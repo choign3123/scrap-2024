@@ -4,8 +4,8 @@ spring:
       ddl-auto: create
     properties:
       hibernate:
-        show_sql: true # sql ??
-        format_sql: true # sql ??? ??
+        show_sql: true # sql show
+        format_sql: true # sql show pretty
 
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
