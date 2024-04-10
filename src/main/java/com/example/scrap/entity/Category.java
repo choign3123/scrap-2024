@@ -11,7 +11,6 @@ import javax.persistence.*;
 public class Category extends BaseEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "category_id")
     private Long id;
 
     @Column(length = 50, nullable = false)
@@ -19,4 +18,8 @@ public class Category extends BaseEntity {
 
     @Column(nullable = false)
     private int sequence;
+
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "member_id")
+    private Member member;
 }

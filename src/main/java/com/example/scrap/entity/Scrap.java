@@ -13,7 +13,6 @@ import javax.persistence.*;
 public class Scrap extends BaseEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "member_id")
     private Long id;
 
     @Column(name = "scrap_url", length = 500, nullable = false)
@@ -38,4 +37,12 @@ public class Scrap extends BaseEntity {
     @Column(nullable = false)
     @ColumnDefault("'ACTIVE'")
     private ScrapStatus status;
+
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "member_id")
+    private Member member;
+
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "category_id")
+    private Category category;
 }
