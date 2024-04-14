@@ -24,6 +24,13 @@ public class ResponseDTO<T>{
     @JsonInclude(value = JsonInclude.Include.NON_NULL)
     private final T result;
 
+    public ResponseDTO (){
+        this.httpStatus = SuccessCode.OK.getHttpStatus();
+        this.code = SuccessCode.OK.getCode();
+        this.message = SuccessCode.OK.getMessage();
+        this.result = null;
+    }
+
     public ResponseDTO (T data){
         this.httpStatus = SuccessCode.OK.getHttpStatus();
         this.code = SuccessCode.OK.getCode();
