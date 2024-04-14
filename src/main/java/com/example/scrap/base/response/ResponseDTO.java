@@ -1,8 +1,9 @@
-package com.example.scrap.base;
+package com.example.scrap.base.response;
 
 import com.example.scrap.base.code.BaseCode;
 import com.example.scrap.base.code.SuccessCode;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -15,17 +16,26 @@ import org.springframework.http.HttpStatus;
 public class ResponseDTO<T>{
 
     @JsonIgnore
-    private HttpStatus httpStatus;
+    private final HttpStatus httpStatus;
 
-    private String code;
-    private String message;
-    private T result;
+    private final String code;
+    private final String message;
+
+    @JsonInclude(value = JsonInclude.Include.NON_NULL)
+    private final T result;
 
     public ResponseDTO (T data){
         this.httpStatus = SuccessCode.OK.getHttpStatus();
         this.code = SuccessCode.OK.getCode();
         this.message = SuccessCode.OK.getMessage();
         this.result = data;
+    }
+
+    public ResponseDTO (BaseCode baseCode){
+        this.httpStatus = baseCode.getHttpStatus();
+        this.code = baseCode.getCode();
+        this.message = baseCode.getMessage();
+        this.result = null;
     }
 
     public  ResponseDTO(T data, BaseCode baseCode){

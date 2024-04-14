@@ -18,4 +18,9 @@ public enum ErrorCode implements BaseCode{
     private final HttpStatus httpStatus;
     private final String code;
     private final String message;
+
+    @Override
+    public String toString() {
+        return code + ": " + message;
+    }
 }

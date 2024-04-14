@@ -1,6 +1,5 @@
-package com.example.scrap.base;
+package com.example.scrap.base.response;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 public class ApiResponse<T extends ResponseDTO> extends ResponseEntity<T> {
