@@ -8,6 +8,8 @@ import com.example.scrap.web.member.IMemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 @RestController
 @RequestMapping("/categories")
 @RequiredArgsConstructor
@@ -17,7 +19,7 @@ public class CategoryController {
     private final ICategoryService categoryService;
 
     @PostMapping()
-    public ApiResponse categorySave(@RequestHeader("member-id") Long memberId, @RequestBody CategoryRequest.CreateCategoryDTO request){
+    public ApiResponse categorySave(@RequestHeader("member-id") Long memberId, @RequestBody @Valid CategoryRequest.CreateCategoryDTO request){
 
         Member member = memberService.findMember(memberId);
         
