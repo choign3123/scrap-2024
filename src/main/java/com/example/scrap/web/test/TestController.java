@@ -1,16 +1,18 @@
-package com.example.scrap;
+package com.example.scrap.web.test;
 
 import com.example.scrap.base.code.ErrorCode;
 import com.example.scrap.base.exception.BaseException;
 import com.example.scrap.base.response.ApiResponse;
 import com.example.scrap.base.response.ResponseDTO;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import com.example.scrap.web.test.dto.TestRequest;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/test")
+@Slf4j
 public class TestController {
 
     @GetMapping("/ok")
@@ -42,5 +44,13 @@ public class TestController {
             ResponseDTO<String> responseDTO = new ResponseDTO<>("성공했음");
             return new ApiResponse(responseDTO);
         }
+    }
+
+    @GetMapping("/valid")
+    public ApiResponse testValid(@RequestBody @Valid TestRequest request){
+        log.info("name: {}, age: {}", request.getName(), request.getAge());
+
+        ResponseDTO<String> responseDTO = new ResponseDTO<>("성공했음");
+        return new ApiResponse(responseDTO);
     }
 }
