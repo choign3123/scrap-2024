@@ -24,7 +24,7 @@ public class GlobalExceptionHandler {
         log.error(e.getMessage());
         e.printStackTrace();
 
-        ResponseDTO<String> responseDTO = new ResponseDTO<>(e.getMessage(), ErrorCode._INTERNAL_SERVER_ERROR);
+        ResponseDTO<String> responseDTO = new ResponseDTO<>(ErrorCode._INTERNAL_SERVER_ERROR);
         return new ApiResponse(responseDTO);
     }
 }
