@@ -47,4 +47,5 @@ public class Category extends BaseEntity {
         this.member = member;
         member.getCategoryList().add(this);
     }
+
 }
