@@ -37,9 +37,10 @@ public class Category extends BaseEntity {
     private List<Scrap> scrapList = new ArrayList<>();
 
     @Builder
-    public Category(String title, int sequence, Member member) {
+    public Category(String title, int sequence, Member member, Boolean isDefault) {
         this.title = title;
         this.sequence = sequence;
+        this.isDefault = isDefault;
         setMember(member);
     }
 
