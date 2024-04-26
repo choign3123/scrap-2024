@@ -23,4 +23,13 @@ public class MemberServiceImpl implements IMemberService{
         return memberRepository.findById(memberId)
                 .orElseThrow(() -> new BaseException(ErrorCode.MEMBER_NOT_FOUND));
     }
+
+    public Member findMember(MemberDTO memberDTO){
+        if(memberDTO.getMemberId() != null){
+            return findMember(memberDTO.getMemberId());
+        }
+        else{
+            throw new BaseException(ErrorCode._BAD_REQUEST);
+        }
+    }
 }
