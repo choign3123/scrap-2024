@@ -7,7 +7,6 @@ import com.example.scrap.entity.Category;
 import com.example.scrap.entity.Member;
 import com.example.scrap.entity.Scrap;
 import com.example.scrap.web.category.dto.CategoryRequest;
-import com.example.scrap.web.category.dto.CategoryResponse;
 import com.example.scrap.web.member.IMemberService;
 import com.example.scrap.web.member.MemberDTO;
 import lombok.RequiredArgsConstructor;
@@ -34,11 +33,11 @@ public class CategoryServiceImpl implements ICategoryService{
     public Category createCategory(MemberDTO memberDTO, CategoryRequest.CreateCategoryDTO request){
         Member member = memberService.findMember(memberDTO);
 
-        int nextCategorySequence = member.getCategoryList().size() + 1;
+        int newCategorySequence = member.calcNewCategorySequence();
 
         Category newCategory = Category.builder()
                 .title(request.getCategoryTitle())
-                .sequence(nextCategorySequence)
+                .sequence(newCategorySequence)
                 .member(member)
                 .build();
 
