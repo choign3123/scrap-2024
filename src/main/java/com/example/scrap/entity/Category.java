@@ -5,6 +5,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -23,6 +24,10 @@ public class Category extends BaseEntity {
 
     @Column(nullable = false)
     private int sequence;
+
+    @Column(nullable = false)
+    @ColumnDefault("false")
+    private Boolean isDefault;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "member_id")
