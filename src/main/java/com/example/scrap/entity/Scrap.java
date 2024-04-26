@@ -3,6 +3,7 @@ package com.example.scrap.entity;
 import com.example.scrap.entity.base.BaseEntity;
 import com.example.scrap.entity.enums.ScrapStatus;
 import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
 
@@ -10,6 +11,7 @@ import javax.persistence.*;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Getter
 public class Scrap extends BaseEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -46,7 +48,24 @@ public class Scrap extends BaseEntity {
     @JoinColumn(name = "category_id")
     private Category category;
 
+    /**
+     * 스크랩 휴지통 보내기
+     */
     public void toTrash(){
+        this.category = null;
         this.status = ScrapStatus.TRASH;
+    }
+
+    /**
+     * 카테고리 이동하기
+     * @param category
+     */
+    public void moveCategory(Category category){
+        if(this.category != null){
+            this.category.getScrapList().remove(this);
+        }
+
+        this.category = category;
+        category.getScrapList().add(this);
     }
 }
