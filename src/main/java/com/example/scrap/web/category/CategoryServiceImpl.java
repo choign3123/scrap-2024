@@ -1,8 +1,11 @@
 package com.example.scrap.web.category;
 
+import com.example.scrap.base.code.ErrorCode;
+import com.example.scrap.base.exception.BaseException;
 import com.example.scrap.converter.CategoryConverter;
 import com.example.scrap.entity.Category;
 import com.example.scrap.entity.Member;
+import com.example.scrap.entity.Scrap;
 import com.example.scrap.web.category.dto.CategoryRequest;
 import com.example.scrap.web.category.dto.CategoryResponse;
 import com.example.scrap.web.member.IMemberService;
@@ -53,5 +56,26 @@ public class CategoryServiceImpl implements ICategoryService{
         Member member = memberService.findMember(memberDTO);
 
         return categoryRepository.findAllByMemberOrderBySequence(member);
+    }
+
+    /**
+     * 카테고리 삭제
+     * @param memberDTO
+     * @param categoryId 카테고리 식별자
+     */
+    @Transactional
+    public void deleteCategory(MemberDTO memberDTO, Long categoryId, Boolean allowDeleteScrap){
+        Member member = memberService.findMember(memberDTO);
+        Category category = categoryRepository.findById(categoryId).get();
+
+        if(category.isIllegalMember(member)){
+            throw new BaseException(ErrorCode.CATEGORY_MEMBER_NOT_MATCH);
+        }
+
+        // 기본 카테고리인지 확인
+
+        // 전부다 삭제하는지, 보존해두는지 확인
+
+        categoryRepository.delete(category);
     }
 }

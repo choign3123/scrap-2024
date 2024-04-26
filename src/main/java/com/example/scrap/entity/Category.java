@@ -42,4 +42,8 @@ public class Category extends BaseEntity {
         this.member = member;
         member.getCategoryList().add(this);
     }
+
+    public boolean isIllegalMember(Member member){
+        return this.member != member;
+    }
 }

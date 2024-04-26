@@ -45,4 +45,8 @@ public class Scrap extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "category_id")
     private Category category;
+
+    public void toTrash(){
+        this.status = ScrapStatus.TRASH;
+    }
 }
