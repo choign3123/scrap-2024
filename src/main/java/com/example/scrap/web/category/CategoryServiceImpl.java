@@ -87,6 +87,7 @@ public class CategoryServiceImpl implements ICategoryService{
         }
         else{
             Category defaultCategory = findDefaultCategory(member);
+            // [TODO] 리스트를 복제해서 사용하는 것 외에 다른 방법은 없는지 고민해봐야 될 것 같음.
             // 이렇게 복제된 리스트를 사용하지 않으면, 요소 삭제로 인해 for 문을 다 돌지 못하고 끝나버림.
             List<Scrap> scrapListCopy = new ArrayList<>(category.getScrapList());
             for(Scrap scrap : scrapListCopy){
