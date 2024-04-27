@@ -1,5 +1,7 @@
 package com.example.scrap.web.category;
 
+import com.example.scrap.base.code.ErrorCode;
+import com.example.scrap.base.exception.BaseException;
 import com.example.scrap.entity.Category;
 import com.example.scrap.entity.Member;
 import com.example.scrap.web.category.dto.CategoryRequest;
@@ -51,5 +53,41 @@ public class CategoryServiceImpl implements ICategoryService{
         Member member = memberService.findMember(memberDTO);
 
         return categoryRepository.findAllByMemberOrderBySequence(member);
+    }
+
+    /**
+     * 카테고리명 수정
+     * @param memberDTO
+     * @param categoryId 카테고리 식별자
+     * @param request
+     * @return 수정된 카테고리
+     */
+    @Transactional
+    public Category updateCategoryTitle(MemberDTO memberDTO, Long categoryId, CategoryRequest.UpdateCategoryTitleDTO request){
+        Member member = memberService.findMember(memberDTO);
+        Category category = findCategory(categoryId);
+
+        if(category.isIllegalMember(member)){
+            throw new BaseException(ErrorCode.CATEGORY_MEMBER_NOT_MATCH);
+        }
+
+        // 기본 카테고리명은 수정 불가
+        if(category.getIsDefault()){
+            throw new BaseException(ErrorCode.NOT_ALLOW_ACCESS_DEFAULT_CATEGORY);
+        }
+
+        category.updateTitle(request.getNewCategoryTitle());
+
+        return category;
+    }
+
+    /**
+     * 카테고리 조회
+     * @param categoryId 카테고리 식별자
+     * @return 카테고리
+     */
+    private Category findCategory(Long categoryId){
+        return categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new BaseException(ErrorCode.CATEGORY_NOT_FOUND));
     }
 }

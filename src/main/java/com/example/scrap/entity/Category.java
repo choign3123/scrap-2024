@@ -49,4 +49,11 @@ public class Category extends BaseEntity {
         member.getCategoryList().add(this);
     }
 
+    public boolean isIllegalMember(Member member){
+        return this.member != member;
+    }
+
+    public void updateTitle(String title){
+        this.title = title;
+    }
 }

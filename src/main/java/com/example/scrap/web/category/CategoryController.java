@@ -53,4 +53,23 @@ public class CategoryController {
 
         return new ApiResponse(new ResponseDTO<>(response));
     }
+
+    /**
+     * [PATCH] /categories/{category-id}/title
+     * [API-10] 카테고리명 수정
+     * @param memberId
+     * @param categoryId 카테고리 식별자
+     * @param request
+     * @return
+     */
+    @PatchMapping("/{category-id}/title")
+    public ApiResponse categoryTitleModify(@RequestHeader("member-id") Long memberId, @PathVariable("category-id") Long categoryId, @RequestBody @Valid CategoryRequest.UpdateCategoryTitleDTO request){
+
+        MemberDTO memberDTO = new MemberDTO(memberId);
+
+        Category category = categoryService.updateCategoryTitle(memberDTO, categoryId, request);
+        CategoryResponse.UpdateCategoryTitleDTO response = CategoryConverter.toUpdateCategoryTitleDTO(category);
+
+        return new ApiResponse(new ResponseDTO<>(response));
+    }
 }
