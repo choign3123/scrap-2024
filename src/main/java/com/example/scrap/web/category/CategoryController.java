@@ -4,10 +4,12 @@ import com.example.scrap.base.response.ApiResponse;
 import com.example.scrap.base.response.ResponseDTO;
 import com.example.scrap.converter.CategoryConverter;
 import com.example.scrap.entity.Category;
+import com.example.scrap.validation.annotaion.ExistCategory;
 import com.example.scrap.web.category.dto.CategoryRequest;
 import com.example.scrap.web.category.dto.CategoryResponse;
 import com.example.scrap.web.member.MemberDTO;
 import lombok.RequiredArgsConstructor;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -16,6 +18,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/categories")
 @RequiredArgsConstructor
+@Validated
 public class CategoryController {
 
     private final ICategoryService categoryService;
@@ -63,7 +66,7 @@ public class CategoryController {
      * @return
      */
     @PatchMapping("/{category-id}/title")
-    public ApiResponse categoryTitleModify(@RequestHeader("member-id") Long memberId, @PathVariable("category-id") Long categoryId, @RequestBody @Valid CategoryRequest.UpdateCategoryTitleDTO request){
+    public ApiResponse categoryTitleModify(@RequestHeader("member-id") Long memberId, @PathVariable("category-id") @ExistCategory Long categoryId, @RequestBody @Valid CategoryRequest.UpdateCategoryTitleDTO request){
 
         MemberDTO memberDTO = new MemberDTO(memberId);
 

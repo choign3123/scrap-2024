@@ -65,7 +65,7 @@ public class CategoryServiceImpl implements ICategoryService{
     @Transactional
     public Category updateCategoryTitle(MemberDTO memberDTO, Long categoryId, CategoryRequest.UpdateCategoryTitleDTO request){
         Member member = memberService.findMember(memberDTO);
-        Category category = findCategory(categoryId);
+        Category category = categoryRepository.findById(categoryId).get();
 
         if(category.isIllegalMember(member)){
             throw new BaseException(ErrorCode.CATEGORY_MEMBER_NOT_MATCH);
@@ -81,13 +81,4 @@ public class CategoryServiceImpl implements ICategoryService{
         return category;
     }
 
-    /**
-     * 카테고리 조회
-     * @param categoryId 카테고리 식별자
-     * @return 카테고리
-     */
-    private Category findCategory(Long categoryId){
-        return categoryRepository.findById(categoryId)
-                .orElseThrow(() -> new BaseException(ErrorCode.CATEGORY_NOT_FOUND));
-    }
 }
