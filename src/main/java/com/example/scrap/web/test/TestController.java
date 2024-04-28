@@ -53,4 +53,12 @@ public class TestController {
         ResponseDTO<String> responseDTO = new ResponseDTO<>("성공했음");
         return new ApiResponse(responseDTO);
     }
+
+    @GetMapping("/validator")
+    public ApiResponse testValidator(@RequestBody @Valid TestRequest request){
+        log.info("categoryId: {}", request.getCategoryId());
+
+        ResponseDTO<String> responseDTO = new ResponseDTO<>("성공했음");
+        return new ApiResponse(responseDTO);
+    }
 }
