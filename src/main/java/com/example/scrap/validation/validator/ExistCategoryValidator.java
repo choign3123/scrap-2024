@@ -18,7 +18,6 @@ public class ExistCategoryValidator implements ConstraintValidator<ExistCategory
     public boolean isValid(Long value, ConstraintValidatorContext context) {
 
         boolean isValid = categoryRepository.existsById(value);
-        log.info("카테고리 존재여부: {}", isValid);
 
         return isValid;
     }
