@@ -11,6 +11,10 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
+import java.util.Set;
+
 @RestControllerAdvice
 @Slf4j
 public class GlobalExceptionHandler {
@@ -24,7 +28,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(Exception.class)
-    protected ApiResponse handleBaseException(Exception e){
+    protected ApiResponse handleException(Exception e){
         log.error(e.getMessage());
         e.printStackTrace();
 
@@ -38,6 +42,15 @@ public class GlobalExceptionHandler {
 
         BindingResult bindingResult = e.getBindingResult();
         ResponseDTO<ValidErrorResponseDTO> responseDTO = new ResponseDTO<>(ErrorConverter.toValidErrorResponseDTO(bindingResult), ErrorCode._BAD_REQUEST);
+        return new ApiResponse(responseDTO);
+    }
+
+    @ExceptionHandler(ConstraintViolationException.class)
+    protected ApiResponse handleConstraintViolationException(ConstraintViolationException e){
+        e.printStackTrace();
+
+        Set<ConstraintViolation<?>> cv = e.getConstraintViolations();
+        ResponseDTO<ValidErrorResponseDTO> responseDTO = new ResponseDTO<>(ErrorConverter.toValidErrorResponseDTO(cv), ErrorCode._BAD_REQUEST);
         return new ApiResponse(responseDTO);
     }
 }
