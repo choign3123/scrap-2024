@@ -40,7 +40,8 @@ public class Category extends BaseEntity {
     public Category(String title, int sequence, Member member, Boolean isDefault) {
         this.title = title;
         this.sequence = sequence;
-        this.isDefault = isDefault;
+        this.isDefault = isDefault == null ? false : isDefault;
+
         setMember(member);
     }
 
