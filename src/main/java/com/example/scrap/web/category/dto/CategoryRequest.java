@@ -11,4 +11,14 @@ public class CategoryRequest {
         @NotBlank
         private String categoryTitle;
     }
+
+    /**
+     * 카테고리명 수정
+     */
+    @Getter
+    public static class UpdateCategoryTitleDTO{
+
+        @NotBlank
+        private String newCategoryTitle;
+    }
 }

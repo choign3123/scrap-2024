@@ -25,4 +25,10 @@ public class CategoryConverter {
 
                 .build();
     }
+
+    public static CategoryResponse.UpdateCategoryTitleDTO toUpdateCategoryTitleDTO(Category category){
+        return CategoryResponse.UpdateCategoryTitleDTO.builder()
+                .newCategoryTitle(category.getTitle())
+                .build();
+    }
 }

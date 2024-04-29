@@ -76,7 +76,7 @@ public class CategoryServiceImpl implements ICategoryService{
 
         // 기본 카테고리는 삭제할 수 없음
         if(category.getIsDefault()){
-            throw new BaseException(ErrorCode.NOT_ALLOWED_DEFAULT_CATEGORY_DELETE);
+            throw new BaseException(ErrorCode.NOT_ALLOW_ACCESS_DEFAULT_CATEGORY);
         }
 
         // 전부다 삭제하는지, 보존해두는지 확인
@@ -98,6 +98,33 @@ public class CategoryServiceImpl implements ICategoryService{
         log.info("남은 스크랩: {}", category.getScrapList().size());
 
         categoryRepository.delete(category);
+    }
+    
+    
+    /** 
+     * 카테고리명 수정
+     * @param memberDTO
+     * @param categoryId 카테고리 식별자
+     * @param request
+     * @return 수정된 카테고리
+     */
+    @Transactional
+    public Category updateCategoryTitle(MemberDTO memberDTO, Long categoryId, CategoryRequest.UpdateCategoryTitleDTO request){
+        Member member = memberService.findMember(memberDTO);
+        Category category = categoryRepository.findById(categoryId).get();
+
+        if(category.isIllegalMember(member)){
+            throw new BaseException(ErrorCode.CATEGORY_MEMBER_NOT_MATCH);
+        }
+
+        // 기본 카테고리명은 수정 불가
+        if(category.getIsDefault()){
+            throw new BaseException(ErrorCode.NOT_ALLOW_ACCESS_DEFAULT_CATEGORY);
+        }
+
+        category.updateTitle(request.getNewCategoryTitle());
+
+        return category;
     }
 
     private Category findDefaultCategory(Member member){

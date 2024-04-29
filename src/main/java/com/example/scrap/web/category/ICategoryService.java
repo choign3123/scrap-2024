@@ -32,4 +32,13 @@ public interface ICategoryService {
      * @param categoryId 카테고리 식별자
      */
     public void deleteCategory(MemberDTO memberDTO, Long categoryId, Boolean allowDeleteScrap);
+
+    /**
+     * 카테고리명 수정
+     * @param memberDTO
+     * @param categoryId 카테고리 식별자
+     * @param request
+     * @return 수정된 카테고리
+     */
+    public Category updateCategoryTitle(MemberDTO memberDTO, Long categoryId, CategoryRequest.UpdateCategoryTitleDTO request);
 }

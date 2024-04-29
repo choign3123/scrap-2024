@@ -8,6 +8,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.NotBlank;
 import java.util.List;
 
 public class CategoryResponse {
@@ -35,5 +36,13 @@ public class CategoryResponse {
         }
     }
 
+    /**
+     * 카테고리명 수정
+     */
+    @Builder
+    @Getter
+    public static class UpdateCategoryTitleDTO{
 
+        private String newCategoryTitle;
+    }
 }
