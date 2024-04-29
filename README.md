@@ -65,3 +65,8 @@
 `deleteMember`|삭제
 `findMember`|검색
 `기타`|그 외의 사항에 대해서는 적절히 이름 짓기
+
+### 📌 TODO 컨벤션
+```
+// [TODO] todo 내용 적기
+```
