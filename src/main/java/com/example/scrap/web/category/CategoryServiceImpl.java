@@ -4,18 +4,23 @@ import com.example.scrap.base.code.ErrorCode;
 import com.example.scrap.base.exception.BaseException;
 import com.example.scrap.entity.Category;
 import com.example.scrap.entity.Member;
+import com.example.scrap.entity.Scrap;
 import com.example.scrap.web.category.dto.CategoryRequest;
 import com.example.scrap.web.member.IMemberService;
 import com.example.scrap.web.member.MemberDTO;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
+@Slf4j
 public class CategoryServiceImpl implements ICategoryService{
 
     private final CategoryRepository categoryRepository;
@@ -56,6 +61,45 @@ public class CategoryServiceImpl implements ICategoryService{
     }
 
     /**
+     * 카테고리 삭제
+     * @param memberDTO
+     * @param categoryId 카테고리 식별자
+     */
+    @Transactional
+    public void deleteCategory(MemberDTO memberDTO, Long categoryId, Boolean allowDeleteScrap){
+        Member member = memberService.findMember(memberDTO);
+        Category category = categoryRepository.findById(categoryId).get();
+
+        if(category.isIllegalMember(member)){
+            throw new BaseException(ErrorCode.CATEGORY_MEMBER_NOT_MATCH);
+        }
+
+        // 기본 카테고리는 삭제할 수 없음
+        if(category.getIsDefault()){
+            throw new BaseException(ErrorCode.NOT_ALLOW_ACCESS_DEFAULT_CATEGORY);
+        }
+
+        // 전부다 삭제하는지, 보존해두는지 확인
+        if(allowDeleteScrap){
+            for(Scrap scrap : category.getScrapList()){
+                scrap.toTrash();
+            }
+        }
+        else{
+            Category defaultCategory = findDefaultCategory(member);
+            // [TODO] 리스트를 복제해서 for 문을 돌리는것 외에 다른 방법은 없는지 고민해봐야 될 것 같음.
+            // 이렇게 복제된 리스트를 사용하지 않으면, 요소 삭제로 인해 for 문을 다 돌지 못하고 끝나버림.
+            List<Scrap> scrapListCopy = new ArrayList<>(category.getScrapList());
+            for(Scrap scrap : scrapListCopy){
+                scrap.moveCategory(defaultCategory);
+            }
+        }
+
+        categoryRepository.delete(category);
+    }
+    
+    
+    /** 
      * 카테고리명 수정
      * @param memberDTO
      * @param categoryId 카테고리 식별자
@@ -81,4 +125,8 @@ public class CategoryServiceImpl implements ICategoryService{
         return category;
     }
 
+    private Category findDefaultCategory(Member member){
+        return categoryRepository.findByMemberAndIsDefault(member, true)
+                .orElseThrow(() -> new BaseException(ErrorCode.CATEGORY_NOT_FOUND));
+    }
 }

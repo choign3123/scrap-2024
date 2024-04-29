@@ -58,7 +58,24 @@ public class CategoryController {
     }
 
     /**
-     * [PATCH] /categories/{category-id}/title
+     * [DELETE] /categories/{category-id}?allow_delete_category=
+     * [API-9] 카테고리 삭제
+     * @param memberId
+     * @param categoryId
+     * @param allowDeleteScrap 해당 카테고리에 속한 스크랩 삭제 여부
+     * @return
+     */
+    @DeleteMapping("/{category-id}")
+    public ApiResponse categoryRemove(@RequestHeader("member-id") Long memberId, @PathVariable("category-id") @ExistCategory Long categoryId, @RequestParam("allow_delete_scrap") Boolean allowDeleteScrap){
+
+        MemberDTO memberDTO = new MemberDTO(memberId);
+
+        categoryService.deleteCategory(memberDTO, categoryId, allowDeleteScrap);
+
+        return new ApiResponse(new ResponseDTO<Void>());
+    }
+
+    /** [PATCH] /categories/{category-id}/title
      * [API-10] 카테고리명 수정
      * @param memberId
      * @param categoryId 카테고리 식별자

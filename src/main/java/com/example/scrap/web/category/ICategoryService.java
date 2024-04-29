@@ -27,6 +27,13 @@ public interface ICategoryService {
     public List<Category> getCategoryWholeList(MemberDTO memberDTO);
 
     /**
+     * 카테고리 삭제
+     * @param memberDTO
+     * @param categoryId 카테고리 식별자
+     */
+    public void deleteCategory(MemberDTO memberDTO, Long categoryId, Boolean allowDeleteScrap);
+
+    /**
      * 카테고리명 수정
      * @param memberDTO
      * @param categoryId 카테고리 식별자
