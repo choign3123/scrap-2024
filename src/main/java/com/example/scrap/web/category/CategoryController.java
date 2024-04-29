@@ -66,7 +66,7 @@ public class CategoryController {
      * @return
      */
     @DeleteMapping("/{category-id}")
-    public ApiResponse categoryRemove(@RequestHeader("member-id") Long memberId, @PathVariable("category-id") Long categoryId, @RequestParam("allow_delete_scrap") Boolean allowDeleteScrap){
+    public ApiResponse categoryRemove(@RequestHeader("member-id") Long memberId, @PathVariable("category-id") @ExistCategory Long categoryId, @RequestParam("allow_delete_scrap") Boolean allowDeleteScrap){
 
         MemberDTO memberDTO = new MemberDTO(memberId);
 
