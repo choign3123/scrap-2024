@@ -60,7 +60,7 @@ public class ScrapServiceImpl implements IScrapService{
      * @param pageRequest
      * @return
      */
-    public Page<Scrap> getScrapListByCategory(MemberDTO memberDTO, Long categoryId, Sort sort, PageRequest pageRequest){
+    public Page<Scrap> getScrapListByCategory(MemberDTO memberDTO, Long categoryId, PageRequest pageRequest){
         Member member = memberService.findMember(memberDTO);
         Category category = categoryService.findCategory(categoryId);
 

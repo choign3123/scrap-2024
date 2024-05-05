@@ -23,9 +23,8 @@ public interface IScrapService {
      * 스크랩 전체 조회 - 카테고리별
      * @param memberDTO
      * @param categoryId
-     * @param sort 정렬 방법
      * @param pageRequest
      * @return
      */
-    public Page<Scrap> getScrapListByCategory(MemberDTO memberDTO, Long categoryId, Sort sort, PageRequest pageRequest);
+    public Page<Scrap> getScrapListByCategory(MemberDTO memberDTO, Long categoryId, PageRequest pageRequest);
 }

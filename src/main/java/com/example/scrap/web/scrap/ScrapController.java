@@ -4,9 +4,7 @@ import com.example.scrap.base.response.ApiResponse;
 import com.example.scrap.base.response.ResponseDTO;
 import com.example.scrap.converter.ScrapConverter;
 import com.example.scrap.entity.Scrap;
-import com.example.scrap.validation.annotaion.ExistCategory;
-import com.example.scrap.validation.annotaion.PagingPage;
-import com.example.scrap.validation.annotaion.PagingSize;
+import com.example.scrap.validation.annotaion.*;
 import com.example.scrap.web.baseDTO.Data;
 import com.example.scrap.web.baseDTO.Sort;
 import com.example.scrap.web.member.MemberDTO;
@@ -21,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.data.domain.Sort.Direction;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 
 @RestController
 @RequestMapping("/scraps")
@@ -50,18 +49,36 @@ public class ScrapController {
         return new ApiResponse(new ResponseDTO<ScrapResponse.CreateScrapDTO>(response));
     }
 
+    /**
+     * [GET] /scraps/{category-id}?sort=&direction=&page=&size
+     * [API-11] 스크랩 전체 조회-카테고리별
+     * @param memberId
+     * @param categoryId
+     * @param sort
+     * @param direction
+     * @param page
+     * @param size
+     * @return
+     */
     @GetMapping("/{category-id}")
     public ApiResponse scrapListByCategory(@RequestHeader("member-id") Long memberId, @PathVariable("category-id") @ExistCategory Long categoryId,
-                                           @RequestParam(name = "sort", defaultValue = "SCRAP_DATE") Sort sort,
-                                           @RequestParam(name = "direction", defaultValue = "ASC") Direction direction,
+                                           @RequestParam(name = "sort", defaultValue = "SCRAP_DATE") @EnumValid(enumC = Sort.class) String sort,
+                                           @RequestParam(name = "direction", defaultValue = "ASC") @EnumValid(enumC = Direction.class) String direction,
                                            @RequestParam(name = "page", defaultValue = "1") @PagingPage int page,
                                            @RequestParam(name = "size", defaultValue = Data.PAGING_SIZE) @PagingSize int size){
 
         MemberDTO memberDTO = new MemberDTO(memberId);
-        log.info("sort: {}, direction: {}, page: {}, size: {}", sort, direction, page, size);
-        PageRequest pageRequest = PageRequest.of(page-1, size, direction, sort.getName());
 
-        Page<Scrap> scrapPage = scrapService.getScrapListByCategory(memberDTO, categoryId, sort, pageRequest);
+        log.info("sort: {}, direction: {}, page: {}, size: {}", sort, direction, page, size);
+
+        // string -> enum 변경
+        Sort sortEnum = Sort.valueOf(sort.toUpperCase());
+        Direction directionEnum = Direction.valueOf(direction.toUpperCase());
+
+        // 페이지네이션
+        PageRequest pageRequest = PageRequest.of(page-1, size, directionEnum, sortEnum.getName());
+
+        Page<Scrap> scrapPage = scrapService.getScrapListByCategory(memberDTO, categoryId, pageRequest);
 
         ScrapResponse.GetScrapListByCategory response = ScrapConverter.toGetScrapListByCategory(scrapPage);
 
