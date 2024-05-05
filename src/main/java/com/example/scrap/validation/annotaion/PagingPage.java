@@ -1,7 +1,6 @@
 package com.example.scrap.validation.annotaion;
 
-import com.example.scrap.validation.validator.ExistCategoryValidator;
-import com.example.scrap.validation.validator.PaginationValidator;
+import com.example.scrap.validation.validator.PagingPageValidator;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;
@@ -15,9 +14,9 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 @Target({FIELD, PARAMETER})
 @Retention(RUNTIME)
-@Constraint(validatedBy = PaginationValidator.class)
+@Constraint(validatedBy = PagingPageValidator.class)
 @Documented
-public @interface Pagination {
+public @interface PagingPage {
 
     String message() default "page는 1부터 시작합니다.";
 

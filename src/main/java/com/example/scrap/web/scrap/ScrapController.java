@@ -5,7 +5,7 @@ import com.example.scrap.base.response.ResponseDTO;
 import com.example.scrap.converter.ScrapConverter;
 import com.example.scrap.entity.Scrap;
 import com.example.scrap.validation.annotaion.ExistCategory;
-import com.example.scrap.validation.annotaion.Pagination;
+import com.example.scrap.validation.annotaion.PagingPage;
 import com.example.scrap.validation.annotaion.PagingSize;
 import com.example.scrap.web.baseDTO.Data;
 import com.example.scrap.web.baseDTO.Sort;
@@ -54,7 +54,7 @@ public class ScrapController {
     public ApiResponse scrapListByCategory(@RequestHeader("member-id") Long memberId, @PathVariable("category-id") @ExistCategory Long categoryId,
                                            @RequestParam(name = "sort", defaultValue = "SCRAP_DATE") Sort sort,
                                            @RequestParam(name = "direction", defaultValue = "ASC") Direction direction,
-                                           @RequestParam(name = "page", defaultValue = "1") @Pagination int page,
+                                           @RequestParam(name = "page", defaultValue = "1") @PagingPage int page,
                                            @RequestParam(name = "size", defaultValue = Data.PAGING_SIZE) @PagingSize int size){
 
         MemberDTO memberDTO = new MemberDTO(memberId);

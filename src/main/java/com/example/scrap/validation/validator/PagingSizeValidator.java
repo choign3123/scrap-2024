@@ -1,6 +1,5 @@
 package com.example.scrap.validation.validator;
 
-import com.example.scrap.validation.annotaion.Pagination;
 import com.example.scrap.validation.annotaion.PagingSize;
 
 import javax.validation.ConstraintValidator;
