@@ -6,6 +6,7 @@ import com.example.scrap.converter.ScrapConverter;
 import com.example.scrap.entity.Scrap;
 import com.example.scrap.validation.annotaion.ExistCategory;
 import com.example.scrap.validation.annotaion.Pagination;
+import com.example.scrap.validation.annotaion.PagingSize;
 import com.example.scrap.web.baseDTO.Data;
 import com.example.scrap.web.baseDTO.Sort;
 import com.example.scrap.web.member.MemberDTO;
@@ -54,7 +55,7 @@ public class ScrapController {
                                            @RequestParam(name = "sort", defaultValue = "SCRAP_DATE") Sort sort,
                                            @RequestParam(name = "direction", defaultValue = "ASC") Direction direction,
                                            @RequestParam(name = "page", defaultValue = "1") @Pagination int page,
-                                           @RequestParam(name = "size", defaultValue = Data.PAGING_SIZE) int size){
+                                           @RequestParam(name = "size", defaultValue = Data.PAGING_SIZE) @PagingSize int size){
 
         MemberDTO memberDTO = new MemberDTO(memberId);
         log.info("sort: {}, direction: {}, page: {}, size: {}", sort, direction, page, size);
