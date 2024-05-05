@@ -41,4 +41,6 @@ public interface ICategoryService {
      * @return 수정된 카테고리
      */
     public Category updateCategoryTitle(MemberDTO memberDTO, Long categoryId, CategoryRequest.UpdateCategoryTitleDTO request);
+
+    public Category findCategory(Long categoryId);
 }
