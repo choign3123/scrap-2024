@@ -34,7 +34,7 @@ public class Scrap extends BaseEntity {
 
     @Column(nullable = false)
     @ColumnDefault("false")
-    private Boolean star;
+    private Boolean favorite;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -50,13 +50,13 @@ public class Scrap extends BaseEntity {
     private Category category;
 
     @Builder
-    public Scrap(String scrapURL, String title, String imageURL, String description, String memo, Boolean star, ScrapStatus status, Member member, Category category) {
+    public Scrap(String scrapURL, String title, String imageURL, String description, String memo, Boolean favorite, ScrapStatus status, Member member, Category category) {
         this.scrapURL = scrapURL;
         this.title = title;
         this.imageURL = imageURL;
         this.description = description;
         this.memo = memo;
-        this.star = star == null ? false : star;
+        this.favorite = favorite == null ? false : favorite;
         this.status = status == null ? ScrapStatus.ACTIVE : status;
         setMember(member);
         setCategory(category);

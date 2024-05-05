@@ -4,7 +4,6 @@ import lombok.Builder;
 import lombok.Getter;
 
 import java.time.LocalDate;
-import java.util.Date;
 
 public class ScrapResponse {
 
@@ -15,7 +14,7 @@ public class ScrapResponse {
         private String title;
         private String scrapURL;
         private String imageURL;
-        private Boolean isStar;
+        private Boolean isFavorite;
         private LocalDate scrapDate;
     }
 }
