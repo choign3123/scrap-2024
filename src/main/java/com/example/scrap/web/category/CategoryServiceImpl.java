@@ -129,4 +129,8 @@ public class CategoryServiceImpl implements ICategoryService{
         return categoryRepository.findByMemberAndIsDefault(member, true)
                 .orElseThrow(() -> new BaseException(ErrorCode.CATEGORY_NOT_FOUND));
     }
+
+    public Category findCategory(Long categoryId){
+        return categoryRepository.findById(categoryId).get();
+    }
 }

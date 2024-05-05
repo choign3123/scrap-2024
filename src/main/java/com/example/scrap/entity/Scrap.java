@@ -3,6 +3,7 @@ package com.example.scrap.entity;
 import com.example.scrap.entity.base.BaseEntity;
 import com.example.scrap.entity.enums.ScrapStatus;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
@@ -47,6 +48,28 @@ public class Scrap extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "category_id")
     private Category category;
+
+    @Builder
+    public Scrap(String scrapURL, String title, String imageURL, String description, String memo, Boolean star, ScrapStatus status, Member member, Category category) {
+        this.scrapURL = scrapURL;
+        this.title = title;
+        this.imageURL = imageURL;
+        this.description = description;
+        this.memo = memo;
+        this.star = star == null ? false : star;
+        this.status = status == null ? ScrapStatus.ACTIVE : status;
+        setMember(member);
+        setCategory(category);
+    }
+
+    private void setMember(Member member){
+        this.member = member;
+    }
+
+    private void setCategory(Category category){
+        this.category = category;
+        category.getScrapList().add(this);
+    }
 
     /**
      * 스크랩 휴지통 보내기
