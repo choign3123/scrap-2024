@@ -3,8 +3,12 @@ package com.example.scrap.converter;
 import com.example.scrap.entity.Category;
 import com.example.scrap.entity.Member;
 import com.example.scrap.entity.Scrap;
+import com.example.scrap.web.baseDTO.Meta;
 import com.example.scrap.web.scrap.dto.ScrapRequest;
 import com.example.scrap.web.scrap.dto.ScrapResponse;
+import org.springframework.data.domain.Page;
+
+import java.util.List;
 
 public class ScrapConverter {
 
@@ -28,6 +32,26 @@ public class ScrapConverter {
                 .imageURL(scrap.getImageURL())
                 .isFavorite(scrap.getFavorite())
                 .scrapDate(scrap.getCreatedAt().toLocalDate())
+                .build();
+    }
+
+    public static ScrapResponse.GetScrapListByCategory toGetScrapListByCategory(Page<Scrap> scrapPage){
+        Meta meta = new Meta(scrapPage);
+
+        List<ScrapResponse.GetScrapListByCategory.ScrapDTO> scrapDTOList = scrapPage.stream().map(scrap -> {
+                    return ScrapResponse.GetScrapListByCategory.ScrapDTO.builder()
+                            .scrapId(scrap.getId())
+                            .title(scrap.getTitle())
+                            .scrapURL(scrap.getScrapURL())
+                            .imageURL(scrap.getImageURL())
+                            .isFavorite(scrap.getFavorite())
+                            .scrapDate(scrap.getCreatedAt().toLocalDate())
+                            .build();
+                }).toList();
+
+        return ScrapResponse.GetScrapListByCategory.builder()
+                .meta(meta)
+                .scrapDTOList(scrapDTOList)
                 .build();
     }
 }
