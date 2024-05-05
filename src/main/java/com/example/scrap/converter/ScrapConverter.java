@@ -26,7 +26,7 @@ public class ScrapConverter {
                 .title(scrap.getTitle())
                 .scrapURL(scrap.getScrapURL())
                 .imageURL(scrap.getImageURL())
-                .isStar(scrap.getStar())
+                .isFavorite(scrap.getFavorite())
                 .scrapDate(scrap.getCreatedAt().toLocalDate())
                 .build();
     }
