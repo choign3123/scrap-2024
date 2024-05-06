@@ -10,6 +10,9 @@ import java.util.List;
 
 public class ScrapResponse {
 
+    /**
+     * 스크랪 생성 DTO
+     */
     @Builder
     @Getter
     public static class CreateScrapDTO{
@@ -21,6 +24,9 @@ public class ScrapResponse {
         private LocalDate scrapDate;
     }
 
+    /**
+     * 스크랩 전체조회 - 카테고리별 DTO
+     */
     @Builder
     @Getter
     public static class GetScrapListByCategory {
@@ -41,6 +47,9 @@ public class ScrapResponse {
         }
     }
 
+    /**
+     * 스크랩 세부조회 DTO
+     */
     @Builder
     @Getter
     public static class GetScrapDetails {
