@@ -7,6 +7,14 @@ import java.util.List;
 
 public class CategoryConverter {
 
+    public static CategoryResponse.CreateCategoryDTO toCreateCategoryDTO(Category category){
+        return CategoryResponse.CreateCategoryDTO.builder()
+                .categoryId(category.getId())
+                .title(category.getTitle())
+                .sequence(category.getSequence())
+                .build();
+    }
+
     public static CategoryResponse.GetCategoryListDTO toGetCategoryListDTO(List<Category> categoryList){
         return CategoryResponse.GetCategoryListDTO.builder()
 

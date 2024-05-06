@@ -35,9 +35,11 @@ public class CategoryController {
 
         MemberDTO memberDTO = new MemberDTO(memberId);
 
-        categoryService.createCategory(memberDTO, request);
+        Category newCategory = categoryService.createCategory(memberDTO, request);
 
-        return new ApiResponse(new ResponseDTO<Void>());
+        CategoryResponse.CreateCategoryDTO response = CategoryConverter.toCreateCategoryDTO(newCategory);
+
+        return new ApiResponse(new ResponseDTO<>(response));
     }
 
     /**

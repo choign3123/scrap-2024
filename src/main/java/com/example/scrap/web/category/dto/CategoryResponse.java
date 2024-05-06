@@ -14,6 +14,17 @@ import java.util.List;
 public class CategoryResponse {
 
     /**
+     * 카테고리 생성 DTO
+     */
+    @Builder
+    @Getter
+    public static class CreateCategoryDTO {
+        private Long categoryId;
+        private String title;
+        private int sequence;
+    }
+
+    /**
      * 카테고리 전체 조회 DTO
      */
     @Getter
@@ -37,7 +48,7 @@ public class CategoryResponse {
     }
 
     /**
-     * 카테고리명 수정
+     * 카테고리명 수정 DTO
      */
     @Builder
     @Getter
