@@ -50,7 +50,7 @@ public class ScrapController {
     }
 
     /**
-     * [GET] /scraps/{category-id}?sort=&direction=&page=&size
+     * [GET] /scraps?category=&sort=&direction=&page=&size
      * [API-11] 스크랩 전체 조회-카테고리별
      * @param memberId
      * @param categoryId
