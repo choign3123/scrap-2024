@@ -71,6 +71,10 @@ public class Scrap extends BaseEntity {
         category.getScrapList().add(this);
     }
 
+    public boolean isIllegalMember(Member member){
+        return this.member != member;
+    }
+
     /**
      * 스크랩 휴지통 보내기
      */

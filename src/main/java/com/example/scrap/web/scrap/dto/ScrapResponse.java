@@ -40,4 +40,16 @@ public class ScrapResponse {
             private LocalDate scrapDate;
         }
     }
+
+    @Builder
+    @Getter
+    public static class GetScrapDetails {
+        private Long scrapId;
+        private String title;
+        private String scrapURL;
+        private String imageURL;
+        private String description;
+        private String memo;
+        private Boolean isFavorite;
+    }
 }

@@ -50,7 +50,7 @@ public class ScrapController {
     }
 
     /**
-     * [GET] /scraps/{category-id}?sort=&direction=&page=&size
+     * [GET] /scraps?category=&sort=&direction=&page=&size
      * [API-11] 스크랩 전체 조회-카테고리별
      * @param memberId
      * @param categoryId
@@ -84,5 +84,23 @@ public class ScrapController {
         ScrapResponse.GetScrapListByCategory response = ScrapConverter.toGetScrapListByCategory(scrapPage);
 
         return new ApiResponse(new ResponseDTO(response));
+    }
+
+    /**
+     * [GET] /scraps/{scrap-id}
+     * [API-12] 스크랩 세부 조회
+     * @param memberId
+     * @param scrapId
+     * @return
+     */
+    @GetMapping("/{scrap-id}")
+    public ApiResponse scrapDetails(@RequestHeader("member-id") Long memberId, @PathVariable("scrap-id") @ExistScrap Long scrapId){
+        MemberDTO memberDTO = new MemberDTO(memberId);
+
+        Scrap scrap = scrapService.getScrapDetails(memberDTO, scrapId);
+
+        ScrapResponse.GetScrapDetails response = ScrapConverter.toGetScrapDetails(scrap);
+
+        return new ApiResponse(new ResponseDTO<>(response));
     }
 }
