@@ -60,8 +60,9 @@ public class ScrapController {
      * @param size
      * @return
      */
-    @GetMapping("/{category-id}")
-    public ApiResponse scrapListByCategory(@RequestHeader("member-id") Long memberId, @PathVariable("category-id") @ExistCategory Long categoryId,
+    @GetMapping()
+    public ApiResponse scrapListByCategory(@RequestHeader("member-id") Long memberId,
+                                           @RequestParam("category") @ExistCategory Long categoryId,
                                            @RequestParam(name = "sort", defaultValue = "SCRAP_DATE") @EnumValid(enumC = Sort.class) String sort,
                                            @RequestParam(name = "direction", defaultValue = "ASC") @EnumValid(enumC = Direction.class) String direction,
                                            @RequestParam(name = "page", defaultValue = "1") @PagingPage int page,
