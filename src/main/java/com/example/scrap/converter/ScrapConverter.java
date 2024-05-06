@@ -54,4 +54,16 @@ public class ScrapConverter {
                 .scrapDTOList(scrapDTOList)
                 .build();
     }
+
+    public static ScrapResponse.GetScrapDetails toGetScrapDetails(Scrap scrap){
+        return ScrapResponse.GetScrapDetails.builder()
+                .scrapId(scrap.getId())
+                .title(scrap.getTitle())
+                .scrapURL(scrap.getScrapURL())
+                .imageURL(scrap.getImageURL())
+                .description(scrap.getDescription())
+                .memo(scrap.getMemo())
+                .isFavorite(scrap.getFavorite())
+                .build();
+    }
 }

@@ -27,4 +27,12 @@ public interface IScrapService {
      * @return
      */
     public Page<Scrap> getScrapListByCategory(MemberDTO memberDTO, Long categoryId, PageRequest pageRequest);
+
+    /**
+     * 스크랩 세부 조회
+     * @param memberDTO
+     * @param scrapId
+     * @return
+     */
+    public Scrap getScrapDetails(MemberDTO memberDTO, Long scrapId);
 }

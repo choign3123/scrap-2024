@@ -68,4 +68,26 @@ public class ScrapServiceImpl implements IScrapService{
 
         return scrapPage;
     }
+
+    /**
+     * 스크랩 세부 조회
+     * @param memberDTO
+     * @param scrapId
+     * @return
+     */
+    public Scrap getScrapDetails(MemberDTO memberDTO, Long scrapId){
+        Member member = memberService.findMember(memberDTO);
+
+        Scrap scrap = findScrap(scrapId);
+
+        if(scrap.isIllegalMember(member)){
+            throw new BaseException(ErrorCode.SCRAP_MEMBER_NOT_MATCH);
+        }
+
+        return scrap;
+    }
+
+    public Scrap findScrap(Long scrapId){
+        return scrapRepository.findById(scrapId).get();
+    }
 }

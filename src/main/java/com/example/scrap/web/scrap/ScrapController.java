@@ -84,4 +84,22 @@ public class ScrapController {
 
         return new ApiResponse(new ResponseDTO(response));
     }
+
+    /**
+     * [GET] /scraps/{scrap-id}
+     * [API-12] 스크랩 세부 조회
+     * @param memberId
+     * @param scrapId
+     * @return
+     */
+    @GetMapping("/{scrap-id}")
+    public ApiResponse scrapDetails(@RequestHeader("member-id") Long memberId, @PathVariable("scrap-id") Long scrapId){
+        MemberDTO memberDTO = new MemberDTO(memberId);
+
+        Scrap scrap = scrapService.getScrapDetails(memberDTO, scrapId);
+
+        ScrapResponse.GetScrapDetails response = ScrapConverter.toGetScrapDetails(scrap);
+
+        return new ApiResponse(new ResponseDTO<>(response));
+    }
 }
