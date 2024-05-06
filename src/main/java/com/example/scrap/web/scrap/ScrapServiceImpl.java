@@ -6,7 +6,6 @@ import com.example.scrap.converter.ScrapConverter;
 import com.example.scrap.entity.Category;
 import com.example.scrap.entity.Member;
 import com.example.scrap.entity.Scrap;
-import com.example.scrap.web.baseDTO.Sort;
 import com.example.scrap.web.category.ICategoryService;
 import com.example.scrap.web.member.IMemberService;
 import com.example.scrap.web.member.MemberDTO;
@@ -14,11 +13,9 @@ import com.example.scrap.web.scrap.dto.ScrapRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -56,7 +53,6 @@ public class ScrapServiceImpl implements IScrapService{
      * 스크랩 전체 조회 - 카테고리별
      * @param memberDTO
      * @param categoryId
-     * @param sort 정렬 방법
      * @param pageRequest
      * @return
      */
