@@ -59,6 +59,24 @@ public class CategoryController {
         return new ApiResponse(new ResponseDTO<>(response));
     }
 
+
+    /**
+     * [GET] /categories/selection
+     * [API-30] 카테고리 선택용 조회
+     * @param memberId
+     * @return
+     */
+    @GetMapping("/selection")
+    public ApiResponse categoryListForSelection(@RequestHeader("member-id") Long memberId){
+
+        MemberDTO memberDTO = new MemberDTO(memberId);
+
+        List<Category> categoryList = categoryService.getCategoryWholeList(memberDTO);
+        CategoryResponse.GetCategoryListForSelectionDTO response = CategoryConverter.toGetCategoryListForSelectionDTO(categoryList);
+
+        return new ApiResponse(new ResponseDTO<>(response));
+    }
+
     /**
      * [DELETE] /categories/{category-id}?allow_delete_category=
      * [API-9] 카테고리 삭제
@@ -94,4 +112,5 @@ public class CategoryController {
 
         return new ApiResponse(new ResponseDTO<>(response));
     }
+
 }

@@ -39,4 +39,18 @@ public class CategoryConverter {
                 .newCategoryTitle(category.getTitle())
                 .build();
     }
+
+    public static CategoryResponse.GetCategoryListForSelectionDTO toGetCategoryListForSelectionDTO(List<Category> categoryList){
+        return CategoryResponse.GetCategoryListForSelectionDTO.builder()
+                .categoryDTOList(
+                        categoryList.stream().map(
+                                category -> CategoryResponse.GetCategoryListForSelectionDTO.CategoryDTO.builder()
+                                        .categoryId(category.getId())
+                                        .categoryTitle(category.getTitle())
+                                        .build()
+                        ).toList()
+                )
+                .total(categoryList.size())
+                .build();
+    }
 }
