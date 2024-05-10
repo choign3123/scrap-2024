@@ -1,14 +1,10 @@
 package com.example.scrap.web.category.dto;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.NotBlank;
 import java.util.List;
 
 public class CategoryResponse {
@@ -55,5 +51,26 @@ public class CategoryResponse {
     public static class UpdateCategoryTitleDTO{
 
         private String newCategoryTitle;
+    }
+
+    /**
+     * 카테고리 선택용 조회 DTO
+     */
+    @Builder
+    @Getter
+    @JsonPropertyOrder({"categories", "total"})
+    public static class GetCategoryListForSelectionDTO {
+
+        @JsonProperty("categories")
+        private List<CategoryDTO> categoryDTOList;
+
+        private int total;
+
+        @Builder
+        @Getter
+        public static class CategoryDTO{
+            private Long categoryId;
+            private String categoryTitle;
+        }
     }
 }
