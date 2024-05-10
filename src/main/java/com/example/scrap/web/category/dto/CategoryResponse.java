@@ -58,6 +58,7 @@ public class CategoryResponse {
      */
     @Builder
     @Getter
+    @JsonPropertyOrder({"categories", "total"})
     public static class GetCategoryListForSelectionDTO {
 
         @JsonProperty("categories")
