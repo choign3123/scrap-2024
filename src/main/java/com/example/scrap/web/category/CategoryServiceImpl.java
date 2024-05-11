@@ -126,7 +126,6 @@ public class CategoryServiceImpl implements ICategoryService{
     /**
      * 카테고리 순서 변경
      * @param memberDTO
-     * @param categoryId
      * @param request
      * @return
      */
