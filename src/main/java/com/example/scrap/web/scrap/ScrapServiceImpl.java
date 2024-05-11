@@ -70,6 +70,18 @@ public class ScrapServiceImpl implements IScrapService{
     }
 
     /**
+     * 즐겨찾기된 스크랩 조회
+     * @param memberDTO
+     * @param pageRequest
+     * @return 즐겨찾기된 스크랩
+     */
+    public Page<Scrap> getFavoriteScrapList(MemberDTO memberDTO, PageRequest pageRequest){
+        Member member = memberService.findMember(memberDTO);
+
+        return scrapRepository.findAllByMemberAndFavorite(member, true, pageRequest);
+    }
+
+    /**
      * 스크랩 세부 조회
      * @param memberDTO
      * @param scrapId

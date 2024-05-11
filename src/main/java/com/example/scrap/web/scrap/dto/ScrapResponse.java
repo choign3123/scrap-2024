@@ -48,6 +48,29 @@ public class ScrapResponse {
     }
 
     /**
+     * 즐겨찾기된 스크랩 조회
+     */
+    @Builder
+    @Getter
+    public static class GetFavoriteScrapList {
+        private Meta meta;
+
+        @JsonProperty("scraps")
+        private List<ScrapDTO> scrapDTOList;
+
+        @Builder
+        @Getter
+        public static class ScrapDTO{
+            private String categoryTitle;
+            private Long scrapId;
+            private String scrapTitle;
+            private String scrapURL;
+            private String imageURL;
+            private LocalDate scrapDate;
+        }
+    }
+
+    /**
      * 스크랩 세부조회 DTO
      */
     @Builder

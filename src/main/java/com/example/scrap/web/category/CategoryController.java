@@ -115,6 +115,13 @@ public class CategoryController {
         return new ApiResponse(new ResponseDTO<>(response));
     }
 
+    /**
+     * [PATCH] /categories/sequence
+     * [API-8] 카테고리 순서 변경
+     * @param memberId
+     * @param request
+     * @return
+     */
     @PatchMapping("/sequence")
     public ApiResponse categorySequenceModify(@RequestHeader("member-id") Long memberId, @RequestBody @Validated CategoryRequest.UpdateCategorySequenceDTO request){
 
