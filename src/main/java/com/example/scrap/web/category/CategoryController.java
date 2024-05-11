@@ -88,7 +88,8 @@ public class CategoryController {
      * @return
      */
     @DeleteMapping("/{category-id}")
-    public ApiResponse categoryRemove(@RequestHeader("member-id") Long memberId, @PathVariable("category-id") @ExistCategory Long categoryId, @RequestParam("allow_delete_scrap") Boolean allowDeleteScrap){
+    public ApiResponse categoryRemove(@RequestHeader("member-id") Long memberId, @PathVariable("category-id") @ExistCategory Long categoryId,
+                                      @RequestParam("allow_delete_scrap") Boolean allowDeleteScrap){
 
         MemberDTO memberDTO = new MemberDTO(memberId);
 
@@ -105,7 +106,8 @@ public class CategoryController {
      * @return
      */
     @PatchMapping("/{category-id}/title")
-    public ApiResponse categoryTitleModify(@RequestHeader("member-id") Long memberId, @PathVariable("category-id") @ExistCategory Long categoryId, @RequestBody @Valid CategoryRequest.UpdateCategoryTitleDTO request){
+    public ApiResponse categoryTitleModify(@RequestHeader("member-id") Long memberId, @PathVariable("category-id") @ExistCategory Long categoryId,
+                                           @RequestBody @Valid CategoryRequest.UpdateCategoryTitleDTO request){
 
         MemberDTO memberDTO = new MemberDTO(memberId);
 

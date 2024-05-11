@@ -39,7 +39,9 @@ public class ScrapController {
      * @return
      */
     @PostMapping("/{category-id}")
-    public ApiResponse scrapSave(@RequestHeader("member-id") Long memberId, @PathVariable("category-id") @ExistCategory Long categoryId, @RequestBody @Validated ScrapRequest.CreateScrap request){
+    public ApiResponse scrapSave(@RequestHeader("member-id") Long memberId, @PathVariable("category-id") @ExistCategory Long categoryId,
+                                 @RequestBody @Validated ScrapRequest.CreateScrap request){
+
         MemberDTO memberDTO = new MemberDTO(memberId);
 
         Scrap newScrap = scrapService.createScrap(memberDTO, categoryId, request);
