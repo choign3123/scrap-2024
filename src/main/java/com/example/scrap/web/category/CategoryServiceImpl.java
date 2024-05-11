@@ -133,6 +133,10 @@ public class CategoryServiceImpl implements ICategoryService{
     public List<Category> updateCategorySequence(MemberDTO memberDTO, CategoryRequest.UpdateCategorySequenceDTO request){
         Member member = memberService.findMember(memberDTO);
 
+        if(request.getCategoryList().size() != member.getCategoryList().size()){
+            throw new BaseException(ErrorCode.REQUEST_CATEGORY_COUNT_NOT_ALL);
+        }
+
         Map<Long, Integer> changeSequenceMap = new HashMap<>();
         int newSequence = 1;
         for(Long categoryId : request.getCategoryList()){
