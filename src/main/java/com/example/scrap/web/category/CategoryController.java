@@ -20,6 +20,7 @@ import java.util.List;
 @RequestMapping("/categories")
 @RequiredArgsConstructor
 @Slf4j
+@Validated
 public class CategoryController {
 
     private final ICategoryService categoryService;
@@ -115,7 +116,7 @@ public class CategoryController {
     }
 
     @PatchMapping("/sequence")
-    public ApiResponse categorySequenceModify(@RequestHeader("member-id") Long memberId, @RequestBody @Valid CategoryRequest.UpdateCategorySequenceDTO request){
+    public ApiResponse categorySequenceModify(@RequestHeader("member-id") Long memberId, @RequestBody @Validated CategoryRequest.UpdateCategorySequenceDTO request){
 
         MemberDTO memberDTO = new MemberDTO(memberId);
 
