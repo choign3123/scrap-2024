@@ -73,4 +73,26 @@ public class CategoryResponse {
             private String categoryTitle;
         }
     }
+
+    /**
+     * 카테고리 순서 변경 DTO
+     */
+    @Builder
+    @Getter
+    @JsonPropertyOrder({"categories", "total"})
+    public static class UpdateCategorySequenceDTO {
+
+        @JsonProperty("categories")
+        private List<CategoryDTO> categoryDTOList;
+
+        private int total;
+
+        @Builder
+        @Getter
+        public static class CategoryDTO{
+            private Long categoryId;
+            private String categoryTitle;
+            private int sequence;
+        }
+    }
 }

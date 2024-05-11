@@ -14,7 +14,7 @@ import java.util.List;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-public class Category extends BaseEntity {
+public class Category extends BaseEntity implements Comparable<Category>{
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -50,6 +50,11 @@ public class Category extends BaseEntity {
         member.getCategoryList().add(this);
     }
 
+    @Override
+    public int compareTo(Category o) {
+        return this.sequence - o.sequence;
+    }
+
     public boolean isIllegalMember(Member member){
         return this.member != member;
     }
@@ -57,4 +62,13 @@ public class Category extends BaseEntity {
     public void updateTitle(String title){
         this.title = title;
     }
+
+    /**
+     * 카테고리 순서 변경
+     * @param sequence
+     */
+    public void changeSequence(int sequence){
+        this.sequence = sequence;
+    }
+
 }
