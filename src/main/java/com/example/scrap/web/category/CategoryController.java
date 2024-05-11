@@ -9,6 +9,7 @@ import com.example.scrap.web.category.dto.CategoryRequest;
 import com.example.scrap.web.category.dto.CategoryResponse;
 import com.example.scrap.web.member.MemberDTO;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,7 +19,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/categories")
 @RequiredArgsConstructor
-@Validated
+@Slf4j
 public class CategoryController {
 
     private final ICategoryService categoryService;
@@ -109,6 +110,17 @@ public class CategoryController {
 
         Category category = categoryService.updateCategoryTitle(memberDTO, categoryId, request);
         CategoryResponse.UpdateCategoryTitleDTO response = CategoryConverter.toUpdateCategoryTitleDTO(category);
+
+        return new ApiResponse(new ResponseDTO<>(response));
+    }
+
+    @PatchMapping("/sequence")
+    public ApiResponse categorySequenceModify(@RequestHeader("member-id") Long memberId, @RequestBody @Valid CategoryRequest.UpdateCategorySequenceDTO request){
+
+        MemberDTO memberDTO = new MemberDTO(memberId);
+
+        List<Category> categoryList = categoryService.updateCategorySequence(memberDTO, request);
+        CategoryResponse.UpdateCategorySequenceDTO response = CategoryConverter.toUpdateCategorySequenceDTO(categoryList);
 
         return new ApiResponse(new ResponseDTO<>(response));
     }

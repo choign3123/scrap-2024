@@ -53,4 +53,19 @@ public class CategoryConverter {
                 .total(categoryList.size())
                 .build();
     }
+
+    public static CategoryResponse.UpdateCategorySequenceDTO toUpdateCategorySequenceDTO(List<Category> categoryList){
+        return CategoryResponse.UpdateCategorySequenceDTO.builder()
+                .categoryDTOList(
+                        categoryList.stream().map(
+                                category -> CategoryResponse.UpdateCategorySequenceDTO.CategoryDTO.builder()
+                                        .categoryId(category.getId())
+                                        .categoryTitle(category.getTitle())
+                                        .sequence(category.getSequence())
+                                        .build()
+                        ).toList()
+                )
+                .total(categoryList.size())
+                .build();
+    }
 }

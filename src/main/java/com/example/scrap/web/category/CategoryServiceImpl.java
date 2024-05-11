@@ -13,9 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -123,6 +121,32 @@ public class CategoryServiceImpl implements ICategoryService{
         category.updateTitle(request.getNewCategoryTitle());
 
         return category;
+    }
+
+    /**
+     * 카테고리 순서 변경
+     * @param memberDTO
+     * @param request
+     * @return
+     */
+    @Transactional
+    public List<Category> updateCategorySequence(MemberDTO memberDTO, CategoryRequest.UpdateCategorySequenceDTO request){
+        Member member = memberService.findMember(memberDTO);
+
+        Map<Long, Integer> changeSequenceMap = new HashMap<>();
+        int newSequence = 1;
+        for(Long categoryId : request.getCategoryList()){
+            changeSequenceMap.put(categoryId, newSequence);
+            newSequence++;
+        }
+
+        // 순서 변경
+        for(Category category : member.getCategoryList()){
+            category.changeSequence(changeSequenceMap.get(category.getId()));
+        }
+
+        Collections.sort(member.getCategoryList());
+        return member.getCategoryList();
     }
 
     private Category findDefaultCategory(Member member){

@@ -42,5 +42,13 @@ public interface ICategoryService {
      */
     public Category updateCategoryTitle(MemberDTO memberDTO, Long categoryId, CategoryRequest.UpdateCategoryTitleDTO request);
 
+    /**
+     * 카테고리 순서 변경
+     * @param memberDTO
+     * @param request
+     * @return
+     */
+    public List<Category> updateCategorySequence(MemberDTO memberDTO, CategoryRequest.UpdateCategorySequenceDTO request);
+
     public Category findCategory(Long categoryId);
 }
