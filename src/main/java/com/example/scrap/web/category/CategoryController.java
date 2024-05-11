@@ -88,7 +88,8 @@ public class CategoryController {
      * @return
      */
     @DeleteMapping("/{category-id}")
-    public ApiResponse categoryRemove(@RequestHeader("member-id") Long memberId, @PathVariable("category-id") @ExistCategory Long categoryId, @RequestParam("allow_delete_scrap") Boolean allowDeleteScrap){
+    public ApiResponse categoryRemove(@RequestHeader("member-id") Long memberId, @PathVariable("category-id") @ExistCategory Long categoryId,
+                                      @RequestParam("allow_delete_scrap") Boolean allowDeleteScrap){
 
         MemberDTO memberDTO = new MemberDTO(memberId);
 
@@ -105,7 +106,8 @@ public class CategoryController {
      * @return
      */
     @PatchMapping("/{category-id}/title")
-    public ApiResponse categoryTitleModify(@RequestHeader("member-id") Long memberId, @PathVariable("category-id") @ExistCategory Long categoryId, @RequestBody @Valid CategoryRequest.UpdateCategoryTitleDTO request){
+    public ApiResponse categoryTitleModify(@RequestHeader("member-id") Long memberId, @PathVariable("category-id") @ExistCategory Long categoryId,
+                                           @RequestBody @Valid CategoryRequest.UpdateCategoryTitleDTO request){
 
         MemberDTO memberDTO = new MemberDTO(memberId);
 
@@ -115,6 +117,13 @@ public class CategoryController {
         return new ApiResponse(new ResponseDTO<>(response));
     }
 
+    /**
+     * [PATCH] /categories/sequence
+     * [API-8] 카테고리 순서 변경
+     * @param memberId
+     * @param request
+     * @return
+     */
     @PatchMapping("/sequence")
     public ApiResponse categorySequenceModify(@RequestHeader("member-id") Long memberId, @RequestBody @Validated CategoryRequest.UpdateCategorySequenceDTO request){
 

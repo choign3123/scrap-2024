@@ -66,4 +66,25 @@ public class ScrapConverter {
                 .isFavorite(scrap.getFavorite())
                 .build();
     }
+
+    public static ScrapResponse.GetFavoriteScrapList toGetFavoriteScrapList(Page<Scrap> scrapPage){
+        Meta meta = new Meta(scrapPage);
+
+        List<ScrapResponse.GetFavoriteScrapList.ScrapDTO> scrapDTOList = scrapPage.stream().map(
+                scrap -> {
+                    return ScrapResponse.GetFavoriteScrapList.ScrapDTO.builder()
+                            .categoryTitle(scrap.getCategory().getTitle())
+                            .scrapId(scrap.getId())
+                            .scrapTitle(scrap.getTitle())
+                            .scrapURL(scrap.getScrapURL())
+                            .imageURL(scrap.getImageURL())
+                            .scrapDate(scrap.getCreatedAt().toLocalDate())
+                            .build();
+                }).toList();
+
+        return ScrapResponse.GetFavoriteScrapList.builder()
+                .meta(meta)
+                .scrapDTOList(scrapDTOList)
+                .build();
+    }
 }

@@ -39,7 +39,9 @@ public class ScrapController {
      * @return
      */
     @PostMapping("/{category-id}")
-    public ApiResponse scrapSave(@RequestHeader("member-id") Long memberId, @PathVariable("category-id") @ExistCategory Long categoryId, @RequestBody @Validated ScrapRequest.CreateScrap request){
+    public ApiResponse scrapSave(@RequestHeader("member-id") Long memberId, @PathVariable("category-id") @ExistCategory Long categoryId,
+                                 @RequestBody @Validated ScrapRequest.CreateScrap request){
+
         MemberDTO memberDTO = new MemberDTO(memberId);
 
         Scrap newScrap = scrapService.createScrap(memberDTO, categoryId, request);
@@ -84,6 +86,38 @@ public class ScrapController {
         ScrapResponse.GetScrapListByCategory response = ScrapConverter.toGetScrapListByCategory(scrapPage);
 
         return new ApiResponse(new ResponseDTO(response));
+    }
+
+    /**
+     * [GET] /scraps/favorite
+     * [API-21] 즐겨찾기된 스크랩 조회
+     * @param memberId
+     * @param sort
+     * @param direction
+     * @param page
+     * @param size
+     * @return
+     */
+    @GetMapping("/favorite")
+    public ApiResponse favoriteScrapList(@RequestHeader("member-id") Long memberId,
+                                         @RequestParam(name = "sort", defaultValue = "SCRAP_DATE") @EnumValid(enumC = Sort.class) String sort,
+                                         @RequestParam(name = "direction", defaultValue = "ASC") @EnumValid(enumC = Direction.class) String direction,
+                                         @RequestParam(name = "page", defaultValue = "1") @PagingPage int page,
+                                         @RequestParam(name = "size", defaultValue = Data.PAGING_SIZE) @PagingSize int size){
+
+        MemberDTO memberDTO = new MemberDTO(memberId);
+
+        // string -> enum 변경
+        Sort sortEnum = Sort.valueOf(sort.toUpperCase());
+        Direction directionEnum = Direction.valueOf(direction.toUpperCase());
+        // 페이지네이션
+        PageRequest pageRequest = PageRequest.of(page-1, size, directionEnum, sortEnum.getName());
+
+        Page<Scrap> scrapPage = scrapService.getFavoriteScrapList(memberDTO, pageRequest);
+        ScrapResponse.GetFavoriteScrapList response = ScrapConverter.toGetFavoriteScrapList(scrapPage);
+
+        return new ApiResponse(new ResponseDTO(response));
+
     }
 
     /**

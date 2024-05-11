@@ -11,8 +11,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ScrapRepository extends JpaRepository<Scrap, Long> {
 
-    Page<Scrap> findAllByMemberAndCategoryOrderByCreatedAt(Member member, Category category, PageRequest pageRequest);
-    Page<Scrap> findAllByMemberAndCategoryOrderByTitle(Member member, Category category, PageRequest pageRequest);
-
     Page<Scrap> findAllByMemberAndCategory(Member member, Category category, PageRequest pageRequest);
+
+    Page<Scrap> findAllByMemberAndFavorite(Member member, Boolean favorite, PageRequest pageRequest);
 }
