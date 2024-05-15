@@ -6,6 +6,7 @@ import com.example.scrap.converter.ScrapConverter;
 import com.example.scrap.entity.Category;
 import com.example.scrap.entity.Member;
 import com.example.scrap.entity.Scrap;
+import com.example.scrap.entity.enums.ScrapStatus;
 import com.example.scrap.web.category.ICategoryService;
 import com.example.scrap.web.member.IMemberService;
 import com.example.scrap.web.member.MemberDTO;
@@ -64,7 +65,7 @@ public class ScrapServiceImpl implements IScrapService{
             throw new BaseException(ErrorCode.CATEGORY_MEMBER_NOT_MATCH);
         }
 
-        Page<Scrap> scrapPage = scrapRepository.findAllByMemberAndCategory(member, category, pageRequest);
+        Page<Scrap> scrapPage = scrapRepository.findAllByMemberAndCategoryAndStatus(member, category, ScrapStatus.ACTIVE, pageRequest);
 
         return scrapPage;
     }
@@ -78,7 +79,7 @@ public class ScrapServiceImpl implements IScrapService{
     public Page<Scrap> getFavoriteScrapList(MemberDTO memberDTO, PageRequest pageRequest){
         Member member = memberService.findMember(memberDTO);
 
-        return scrapRepository.findAllByMemberAndFavorite(member, true, pageRequest);
+        return scrapRepository.findAllByMemberAndFavoriteAndStatus(member, true, ScrapStatus.ACTIVE, pageRequest);
     }
 
     /**
