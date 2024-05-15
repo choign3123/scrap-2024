@@ -6,7 +6,7 @@ import com.example.scrap.converter.ScrapConverter;
 import com.example.scrap.entity.Scrap;
 import com.example.scrap.validation.annotaion.*;
 import com.example.scrap.web.baseDTO.Data;
-import com.example.scrap.web.baseDTO.Sort;
+import com.example.scrap.web.baseDTO.Sorts;
 import com.example.scrap.web.member.MemberDTO;
 import com.example.scrap.web.scrap.dto.ScrapRequest;
 import com.example.scrap.web.scrap.dto.ScrapResponse;
@@ -14,12 +14,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.data.domain.Sort.Direction;
 
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.NotBlank;
+import java.util.List;
 
 @RestController
 @RequestMapping("/scraps")
@@ -65,7 +66,7 @@ public class ScrapController {
     @GetMapping()
     public ApiResponse scrapListByCategory(@RequestHeader("member-id") Long memberId,
                                            @RequestParam("category") @ExistCategory Long categoryId,
-                                           @RequestParam(name = "sort", defaultValue = "SCRAP_DATE") @EnumValid(enumC = Sort.class) String sort,
+                                           @RequestParam(name = "sort", defaultValue = "SCRAP_DATE") @EnumValid(enumC = Sorts.class) String sort,
                                            @RequestParam(name = "direction", defaultValue = "ASC") @EnumValid(enumC = Direction.class) String direction,
                                            @RequestParam(name = "page", defaultValue = "1") @PagingPage int page,
                                            @RequestParam(name = "size", defaultValue = Data.PAGING_SIZE) @PagingSize int size){
@@ -75,11 +76,11 @@ public class ScrapController {
         log.info("sort: {}, direction: {}, page: {}, size: {}", sort, direction, page, size);
 
         // string -> enum 변경
-        Sort sortEnum = Sort.valueOf(sort.toUpperCase());
+        Sorts sortsEnum = Sorts.valueOf(sort.toUpperCase());
         Direction directionEnum = Direction.valueOf(direction.toUpperCase());
 
         // 페이지네이션
-        PageRequest pageRequest = PageRequest.of(page-1, size, directionEnum, sortEnum.getName());
+        PageRequest pageRequest = PageRequest.of(page-1, size, directionEnum, sortsEnum.getName());
 
         Page<Scrap> scrapPage = scrapService.getScrapListByCategory(memberDTO, categoryId, pageRequest);
 
@@ -100,7 +101,7 @@ public class ScrapController {
      */
     @GetMapping("/favorite")
     public ApiResponse favoriteScrapList(@RequestHeader("member-id") Long memberId,
-                                         @RequestParam(name = "sort", defaultValue = "SCRAP_DATE") @EnumValid(enumC = Sort.class) String sort,
+                                         @RequestParam(name = "sort", defaultValue = "SCRAP_DATE") @EnumValid(enumC = Sorts.class) String sort,
                                          @RequestParam(name = "direction", defaultValue = "ASC") @EnumValid(enumC = Direction.class) String direction,
                                          @RequestParam(name = "page", defaultValue = "1") @PagingPage int page,
                                          @RequestParam(name = "size", defaultValue = Data.PAGING_SIZE) @PagingSize int size){
@@ -108,10 +109,10 @@ public class ScrapController {
         MemberDTO memberDTO = new MemberDTO(memberId);
 
         // string -> enum 변경
-        Sort sortEnum = Sort.valueOf(sort.toUpperCase());
+        Sorts sortsEnum = Sorts.valueOf(sort.toUpperCase());
         Direction directionEnum = Direction.valueOf(direction.toUpperCase());
         // 페이지네이션
-        PageRequest pageRequest = PageRequest.of(page-1, size, directionEnum, sortEnum.getName());
+        PageRequest pageRequest = PageRequest.of(page-1, size, directionEnum, sortsEnum.getName());
 
         Page<Scrap> scrapPage = scrapService.getFavoriteScrapList(memberDTO, pageRequest);
         ScrapResponse.GetFavoriteScrapList response = ScrapConverter.toGetFavoriteScrapList(scrapPage);
@@ -137,4 +138,36 @@ public class ScrapController {
 
         return new ApiResponse(new ResponseDTO<>(response));
     }
+
+    /**
+     * [GET] /scraps/search/title
+     * [API-20] 스크랩 제목으로 검색-카테고리별
+     * @param memberId
+     * @param categoryId
+     * @param query
+     * @param sorts
+     * @param direction
+     * @return
+     */
+    @GetMapping("/search/title")
+    public ApiResponse scrapSearchByTitle(@RequestHeader("member-id") Long memberId,
+                                          @RequestParam("category") @ExistCategory Long categoryId,
+                                          @RequestParam("q") @NotBlank String query,
+                                          @RequestParam(name = "sort", defaultValue = "SCRAP_DATE") @EnumValid(enumC = Sorts.class) String sorts,
+                                          @RequestParam(name = "direction", defaultValue = "ASC") @EnumValid(enumC = Direction.class) String direction){
+
+        MemberDTO memberDTO = new MemberDTO(memberId);
+
+        // string -> enum 변경
+        Sorts sortsEnum = Sorts.valueOf(sorts.toUpperCase());
+        Direction directionEnum = Direction.valueOf(direction.toUpperCase());
+        // 정렬
+        Sort sortWay = Sort.by(directionEnum, sortsEnum.getName());
+
+        List<Scrap> scrapList = scrapService.findScrapByTitle(memberDTO, categoryId, query, sortWay);
+        ScrapResponse.FindScrapByTitle response = ScrapConverter.toFindScrapByTitle(scrapList);
+
+        return new ApiResponse(new ResponseDTO(response));
+    }
+
 }

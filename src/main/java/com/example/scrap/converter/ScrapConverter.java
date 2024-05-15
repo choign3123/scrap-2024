@@ -38,7 +38,8 @@ public class ScrapConverter {
     public static ScrapResponse.GetScrapListByCategory toGetScrapListByCategory(Page<Scrap> scrapPage){
         Meta meta = new Meta(scrapPage);
 
-        List<ScrapResponse.GetScrapListByCategory.ScrapDTO> scrapDTOList = scrapPage.stream().map(scrap -> {
+        List<ScrapResponse.GetScrapListByCategory.ScrapDTO> scrapDTOList = scrapPage.stream()
+                .map(scrap -> {
                     return ScrapResponse.GetScrapListByCategory.ScrapDTO.builder()
                             .scrapId(scrap.getId())
                             .title(scrap.getTitle())
@@ -47,7 +48,8 @@ public class ScrapConverter {
                             .isFavorite(scrap.getFavorite())
                             .scrapDate(scrap.getCreatedAt().toLocalDate())
                             .build();
-                }).toList();
+                })
+                .toList();
 
         return ScrapResponse.GetScrapListByCategory.builder()
                 .meta(meta)
@@ -70,8 +72,8 @@ public class ScrapConverter {
     public static ScrapResponse.GetFavoriteScrapList toGetFavoriteScrapList(Page<Scrap> scrapPage){
         Meta meta = new Meta(scrapPage);
 
-        List<ScrapResponse.GetFavoriteScrapList.ScrapDTO> scrapDTOList = scrapPage.stream().map(
-                scrap -> {
+        List<ScrapResponse.GetFavoriteScrapList.ScrapDTO> scrapDTOList = scrapPage.stream()
+                .map( scrap -> {
                     return ScrapResponse.GetFavoriteScrapList.ScrapDTO.builder()
                             .categoryTitle(scrap.getCategory().getTitle())
                             .scrapId(scrap.getId())
@@ -80,10 +82,30 @@ public class ScrapConverter {
                             .imageURL(scrap.getImageURL())
                             .scrapDate(scrap.getCreatedAt().toLocalDate())
                             .build();
-                }).toList();
+                })
+                .toList();
 
         return ScrapResponse.GetFavoriteScrapList.builder()
                 .meta(meta)
+                .scrapDTOList(scrapDTOList)
+                .build();
+    }
+
+    public static ScrapResponse.FindScrapByTitle toFindScrapByTitle(List<Scrap> scrapList){
+        List<ScrapResponse.FindScrapByTitle.ScrapDTO> scrapDTOList = scrapList.stream()
+                .map( scrap -> {
+                    return ScrapResponse.FindScrapByTitle.ScrapDTO.builder()
+                            .scrapId(scrap.getId())
+                            .title(scrap.getTitle())
+                            .scrapURL(scrap.getScrapURL())
+                            .imageURL(scrap.getImageURL())
+                            .isFavorite(scrap.getFavorite())
+                            .scrapDate(scrap.getCreatedAt().toLocalDate())
+                            .build();
+                })
+                .toList();
+
+        return ScrapResponse.FindScrapByTitle.builder()
                 .scrapDTOList(scrapDTOList)
                 .build();
     }
