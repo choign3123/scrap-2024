@@ -8,16 +8,17 @@ import javax.validation.ConstraintValidatorContext;
 
 public class EnumValidValidator implements ConstraintValidator<EnumValid, String> {
 
-    private Enum<?>[] enums;
+    private Class<? extends Enum<?>> enumType;
 
     @Override
     public void initialize(EnumValid constraintAnnotation) {
         ConstraintValidator.super.initialize(constraintAnnotation);
-        enums = constraintAnnotation.enumC().getEnumConstants();
+        enumType = constraintAnnotation.enumC();
     }
 
     @Override
     public boolean isValid(String value, ConstraintValidatorContext context) {
+        Enum<?>[] enums = enumType.getEnumConstants();
         value = value.toUpperCase();
 
         if(enums == null){

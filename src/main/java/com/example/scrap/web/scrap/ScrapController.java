@@ -5,7 +5,10 @@ import com.example.scrap.base.response.ResponseDTO;
 import com.example.scrap.converter.ScrapConverter;
 import com.example.scrap.entity.Scrap;
 import com.example.scrap.validation.annotaion.*;
+import com.example.scrap.validation.validator.EnumValidValidator;
+import com.example.scrap.validation.validator.ExistCategoriesValidator;
 import com.example.scrap.web.baseDTO.Data;
+import com.example.scrap.web.baseDTO.PressSelectionType;
 import com.example.scrap.web.baseDTO.Sorts;
 import com.example.scrap.web.member.MemberDTO;
 import com.example.scrap.web.scrap.dto.ScrapRequest;
@@ -183,6 +186,34 @@ public class ScrapController {
         MemberDTO memberDTO = new MemberDTO(memberId);
 
         scrapService.deleteScrap(memberDTO, scrapId);
+
+        return new ApiResponse(new ResponseDTO<Void>());
+    }
+
+    @PatchMapping("/trash")
+    public ApiResponse scrapListRemove(@RequestHeader("member-id") Long memberId, @RequestBody @Validated ScrapRequest.DeleteScrapList request,
+                                       @RequestParam(name = "all", defaultValue = "false", required = false) boolean isAllDelete,
+                                       @RequestParam(name = "type", required = false) @EnumValid(enumC = PressSelectionType.class) String pressSelectionType,
+                                       @RequestParam(name = "category", required = false) @ExistCategory Long categoryId){
+
+        MemberDTO memberDTO = new MemberDTO(memberId);
+
+        // string -> enum
+        PressSelectionType pressSelectionTypeEnum;
+        if(isAllDelete){
+            // 프레스 선택 타입 누락
+            if(pressSelectionType == null){
+                // [TODO] 에러 발생
+            }
+            pressSelectionTypeEnum = PressSelectionType.valueOf(pressSelectionType);
+
+            // 카테고리 누락
+            boolean categoryIdNeed = (pressSelectionTypeEnum == PressSelectionType.CATEGORY);
+            boolean categoryIdMissing = categoryIdNeed && categoryId == null;
+            if(categoryIdMissing){
+                // [TODO] 에러 발생
+            }
+        }
 
         return new ApiResponse(new ResponseDTO<Void>());
     }
