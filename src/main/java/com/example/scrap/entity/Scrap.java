@@ -76,6 +76,14 @@ public class Scrap extends BaseEntity {
     }
 
     /**
+     * 스크랩 유효성 확인
+     * @return if status is ACTIVE return true, else return false.
+     */
+    public boolean isAvailable(){
+        return status == ScrapStatus.ACTIVE;
+    }
+
+    /**
      * 스크랩 휴지통 보내기
      */
     public void toTrash(){

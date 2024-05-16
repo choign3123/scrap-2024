@@ -18,9 +18,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.data.domain.Sort.Direction;
 
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
-
 @RestController
 @RequestMapping("/scraps")
 @Validated
@@ -128,7 +125,7 @@ public class ScrapController {
      * @return
      */
     @GetMapping("/{scrap-id}")
-    public ApiResponse scrapDetails(@RequestHeader("member-id") Long memberId, @PathVariable("scrap-id") @ExistScrap Long scrapId){
+    public ApiResponse scrapDetails(@RequestHeader("member-id") Long memberId, @PathVariable("scrap-id") @ExistAvailableScrap Long scrapId){
         MemberDTO memberDTO = new MemberDTO(memberId);
 
         Scrap scrap = scrapService.getScrapDetails(memberDTO, scrapId);
