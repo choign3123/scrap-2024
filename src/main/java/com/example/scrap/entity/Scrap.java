@@ -87,7 +87,6 @@ public class Scrap extends BaseEntity {
      * 스크랩 휴지통 보내기
      */
     public void toTrash(){
-        this.category = null;
         this.status = ScrapStatus.TRASH;
     }
 

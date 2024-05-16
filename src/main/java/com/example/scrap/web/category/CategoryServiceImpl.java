@@ -77,19 +77,18 @@ public class CategoryServiceImpl implements ICategoryService{
             throw new BaseException(ErrorCode.NOT_ALLOW_ACCESS_DEFAULT_CATEGORY);
         }
 
-        // 전부다 삭제하는지, 보존해두는지 확인
+        // [TODO] 리스트를 복제해서 for 문을 돌리는것 외에 다른 방법은 없는지 고민해봐야 될 것 같음. 이렇게 복제된 리스트를 사용하지 않으면, 요소 삭제로 인해 for 문을 다 돌지 못하고 끝나버림.
+        // 모든 스크랩은 기본 카테고리로 이동
+        Category defaultCategory = findDefaultCategory(member);
+        List<Scrap> scrapListCopy = new ArrayList<>(category.getScrapList());
+        for(Scrap scrap : scrapListCopy){
+            scrap.moveCategory(defaultCategory);
+        }
+
+        // 스크랩을 삭제하기로 결정한 경우
         if(allowDeleteScrap){
             for(Scrap scrap : category.getScrapList()){
                 scrap.toTrash();
-            }
-        }
-        else{
-            Category defaultCategory = findDefaultCategory(member);
-            // [TODO] 리스트를 복제해서 for 문을 돌리는것 외에 다른 방법은 없는지 고민해봐야 될 것 같음.
-            // 이렇게 복제된 리스트를 사용하지 않으면, 요소 삭제로 인해 for 문을 다 돌지 못하고 끝나버림.
-            List<Scrap> scrapListCopy = new ArrayList<>(category.getScrapList());
-            for(Scrap scrap : scrapListCopy){
-                scrap.moveCategory(defaultCategory);
             }
         }
 

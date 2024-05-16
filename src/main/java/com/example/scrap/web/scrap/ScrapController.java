@@ -170,4 +170,20 @@ public class ScrapController {
         return new ApiResponse(new ResponseDTO(response));
     }
 
+    /**
+     * [PATCH] /scraps/{scrap-id}/trash
+     * [API-13] 스크랩 삭제 (단건)
+     * @param memberId
+     * @param scrapId
+     * @return
+     */
+    @PatchMapping("/{scrap-id}/trash")
+    public ApiResponse scrapRemove(@RequestHeader("member-id") Long memberId, @PathVariable("scrap-id") @ExistAvailableScrap Long scrapId){
+
+        MemberDTO memberDTO = new MemberDTO(memberId);
+
+        scrapService.deleteScrap(memberDTO, scrapId);
+
+        return new ApiResponse(new ResponseDTO<Void>());
+    }
 }
