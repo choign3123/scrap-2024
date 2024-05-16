@@ -34,4 +34,8 @@ public class ScrapSpecification {
     public static Specification<Scrap> isAvailable(){
         return (root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("status"), ScrapStatus.ACTIVE);
     }
+
+    public static Specification<Scrap> isFavorite(){
+        return (root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("favorite"), true);
+    }
 }

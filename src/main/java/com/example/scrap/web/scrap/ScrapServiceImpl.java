@@ -84,7 +84,12 @@ public class ScrapServiceImpl implements IScrapService{
     public Page<Scrap> getFavoriteScrapList(MemberDTO memberDTO, PageRequest pageRequest){
         Member member = memberService.findMember(memberDTO);
 
-        return scrapRepository.findAllByMemberAndFavoriteAndStatus(member, true, ScrapStatus.ACTIVE, pageRequest);
+        Specification<Scrap> spec = Specification.where(ScrapSpecification.equalMember(member))
+                .and(ScrapSpecification.isFavorite())
+                .and(ScrapSpecification.isAvailable());
+
+//        return scrapRepository.findAllByMemberAndFavoriteAndStatus(member, true, ScrapStatus.ACTIVE, pageRequest);
+        return scrapRepository.findAll(spec, pageRequest);
     }
 
     /**
