@@ -14,5 +14,4 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ScrapRepository extends JpaRepository<Scrap, Long>, JpaSpecificationExecutor<Scrap> {
 
-    Page<Scrap> findAllByMemberAndFavoriteAndStatus(Member member, Boolean favorite, ScrapStatus status, PageRequest pageRequest);
 }

@@ -68,9 +68,9 @@ public class ScrapServiceImpl implements IScrapService{
         }
 
 //        Page<Scrap> scrapPage = scrapRepository.findAllByMemberAndCategoryAndStatus(member, category, ScrapStatus.ACTIVE, pageRequest);
-        Specification<Scrap> spec = Specification.where(ScrapSpecification.equalMember(member))
-                .and(ScrapSpecification.equalCategory(category))
-                .and(ScrapSpecification.isAvailable());
+        Specification<Scrap> spec = Specification.where(ScrapSpecification.isAvailable())
+                .and(ScrapSpecification.equalMember(member))
+                .and(ScrapSpecification.equalCategory(category));
 
         return  scrapRepository.findAll(spec, pageRequest);
     }
@@ -84,9 +84,9 @@ public class ScrapServiceImpl implements IScrapService{
     public Page<Scrap> getFavoriteScrapList(MemberDTO memberDTO, PageRequest pageRequest){
         Member member = memberService.findMember(memberDTO);
 
-        Specification<Scrap> spec = Specification.where(ScrapSpecification.equalMember(member))
-                .and(ScrapSpecification.isFavorite())
-                .and(ScrapSpecification.isAvailable());
+        Specification<Scrap> spec = Specification.where(ScrapSpecification.isAvailable())
+                .and(ScrapSpecification.equalMember(member))
+                .and(ScrapSpecification.isFavorite());
 
 //        return scrapRepository.findAllByMemberAndFavoriteAndStatus(member, true, ScrapStatus.ACTIVE, pageRequest);
         return scrapRepository.findAll(spec, pageRequest);
