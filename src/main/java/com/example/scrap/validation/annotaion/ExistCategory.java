@@ -23,4 +23,5 @@ public @interface ExistCategory {
 
     Class<? extends Payload>[] payload() default { };
 
+    boolean required() default true;
 }

@@ -27,4 +27,6 @@ public @interface EnumValid {
     Class<? extends Payload>[] payload() default { };
 
     Class<? extends java.lang.Enum<?>> enumC();
+
+    boolean required() default true;
 }
