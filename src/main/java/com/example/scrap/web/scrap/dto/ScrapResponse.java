@@ -2,6 +2,7 @@ package com.example.scrap.web.scrap.dto;
 
 import com.example.scrap.web.baseDTO.Meta;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -94,6 +95,8 @@ public class ScrapResponse {
 
         @JsonProperty("scraps")
         private List<ScrapDTO> scrapDTOList;
+
+        private int total;
 
         @Builder
         @Getter

@@ -107,6 +107,7 @@ public class ScrapConverter {
 
         return ScrapResponse.FindScrapByTitle.builder()
                 .scrapDTOList(scrapDTOList)
+                .total(scrapList.size())
                 .build();
     }
 }
