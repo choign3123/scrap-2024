@@ -190,22 +190,32 @@ public class ScrapController {
         return new ApiResponse(new ResponseDTO<Void>());
     }
 
+    /**
+     * [PATCH] /scraps/trash
+     * [API-18] 스크랩 삭제 (목록)
+     * @param memberId
+     * @param request
+     * @param isAllDelete
+     * @param pressSelectionType
+     * @param categoryId
+     * @return
+     */
     @PatchMapping("/trash")
     public ApiResponse scrapListRemove(@RequestHeader("member-id") Long memberId, @RequestBody @Validated ScrapRequest.DeleteScrapList request,
                                        @RequestParam(name = "all", defaultValue = "false", required = false) boolean isAllDelete,
-                                       @RequestParam(name = "type", required = false) @EnumValid(enumC = PressSelectionType.class) String pressSelectionType,
-                                       @RequestParam(name = "category", required = false) @ExistCategory Long categoryId){
+                                       @RequestParam(name = "type", required = false) @EnumValid(enumC = PressSelectionType.class, required = false) String pressSelectionType,
+                                       @RequestParam(name = "category", required = false) @ExistCategory(required = false) Long categoryId){
 
         MemberDTO memberDTO = new MemberDTO(memberId);
 
         // string -> enum
-        PressSelectionType pressSelectionTypeEnum;
+        PressSelectionType pressSelectionTypeEnum = null;
         if(isAllDelete){
             // 프레스 선택 타입 누락
             if(pressSelectionType == null){
                 // [TODO] 에러 발생
             }
-            pressSelectionTypeEnum = PressSelectionType.valueOf(pressSelectionType);
+            pressSelectionTypeEnum = PressSelectionType.valueOf(pressSelectionType.toUpperCase());
 
             // 카테고리 누락
             boolean categoryIdNeed = (pressSelectionTypeEnum == PressSelectionType.CATEGORY);
@@ -214,6 +224,8 @@ public class ScrapController {
                 // [TODO] 에러 발생
             }
         }
+
+        scrapService.deleteScrapList(memberDTO, isAllDelete, pressSelectionTypeEnum, categoryId, request);
 
         return new ApiResponse(new ResponseDTO<Void>());
     }

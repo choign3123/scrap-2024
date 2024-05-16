@@ -156,6 +156,14 @@ public class ScrapServiceImpl implements IScrapService{
         scrap.toTrash();
     }
 
+    /**
+     * 스크랩 삭제(목록)
+     * @param memberDTO
+     * @param isAllDelete
+     * @param pressSelectionType
+     * @param categoryId
+     * @param request
+     */
     @Transactional
     public void deleteScrapList(MemberDTO memberDTO, boolean isAllDelete, PressSelectionType pressSelectionType, Long categoryId, ScrapRequest.DeleteScrapList request){
         Member member = memberService.findMember(memberDTO);
@@ -172,7 +180,7 @@ public class ScrapServiceImpl implements IScrapService{
                     Category category = categoryService.findCategory(categoryId);
                     spec = spec.and(ScrapSpecification.equalCategory(category));
                 }
-                case FAVORTIE -> {
+                case FAVORITE -> {
                     spec = spec.and(ScrapSpecification.isFavorite());
                 }
             }

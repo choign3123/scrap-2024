@@ -1,11 +1,13 @@
 package com.example.scrap.web.scrap;
 
 import com.example.scrap.entity.Scrap;
+import com.example.scrap.web.baseDTO.PressSelectionType;
 import com.example.scrap.web.member.MemberDTO;
 import com.example.scrap.web.scrap.dto.ScrapRequest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -61,4 +63,14 @@ public interface IScrapService {
      * @param scrapId
      */
     public void deleteScrap(MemberDTO memberDTO, Long scrapId);
+
+    /**
+     * 스크랩 삭제(목록)
+     * @param memberDTO
+     * @param isAllDelete
+     * @param pressSelectionType
+     * @param categoryId
+     * @param request
+     */
+    public void deleteScrapList(MemberDTO memberDTO, boolean isAllDelete, PressSelectionType pressSelectionType, Long categoryId, ScrapRequest.DeleteScrapList request);
 }
