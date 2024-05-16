@@ -31,6 +31,10 @@ public class ScrapSpecification {
         return (root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("category"), category);
     }
 
+    public static Specification<Scrap> containingTitle(String title){
+        return (root, query, criteriaBuilder) -> criteriaBuilder.like(root.get("title"), "%" + title + "%");
+    }
+
     public static Specification<Scrap> isAvailable(){
         return (root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("status"), ScrapStatus.ACTIVE);
     }

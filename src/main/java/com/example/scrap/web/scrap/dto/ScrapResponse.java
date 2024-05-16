@@ -84,4 +84,26 @@ public class ScrapResponse {
         private String memo;
         private Boolean isFavorite;
     }
+
+    /**
+     * 스크랩 제목으로 검색 - 카테고리별
+     */
+    @Builder
+    @Getter
+    public static class FindScrapByTitle {
+
+        @JsonProperty("scraps")
+        private List<ScrapDTO> scrapDTOList;
+
+        @Builder
+        @Getter
+        public static class ScrapDTO {
+            private Long scrapId;
+            private String title;
+            private String scrapURL;
+            private String imageURL;
+            private Boolean isFavorite;
+            private LocalDate scrapDate;
+        }
+    }
 }

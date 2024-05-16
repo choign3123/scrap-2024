@@ -1,12 +1,13 @@
 package com.example.scrap.web.scrap;
 
 import com.example.scrap.entity.Scrap;
-import com.example.scrap.web.baseDTO.Sort;
 import com.example.scrap.web.member.MemberDTO;
 import com.example.scrap.web.scrap.dto.ScrapRequest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.data.domain.Sort;
+
+import java.util.List;
 
 public interface IScrapService {
 
@@ -43,4 +44,14 @@ public interface IScrapService {
      * @return
      */
     public Scrap getScrapDetails(MemberDTO memberDTO, Long scrapId);
+
+    /**
+     * 스크랩 제목으로 검색 - 카테고리별
+     * @param memberDTO
+     * @param categoryId
+     * @param query
+     * @param sort
+     * @return
+     */
+    public List<Scrap> findScrapByTitle(MemberDTO memberDTO, Long categoryId, String query, Sort sort);
 }

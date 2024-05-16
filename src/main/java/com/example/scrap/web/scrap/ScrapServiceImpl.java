@@ -14,9 +14,12 @@ import com.example.scrap.web.scrap.dto.ScrapRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 
 @Service
@@ -107,6 +110,31 @@ public class ScrapServiceImpl implements IScrapService{
         }
 
         return scrap;
+    }
+
+    /**
+     * 스크랩 제목으로 검색 - 카테고리별
+     * @param memberDTO
+     * @param categoryId
+     * @param query
+     * @param sort
+     * @return
+     */
+    public List<Scrap> findScrapByTitle(MemberDTO memberDTO, Long categoryId, String query, Sort sort){
+        Member member = memberService.findMember(memberDTO);
+        Category category = categoryService.findCategory(categoryId);
+
+        if(category.isIllegalMember(member)){
+            throw new BaseException(ErrorCode.CATEGORY_MEMBER_NOT_MATCH);
+        }
+
+        Specification<Scrap> spec = Specification.where(ScrapSpecification.isAvailable())
+                .and(ScrapSpecification.equalMember(member))
+                .and(ScrapSpecification.equalCategory(category))
+                .and(ScrapSpecification.containingTitle(query));
+
+//        return scrapRepository.findAllByMemberAndCategoryAndTitleContainingAndStatus(member, category, query, ScrapStatus.ACTIVE, sort);
+        return scrapRepository.findAll(spec, sort);
     }
 
     public Scrap findScrap(Long scrapId){

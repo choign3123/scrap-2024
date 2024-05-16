@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public enum Sort {
+public enum Sorts {
 
     TITLE("title"),
     SCRAP_DATE("createdAt");
