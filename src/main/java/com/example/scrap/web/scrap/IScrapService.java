@@ -54,4 +54,11 @@ public interface IScrapService {
      * @return
      */
     public List<Scrap> findScrapByTitle(MemberDTO memberDTO, Long categoryId, String query, Sort sort);
+
+    /**
+     * 스크랩 삭제(단건)
+     * @param memberDTO
+     * @param scrapId
+     */
+    public void deleteScrap(MemberDTO memberDTO, Long scrapId);
 }

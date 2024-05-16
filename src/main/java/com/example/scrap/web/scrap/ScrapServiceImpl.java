@@ -137,6 +137,23 @@ public class ScrapServiceImpl implements IScrapService{
         return scrapRepository.findAll(spec, sort);
     }
 
+    /**
+     * 스크랩 삭제(단건)
+     * @param memberDTO
+     * @param scrapId
+     */
+    @Transactional
+    public void deleteScrap(MemberDTO memberDTO, Long scrapId){
+        Member member = memberService.findMember(memberDTO);
+        Scrap scrap = findScrap(scrapId);
+
+        if(scrap.isIllegalMember(member)){
+            throw new BaseException(ErrorCode.SCRAP_MEMBER_NOT_MATCH);
+        }
+
+        scrap.toTrash();
+    }
+
     public Scrap findScrap(Long scrapId){
         return scrapRepository.findById(scrapId).get();
     }
