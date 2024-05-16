@@ -6,6 +6,7 @@ import com.example.scrap.converter.ScrapConverter;
 import com.example.scrap.entity.Category;
 import com.example.scrap.entity.Member;
 import com.example.scrap.entity.Scrap;
+import com.example.scrap.entity.enums.ScrapStatus;
 import com.example.scrap.specification.ScrapSpecification;
 import com.example.scrap.web.category.ICategoryService;
 import com.example.scrap.web.member.IMemberService;
@@ -128,7 +129,13 @@ public class ScrapServiceImpl implements IScrapService{
             throw new BaseException(ErrorCode.CATEGORY_MEMBER_NOT_MATCH);
         }
 
-        return scrapRepository.findAllByMemberAndCategoryAndTitleContainingAndStatus(member, category, query, ScrapStatus.ACTIVE, sort);
+        Specification<Scrap> spec = Specification.where(ScrapSpecification.isAvailable())
+                .and(ScrapSpecification.equalMember(member))
+                .and(ScrapSpecification.equalCategory(category))
+                .and(ScrapSpecification.containingTitle(query));
+
+//        return scrapRepository.findAllByMemberAndCategoryAndTitleContainingAndStatus(member, category, query, ScrapStatus.ACTIVE, sort);
+        return scrapRepository.findAll(spec, sort);
     }
 
     public Scrap findScrap(Long scrapId){
