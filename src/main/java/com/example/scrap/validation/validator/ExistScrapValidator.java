@@ -19,8 +19,10 @@ public class ExistScrapValidator implements ConstraintValidator<ExistScrap, Long
     @Override
     public boolean isValid(Long value, ConstraintValidatorContext context) {
 
-        boolean isValid = scrapRepository.existsById(value);
+        if(value == null || !scrapRepository.existsById(value)){
+            return false;
+        }
 
-        return isValid;
+        return true;
     }
 }
