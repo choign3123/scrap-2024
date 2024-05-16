@@ -129,7 +129,7 @@ public class ScrapController {
      * @return
      */
     @GetMapping("/{scrap-id}")
-    public ApiResponse scrapDetails(@RequestHeader("member-id") Long memberId, @PathVariable("scrap-id") @ExistScrap Long scrapId){
+    public ApiResponse scrapDetails(@RequestHeader("member-id") Long memberId, @PathVariable("scrap-id") @ExistAvailableScrap Long scrapId){
         MemberDTO memberDTO = new MemberDTO(memberId);
 
         Scrap scrap = scrapService.getScrapDetails(memberDTO, scrapId);

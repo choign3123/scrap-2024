@@ -20,7 +20,7 @@ public class ExistCategoriesValidator implements ConstraintValidator<ExistCatego
     public boolean isValid(List<Long> value, ConstraintValidatorContext context) {
 
         for(Long categoryId : value){
-            if(!categoryRepository.existsById(categoryId)){
+            if(categoryId == null || !categoryRepository.existsById(categoryId)){
                 return false;
             }
         }
