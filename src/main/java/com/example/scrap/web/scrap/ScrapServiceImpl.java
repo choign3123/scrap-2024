@@ -7,6 +7,7 @@ import com.example.scrap.entity.Category;
 import com.example.scrap.entity.Member;
 import com.example.scrap.entity.Scrap;
 import com.example.scrap.entity.enums.ScrapStatus;
+import com.example.scrap.specification.ScrapSpecification;
 import com.example.scrap.web.category.ICategoryService;
 import com.example.scrap.web.member.IMemberService;
 import com.example.scrap.web.member.MemberDTO;
@@ -14,6 +15,7 @@ import com.example.scrap.web.scrap.dto.ScrapRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -65,9 +67,12 @@ public class ScrapServiceImpl implements IScrapService{
             throw new BaseException(ErrorCode.CATEGORY_MEMBER_NOT_MATCH);
         }
 
-        Page<Scrap> scrapPage = scrapRepository.findAllByMemberAndCategoryAndStatus(member, category, ScrapStatus.ACTIVE, pageRequest);
+//        Page<Scrap> scrapPage = scrapRepository.findAllByMemberAndCategoryAndStatus(member, category, ScrapStatus.ACTIVE, pageRequest);
+        Specification<Scrap> spec = Specification.where(ScrapSpecification.isAvailable())
+                .and(ScrapSpecification.equalMember(member))
+                .and(ScrapSpecification.equalCategory(category));
 
-        return scrapPage;
+        return  scrapRepository.findAll(spec, pageRequest);
     }
 
     /**
@@ -79,7 +84,12 @@ public class ScrapServiceImpl implements IScrapService{
     public Page<Scrap> getFavoriteScrapList(MemberDTO memberDTO, PageRequest pageRequest){
         Member member = memberService.findMember(memberDTO);
 
-        return scrapRepository.findAllByMemberAndFavoriteAndStatus(member, true, ScrapStatus.ACTIVE, pageRequest);
+        Specification<Scrap> spec = Specification.where(ScrapSpecification.isAvailable())
+                .and(ScrapSpecification.equalMember(member))
+                .and(ScrapSpecification.isFavorite());
+
+//        return scrapRepository.findAllByMemberAndFavoriteAndStatus(member, true, ScrapStatus.ACTIVE, pageRequest);
+        return scrapRepository.findAll(spec, pageRequest);
     }
 
     /**

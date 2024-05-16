@@ -6,13 +6,12 @@ import com.example.scrap.entity.Scrap;
 import com.example.scrap.entity.enums.ScrapStatus;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface ScrapRepository extends JpaRepository<Scrap, Long> {
+public interface ScrapRepository extends JpaRepository<Scrap, Long>, JpaSpecificationExecutor<Scrap> {
 
-    Page<Scrap> findAllByMemberAndCategoryAndStatus(Member member, Category category, ScrapStatus status, PageRequest pageRequest);
-
-    Page<Scrap> findAllByMemberAndFavoriteAndStatus(Member member, Boolean favorite, ScrapStatus status, PageRequest pageRequest);
 }
