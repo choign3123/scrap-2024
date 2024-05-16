@@ -6,7 +6,6 @@ import com.example.scrap.converter.ScrapConverter;
 import com.example.scrap.entity.Category;
 import com.example.scrap.entity.Member;
 import com.example.scrap.entity.Scrap;
-import com.example.scrap.entity.enums.ScrapStatus;
 import com.example.scrap.specification.ScrapSpecification;
 import com.example.scrap.web.category.ICategoryService;
 import com.example.scrap.web.member.IMemberService;
