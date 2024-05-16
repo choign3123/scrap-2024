@@ -13,9 +13,21 @@ import javax.validation.ConstraintValidatorContext;
 public class ExistCategoryValidator implements ConstraintValidator<ExistCategory, Long> {
 
     private final CategoryRepository categoryRepository;
+    private boolean required;
+
+    @Override
+    public void initialize(ExistCategory constraintAnnotation) {
+        ConstraintValidator.super.initialize(constraintAnnotation);
+        this.required = constraintAnnotation.required();
+    }
 
     @Override
     public boolean isValid(Long value, ConstraintValidatorContext context) {
+
+        boolean nullable = !required && value == null;
+        if(nullable){
+            return true;
+        }
 
         if(value == null || !categoryRepository.existsById(value)){
             return false;
