@@ -2,6 +2,7 @@ package com.example.scrap.web.scrap;
 
 import com.example.scrap.base.code.ErrorCode;
 import com.example.scrap.base.exception.BaseException;
+import com.example.scrap.base.exception.ValidationException;
 import com.example.scrap.converter.ScrapConverter;
 import com.example.scrap.entity.Category;
 import com.example.scrap.entity.Member;
@@ -189,6 +190,11 @@ public class ScrapServiceImpl implements IScrapService{
         }
         // 요청된 스크랩만 삭제
         else{
+            // 빈 리스트인 경우
+            if(request.getScrapIdList().size() == 0){
+                throw new ValidationException("scraps", "적어도 하나 이상의 스크랩을 포함하여야 됩니다.");
+            }
+
             for(Long scrapId : request.getScrapIdList()){
                 Scrap deleteScrap = findScrap(scrapId);
 
