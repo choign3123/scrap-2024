@@ -179,6 +179,9 @@ public class ScrapServiceImpl implements IScrapService{
             switch (pressSelectionType){
                 case CATEGORY -> {
                     Category category = categoryService.findCategory(categoryId);
+                    if(category.isIllegalMember(member)){
+                        throw new BaseException(ErrorCode.SCRAP_MEMBER_NOT_MATCH);
+                    }
                     spec = spec.and(ScrapSpecification.equalCategory(category));
                 }
                 case FAVORITE -> {
