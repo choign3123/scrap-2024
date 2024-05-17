@@ -53,4 +53,11 @@ public class GlobalExceptionHandler {
         ResponseDTO<ValidErrorResponseDTO> responseDTO = new ResponseDTO<>(ErrorConverter.toValidErrorResponseDTO(cv), ErrorCode._BAD_REQUEST);
         return new ApiResponse(responseDTO);
     }
+
+    @ExceptionHandler(ValidationException.class)
+    protected ApiResponse handleValidationException(ValidationException e){
+
+        ResponseDTO<ValidErrorResponseDTO> responseDTO = new ResponseDTO<>(ErrorConverter.toValidErrorResponseDTO(e), e.getErrorCode());
+        return new ApiResponse(responseDTO);
+    }
 }

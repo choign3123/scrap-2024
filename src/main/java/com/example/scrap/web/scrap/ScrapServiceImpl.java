@@ -2,11 +2,13 @@ package com.example.scrap.web.scrap;
 
 import com.example.scrap.base.code.ErrorCode;
 import com.example.scrap.base.exception.BaseException;
+import com.example.scrap.base.exception.ValidationException;
 import com.example.scrap.converter.ScrapConverter;
 import com.example.scrap.entity.Category;
 import com.example.scrap.entity.Member;
 import com.example.scrap.entity.Scrap;
 import com.example.scrap.specification.ScrapSpecification;
+import com.example.scrap.web.baseDTO.PressSelectionType;
 import com.example.scrap.web.category.ICategoryService;
 import com.example.scrap.web.member.IMemberService;
 import com.example.scrap.web.member.MemberDTO;
@@ -19,6 +21,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -152,6 +155,63 @@ public class ScrapServiceImpl implements IScrapService{
         }
 
         scrap.toTrash();
+    }
+
+    /**
+     * 스크랩 삭제(목록)
+     * @param memberDTO
+     * @param isAllDelete
+     * @param pressSelectionType
+     * @param categoryId
+     * @param request
+     */
+    @Transactional
+    public void deleteScrapList(MemberDTO memberDTO, boolean isAllDelete, PressSelectionType pressSelectionType, Long categoryId, ScrapRequest.DeleteScrapList request){
+        Member member = memberService.findMember(memberDTO);
+        List<Scrap> deleteScrapList = new ArrayList<>();
+
+        // 모든 스크랩 삭제
+        if(isAllDelete){
+            Specification<Scrap> spec = Specification.where(ScrapSpecification.isAvailable())
+                    .and(ScrapSpecification.equalMember(member));
+
+            // 어떤 프레스 타입인지
+            switch (pressSelectionType){
+                case CATEGORY -> {
+                    Category category = categoryService.findCategory(categoryId);
+                    if(category.isIllegalMember(member)){
+                        throw new BaseException(ErrorCode.SCRAP_MEMBER_NOT_MATCH);
+                    }
+                    spec = spec.and(ScrapSpecification.equalCategory(category));
+                }
+                case FAVORITE -> {
+                    spec = spec.and(ScrapSpecification.isFavorite());
+                }
+            }
+
+            deleteScrapList = scrapRepository.findAll(spec);
+        }
+        // 요청된 스크랩만 삭제
+        else{
+            // 빈 리스트인 경우
+            if(request.getScrapIdList().size() == 0){
+                throw new ValidationException("scraps", "적어도 하나 이상의 스크랩을 포함하여야 됩니다.");
+            }
+
+            for(Long scrapId : request.getScrapIdList()){
+                Scrap deleteScrap = findScrap(scrapId);
+
+                if(deleteScrap.isIllegalMember(member)){
+                    throw new BaseException(ErrorCode.SCRAP_MEMBER_NOT_MATCH);
+                }
+
+                deleteScrapList.add(deleteScrap);
+            }
+        }
+
+        for(Scrap scrap : deleteScrapList){
+            scrap.toTrash();
+        }
     }
 
     public Scrap findScrap(Long scrapId){

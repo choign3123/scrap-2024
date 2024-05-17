@@ -1,11 +1,15 @@
 package com.example.scrap.web.scrap;
 
+import com.example.scrap.base.exception.ValidationException;
 import com.example.scrap.base.response.ApiResponse;
 import com.example.scrap.base.response.ResponseDTO;
 import com.example.scrap.converter.ScrapConverter;
 import com.example.scrap.entity.Scrap;
 import com.example.scrap.validation.annotaion.*;
+import com.example.scrap.validation.validator.EnumValidValidator;
+import com.example.scrap.validation.validator.ExistCategoriesValidator;
 import com.example.scrap.web.baseDTO.Data;
+import com.example.scrap.web.baseDTO.PressSelectionType;
 import com.example.scrap.web.baseDTO.Sorts;
 import com.example.scrap.web.member.MemberDTO;
 import com.example.scrap.web.scrap.dto.ScrapRequest;
@@ -183,6 +187,46 @@ public class ScrapController {
         MemberDTO memberDTO = new MemberDTO(memberId);
 
         scrapService.deleteScrap(memberDTO, scrapId);
+
+        return new ApiResponse(new ResponseDTO<Void>());
+    }
+
+    /**
+     * [PATCH] /scraps/trash
+     * [API-18] 스크랩 삭제 (목록)
+     * @param memberId
+     * @param request
+     * @param isAllDelete
+     * @param pressSelectionType
+     * @param categoryId
+     * @return
+     */
+    @PatchMapping("/trash")
+    public ApiResponse scrapListRemove(@RequestHeader("member-id") Long memberId, @RequestBody @Validated ScrapRequest.DeleteScrapList request,
+                                       @RequestParam(name = "all", defaultValue = "false", required = false) boolean isAllDelete,
+                                       @RequestParam(name = "type", required = false) @EnumValid(enumC = PressSelectionType.class, required = false) String pressSelectionType,
+                                       @RequestParam(name = "category", required = false) @ExistCategory(required = false) Long categoryId){
+
+        MemberDTO memberDTO = new MemberDTO(memberId);
+
+        // string -> enum
+        PressSelectionType pressSelectionTypeEnum = null;
+        if(isAllDelete){
+            // 프레스 선택 타입 누락
+            if(pressSelectionType == null){
+                throw new ValidationException("type", "모두 삭제일 시, 필수 입력입니다.");
+            }
+            pressSelectionTypeEnum = PressSelectionType.valueOf(pressSelectionType.toUpperCase());
+
+            // 카테고리 누락
+            boolean categoryIdNeed = (pressSelectionTypeEnum == PressSelectionType.CATEGORY);
+            boolean categoryIdMissing = categoryIdNeed && categoryId == null;
+            if(categoryIdMissing){
+                throw new ValidationException("category", "CATEGORY 타입일 시, 필수 입력입니다.");
+            }
+        }
+
+        scrapService.deleteScrapList(memberDTO, isAllDelete, pressSelectionTypeEnum, categoryId, request);
 
         return new ApiResponse(new ResponseDTO<Void>());
     }

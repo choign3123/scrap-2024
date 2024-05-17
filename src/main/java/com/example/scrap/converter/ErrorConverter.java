@@ -3,6 +3,7 @@ package com.example.scrap.converter;
 import com.example.scrap.base.code.ErrorCode;
 import com.example.scrap.base.exception.BaseException;
 import com.example.scrap.base.exception.ValidErrorResponseDTO;
+import com.example.scrap.base.exception.ValidationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.BindingResult;
 
@@ -29,5 +30,10 @@ public class ErrorConverter {
         String cause = cv.getMessage();
 
         return new ValidErrorResponseDTO(field, cause);
+    }
+
+    public static ValidErrorResponseDTO toValidErrorResponseDTO(ValidationException e){
+
+        return new ValidErrorResponseDTO(e.getFiled(), e.getCauses());
     }
 }
