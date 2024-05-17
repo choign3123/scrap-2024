@@ -1,5 +1,6 @@
 package com.example.scrap.web.scrap;
 
+import com.example.scrap.base.exception.ValidationException;
 import com.example.scrap.base.response.ApiResponse;
 import com.example.scrap.base.response.ResponseDTO;
 import com.example.scrap.converter.ScrapConverter;
@@ -213,7 +214,7 @@ public class ScrapController {
         if(isAllDelete){
             // 프레스 선택 타입 누락
             if(pressSelectionType == null){
-                // [TODO] 에러 발생
+                throw new ValidationException("type", "모두 삭제일 시, 필수 입력입니다.");
             }
             pressSelectionTypeEnum = PressSelectionType.valueOf(pressSelectionType.toUpperCase());
 
@@ -221,7 +222,7 @@ public class ScrapController {
             boolean categoryIdNeed = (pressSelectionTypeEnum == PressSelectionType.CATEGORY);
             boolean categoryIdMissing = categoryIdNeed && categoryId == null;
             if(categoryIdMissing){
-                // [TODO] 에러 발생
+                throw new ValidationException("category", "CATEGORY 타입일 시, 필수 입력입니다.");
             }
         }
 
