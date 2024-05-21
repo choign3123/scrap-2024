@@ -118,10 +118,20 @@ public class ScrapConverter {
                 .build();
     }
 
-    public static ScrapResponse.ToggleScrapFavoriteList toToggleScrapFavoriteList(boolean isFavorite){
+    public static ScrapResponse.ToggleScrapFavoriteList toToggleScrapFavoriteList(List<Scrap> scrapList){
+
+        List<ScrapResponse.ToggleScrapFavoriteList.ScrapDTO> scrapDTOList = scrapList.stream()
+                .map(scrap -> {
+                    return ScrapResponse.ToggleScrapFavoriteList.ScrapDTO.builder()
+                            .scrapId(scrap.getId())
+                            .isFavorite(scrap.getFavorite())
+                            .build();
+                })
+                .toList();
 
         return ScrapResponse.ToggleScrapFavoriteList.builder()
-                .isFavorite(isFavorite)
+                .scrapDTOList(scrapDTOList)
+                .total(scrapList.size())
                 .build();
     }
 }

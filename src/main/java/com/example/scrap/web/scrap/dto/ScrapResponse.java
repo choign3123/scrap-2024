@@ -127,6 +127,16 @@ public class ScrapResponse {
     @Getter
     public static class ToggleScrapFavoriteList{
 
-        private Boolean isFavorite;
+        private int total;
+
+        @JsonProperty("scraps")
+        private List<ScrapDTO> scrapDTOList;
+
+        @Builder
+        @Getter
+        public static class ScrapDTO {
+            private Long scrapId;
+            private Boolean isFavorite;
+        }
     }
 }

@@ -74,7 +74,7 @@ public interface IScrapService {
      * @param categoryId
      * @param request
      */
-    public void toggleScrapFavoriteList(MemberDTO memberDTO, boolean toggle,
+    public List<Scrap> toggleScrapFavoriteList(MemberDTO memberDTO, boolean toggle,
                                         boolean isAllFavorite, PressSelectionType pressSelectionType, Long categoryId,
                                         ScrapRequest.ToggleScrapFavoriteList request);
 

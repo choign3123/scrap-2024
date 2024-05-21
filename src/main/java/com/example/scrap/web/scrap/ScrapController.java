@@ -236,8 +236,8 @@ public class ScrapController {
             }
         }
 
-        scrapService.toggleScrapFavoriteList(memberDTO, toggle, isAllFavorite, pressSelectionTypeEnum, categoryId, request);
-        ScrapResponse.ToggleScrapFavoriteList response = ScrapConverter.toToggleScrapFavoriteList(toggle);
+        List<Scrap> scrapList = scrapService.toggleScrapFavoriteList(memberDTO, toggle, isAllFavorite, pressSelectionTypeEnum, categoryId, request);
+        ScrapResponse.ToggleScrapFavoriteList response = ScrapConverter.toToggleScrapFavoriteList(scrapList);
 
         return new ApiResponse(new ResponseDTO(response));
     }
