@@ -109,4 +109,14 @@ public class ScrapResponse {
             private LocalDate scrapDate;
         }
     }
+
+    /**
+     * 스크랩 즐겨찾기
+     */
+    @Builder
+    @Getter
+    public static class ToggleScrapFavorite{
+
+        private Boolean isFavorite;
+    }
 }

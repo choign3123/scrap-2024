@@ -141,6 +141,26 @@ public class ScrapServiceImpl implements IScrapService{
     }
 
     /**
+     * 스크랩 즐겨찾기
+     * @param memberDTO
+     * @param scrapId
+     * @return
+     */
+    @Transactional
+    public Scrap toggleScrapFavorite(MemberDTO memberDTO, Long scrapId){
+        Member member = memberService.findMember(memberDTO);
+        Scrap scrap = findScrap(scrapId);
+
+        if(scrap.isIllegalMember(member)){
+            throw new BaseException(ErrorCode.SCRAP_MEMBER_NOT_MATCH);
+        }
+
+        scrap.toggleFavorite();
+
+        return scrap;
+    }
+
+    /**
      * 스크랩 삭제(단건)
      * @param memberDTO
      * @param scrapId
