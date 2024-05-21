@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.data.domain.Sort.Direction;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @RestController
@@ -204,7 +205,8 @@ public class ScrapController {
      * @return
      */
     @PatchMapping("/favorite")
-    public ApiResponse scrapFavoriteListToggle(@RequestHeader("member-id") Long memberId, @RequestParam("toggle") boolean toggle,
+    public ApiResponse scrapFavoriteListToggle(@RequestHeader("member-id") Long memberId,
+                                               @RequestParam("toggle") @NotNull boolean toggle,
                                                @RequestParam(name = "all", defaultValue = "false", required = false) boolean isAllFavorite,
                                                @RequestParam(name = "type", required = false) @EnumValid(enumC = PressSelectionType.class, required = false) String pressSelectionType,
                                                @RequestParam(name = "category", required = false) @ExistCategory(required = false) Long categoryId,
