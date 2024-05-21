@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 public class ScrapRequest {
@@ -24,6 +25,15 @@ public class ScrapRequest {
 
         private String description;
 
+        private String memo;
+    }
+
+    /**
+     * 스크랩의 메모 수정
+     */
+    @Getter
+    public static class UpdateScrapMemo{
+        @NotNull
         private String memo;
     }
 

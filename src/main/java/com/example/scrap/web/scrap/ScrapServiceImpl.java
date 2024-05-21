@@ -225,6 +225,27 @@ public class ScrapServiceImpl implements IScrapService{
     }
 
     /**
+     * 스크랩의 메모 수정
+     * @param memberDTO
+     * @param scrapId
+     * @param request
+     * @return
+     */
+    @Transactional
+    public Scrap updateScrapMemo(MemberDTO memberDTO, Long scrapId, ScrapRequest.UpdateScrapMemo request){
+        Member member = memberService.findMember(memberDTO);
+        Scrap scrap = findScrap(scrapId);
+
+        if(scrap.isIllegalMember(member)){
+            throw new BaseException(ErrorCode.SCRAP_MEMBER_NOT_MATCH);
+        }
+
+        scrap.updateMemo(request.getMemo());
+
+        return scrap;
+    }
+
+    /**
      * 스크랩 삭제(단건)
      * @param memberDTO
      * @param scrapId

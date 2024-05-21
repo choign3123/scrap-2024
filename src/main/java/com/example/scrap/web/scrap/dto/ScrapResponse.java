@@ -139,4 +139,15 @@ public class ScrapResponse {
             private Boolean isFavorite;
         }
     }
+
+    /**
+     * 스크랩의 메모 수정
+     */
+    @Builder
+    @Getter
+    public static class UpdateScrapMemo{
+
+        private Long scrapId;
+        private String memo;
+    }
 }

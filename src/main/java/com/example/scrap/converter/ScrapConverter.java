@@ -134,4 +134,12 @@ public class ScrapConverter {
                 .total(scrapList.size())
                 .build();
     }
+
+    public static ScrapResponse.UpdateScrapMemo toUpdateScrapMemo(Scrap scrap){
+
+        return ScrapResponse.UpdateScrapMemo.builder()
+                .scrapId(scrap.getId())
+                .memo(scrap.getMemo())
+                .build();
+    }
 }
