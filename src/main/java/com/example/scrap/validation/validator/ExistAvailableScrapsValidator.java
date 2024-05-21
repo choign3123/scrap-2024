@@ -20,13 +20,13 @@ public class ExistAvailableScrapsValidator implements ConstraintValidator<ExistA
     public boolean isValid(List<Long> value, ConstraintValidatorContext context) {
 
         for(Long scrapId : value){
-            if(scrapId == null || !scrapRepository.existsById(scrapId)){
+            if(scrapId == null){
                 return false;
             }
 
             // 스크랩 유효성 확인
-            Scrap scrap = scrapRepository.findById(scrapId).get();
-            if(!scrap.isAvailable()){
+            Scrap scrap = scrapRepository.findById(scrapId).orElse(null);
+            if(scrap == null || !scrap.isAvailable()){
                 return false;
             }
         }
