@@ -214,13 +214,14 @@ public class ScrapController {
 
         MemberDTO memberDTO = new MemberDTO(memberId);
 
+        PressSelectionType pressSelectionTypeEnum = null;
         if(isAllFavorite){
             // 프레스 선택 타입 누락 확인
             boolean pressSelectionTypeMissing = (pressSelectionType == null);
             if(pressSelectionTypeMissing){
                 throw new ValidationException("type", "모두 즐겨찾기일 시, 필수 입력입니다.");
             }
-            PressSelectionType pressSelectionTypeEnum = PressSelectionType.valueOf(pressSelectionType);
+            pressSelectionTypeEnum = PressSelectionType.valueOf(pressSelectionType);
 
             // 카테고리 누락 확인
             boolean categoryIdMissing = (pressSelectionTypeEnum == PressSelectionType.CATEGORY) && (categoryId == null);
@@ -235,7 +236,7 @@ public class ScrapController {
             }
         }
 
-        scrapService.toggleScrapFavoriteList(memberDTO, toggle, isAllFavorite, PressSelectionType.valueOf(pressSelectionType), categoryId, request);
+        scrapService.toggleScrapFavoriteList(memberDTO, toggle, isAllFavorite, pressSelectionTypeEnum, categoryId, request);
         ScrapResponse.ToggleScrapFavoriteList response = ScrapConverter.toToggleScrapFavoriteList(toggle);
 
         return new ApiResponse(new ResponseDTO(response));
