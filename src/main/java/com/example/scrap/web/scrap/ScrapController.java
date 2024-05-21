@@ -175,6 +175,24 @@ public class ScrapController {
     }
 
     /**
+     * [PATCH] /scraps/{scrap-id}/favorite
+     * [API-16] 스크랩 즐겨찾기 (단건)
+     * @param memberId
+     * @param scrapId
+     * @return
+     */
+    @PatchMapping("{scrap-id}/favorite")
+    public ApiResponse scrapFavoriteToggle(@RequestHeader("member-id") Long memberId, @PathVariable("scrap-id") @ExistAvailableScrap Long scrapId){
+
+        MemberDTO memberDTO = new MemberDTO(memberId);
+
+        Scrap scrap = scrapService.toggleScrapFavorite(memberDTO, scrapId);
+        ScrapResponse.ToggleScrapFavorite response = ScrapConverter.toToggleScrapFavorite(scrap);
+
+        return new ApiResponse(new ResponseDTO(response));
+    }
+
+    /**
      * [PATCH] /scraps/{scrap-id}/trash
      * [API-13] 스크랩 삭제 (단건)
      * @param memberId
@@ -230,4 +248,5 @@ public class ScrapController {
 
         return new ApiResponse(new ResponseDTO<Void>());
     }
+
 }

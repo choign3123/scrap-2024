@@ -58,6 +58,14 @@ public interface IScrapService {
     public List<Scrap> findScrapByTitle(MemberDTO memberDTO, Long categoryId, String query, Sort sort);
 
     /**
+     * 스크랩 즐겨찾기
+     * @param memberDTO
+     * @param scrapId
+     * @return
+     */
+    public Scrap toggleScrapFavorite(MemberDTO memberDTO, Long scrapId);
+
+    /**
      * 스크랩 삭제(단건)
      * @param memberDTO
      * @param scrapId

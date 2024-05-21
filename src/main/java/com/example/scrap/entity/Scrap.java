@@ -102,4 +102,13 @@ public class Scrap extends BaseEntity {
         this.category = category;
         category.getScrapList().add(this);
     }
+
+    /**
+     * 즐겨찾기
+     * @return true=즐겨찾기 됨. false=즐겨찾기 해제
+     */
+    public boolean toggleFavorite(){
+        favorite = !favorite;
+        return favorite;
+    }
 }
