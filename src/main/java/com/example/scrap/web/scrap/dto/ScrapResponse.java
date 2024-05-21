@@ -111,11 +111,21 @@ public class ScrapResponse {
     }
 
     /**
-     * 스크랩 즐겨찾기
+     * 스크랩 즐겨찾기(단건)
      */
     @Builder
     @Getter
     public static class ToggleScrapFavorite{
+
+        private Boolean isFavorite;
+    }
+
+    /**
+     * 스크랩 즐겨찾기(목록)
+     */
+    @Builder
+    @Getter
+    public static class ToggleScrapFavoriteList{
 
         private Boolean isFavorite;
     }

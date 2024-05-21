@@ -111,4 +111,14 @@ public class Scrap extends BaseEntity {
         favorite = !favorite;
         return favorite;
     }
+
+    /**
+     * 즐겨찾기
+     * @param isFavorite true=즐겨찾기 됨. false=즐겨찾기 해제
+     * @return
+     */
+    public boolean toggleFavorite(boolean isFavorite){
+        favorite = isFavorite;
+        return favorite;
+    }
 }
