@@ -1,5 +1,6 @@
 package com.example.scrap.validation.validator;
 
+import com.example.scrap.entity.Category;
 import com.example.scrap.validation.annotaion.ExistCategories;
 import com.example.scrap.validation.annotaion.ExistCategory;
 import com.example.scrap.web.category.CategoryRepository;
@@ -20,7 +21,12 @@ public class ExistCategoriesValidator implements ConstraintValidator<ExistCatego
     public boolean isValid(List<Long> value, ConstraintValidatorContext context) {
 
         for(Long categoryId : value){
-            if(categoryId == null || !categoryRepository.existsById(categoryId)){
+            if(categoryId == null){
+                return false;
+            }
+
+            Category category = categoryRepository.findById(categoryId).orElse(null);
+            if(category == null){
                 return false;
             }
         }
