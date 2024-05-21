@@ -1,5 +1,6 @@
 package com.example.scrap.validation.validator;
 
+import com.example.scrap.entity.Category;
 import com.example.scrap.validation.annotaion.ExistCategory;
 import com.example.scrap.web.category.CategoryRepository;
 import lombok.RequiredArgsConstructor;
@@ -29,7 +30,12 @@ public class ExistCategoryValidator implements ConstraintValidator<ExistCategory
             return true;
         }
 
-        if(value == null || !categoryRepository.existsById(value)){
+        if(value == null){
+            return false;
+        }
+
+        Category category = categoryRepository.findById(value).orElse(null);
+        if(category == null){
             return false;
         }
 

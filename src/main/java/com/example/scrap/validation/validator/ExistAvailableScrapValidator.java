@@ -18,13 +18,13 @@ public class ExistAvailableScrapValidator implements ConstraintValidator<ExistAv
     @Override
     public boolean isValid(Long value, ConstraintValidatorContext context) {
 
-        if(value == null || !scrapRepository.existsById(value)){
+        if(value == null){
             return false;
         }
 
         // 스크랩 유효성 확인
-        Scrap scrap = scrapRepository.findById(value).get();
-        if(!scrap.isAvailable()){
+        Scrap scrap = scrapRepository.findById(value).orElse(null);
+        if(scrap == null || !scrap.isAvailable()){
             return false;
         }
 
