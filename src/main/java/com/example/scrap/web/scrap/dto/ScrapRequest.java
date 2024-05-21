@@ -9,6 +9,9 @@ import java.util.List;
 
 public class ScrapRequest {
 
+    /**
+     * 스크랩 생성
+     */
     @Getter
     public static class CreateScrap {
         @NotBlank
@@ -24,6 +27,9 @@ public class ScrapRequest {
         private String memo;
     }
 
+    /**
+     * 스크랩 삭제(목록)
+     */
     @Getter
     public static class DeleteScrapList{
 
@@ -31,4 +37,5 @@ public class ScrapRequest {
         @JsonProperty("scraps")
         private List<Long> scrapIdList;
     }
+
 }
