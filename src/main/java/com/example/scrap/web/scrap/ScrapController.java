@@ -230,7 +230,7 @@ public class ScrapController {
             }
 
             // 잘못된 toggle 설정인지 확인
-            boolean wrongToggle = (pressSelectionTypeEnum == PressSelectionType.FAVORITE) && (toggle = true);
+            boolean wrongToggle = (pressSelectionTypeEnum == PressSelectionType.FAVORITE) && (toggle == true);
             if(wrongToggle){
                 throw new ValidationException("toggle", "FAVORITE 타입일 시, 즐겨찾기 해제만 할 수 있습니다.");
             }
