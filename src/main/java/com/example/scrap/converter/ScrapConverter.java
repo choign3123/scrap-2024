@@ -114,6 +114,7 @@ public class ScrapConverter {
     public static ScrapResponse.ToggleScrapFavorite toToggleScrapFavorite(Scrap scrap){
 
         return ScrapResponse.ToggleScrapFavorite.builder()
+                .scrapId(scrap.getId())
                 .isFavorite(scrap.getFavorite())
                 .build();
     }
