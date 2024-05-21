@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.data.domain.Sort.Direction;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @RestController
@@ -188,6 +189,55 @@ public class ScrapController {
 
         Scrap scrap = scrapService.toggleScrapFavorite(memberDTO, scrapId);
         ScrapResponse.ToggleScrapFavorite response = ScrapConverter.toToggleScrapFavorite(scrap);
+
+        return new ApiResponse(new ResponseDTO(response));
+    }
+
+    /**
+     * [PATCH] /scraps/favorite
+     * [API-17] 스크랩 즐겨찾기 (목록)
+     * @param memberId
+     * @param toggle
+     * @param isAllFavorite
+     * @param pressSelectionType
+     * @param categoryId
+     * @param request
+     * @return
+     */
+    @PatchMapping("/favorite")
+    public ApiResponse scrapFavoriteListToggle(@RequestHeader("member-id") Long memberId,
+                                               @RequestParam("toggle") @NotNull boolean toggle,
+                                               @RequestParam(name = "all", defaultValue = "false", required = false) boolean isAllFavorite,
+                                               @RequestParam(name = "type", required = false) @EnumValid(enumC = PressSelectionType.class, required = false) String pressSelectionType,
+                                               @RequestParam(name = "category", required = false) @ExistCategory(required = false) Long categoryId,
+                                               @RequestBody @Validated ScrapRequest.ToggleScrapFavoriteList request){
+
+        MemberDTO memberDTO = new MemberDTO(memberId);
+
+        PressSelectionType pressSelectionTypeEnum = null;
+        if(isAllFavorite){
+            // 프레스 선택 타입 누락 확인
+            boolean pressSelectionTypeMissing = (pressSelectionType == null);
+            if(pressSelectionTypeMissing){
+                throw new ValidationException("type", "모두 즐겨찾기일 시, 필수 입력입니다.");
+            }
+            pressSelectionTypeEnum = PressSelectionType.valueOf(pressSelectionType.toUpperCase());
+
+            // 카테고리 누락 확인
+            boolean categoryIdMissing = (pressSelectionTypeEnum == PressSelectionType.CATEGORY) && (categoryId == null);
+            if(categoryIdMissing){
+                throw new ValidationException("category", "CATEGORY 타입일 시, 필수 입력입니다.");
+            }
+
+            // 잘못된 toggle 설정인지 확인
+            boolean wrongToggle = (pressSelectionTypeEnum == PressSelectionType.FAVORITE) && (toggle == true);
+            if(wrongToggle){
+                throw new ValidationException("toggle", "FAVORITE 타입일 시, 즐겨찾기 해제만 할 수 있습니다.");
+            }
+        }
+
+        List<Scrap> scrapList = scrapService.toggleScrapFavoriteList(memberDTO, toggle, isAllFavorite, pressSelectionTypeEnum, categoryId, request);
+        ScrapResponse.ToggleScrapFavoriteList response = ScrapConverter.toToggleScrapFavoriteList(scrapList);
 
         return new ApiResponse(new ResponseDTO(response));
     }

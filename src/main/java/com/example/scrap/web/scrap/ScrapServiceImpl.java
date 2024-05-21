@@ -141,7 +141,7 @@ public class ScrapServiceImpl implements IScrapService{
     }
 
     /**
-     * 스크랩 즐겨찾기
+     * 스크랩 즐겨찾기(단건)
      * @param memberDTO
      * @param scrapId
      * @return
@@ -158,6 +158,70 @@ public class ScrapServiceImpl implements IScrapService{
         scrap.toggleFavorite();
 
         return scrap;
+    }
+
+    /**
+     * 스크랩 즐겨찾기(목록)
+     * @param memberDTO
+     * @param toggle
+     * @param isAllFavorite
+     * @param pressSelectionType
+     * @param categoryId
+     * @param request
+     */
+    @Transactional
+    public List<Scrap> toggleScrapFavoriteList(MemberDTO memberDTO, boolean toggle,
+                                        boolean isAllFavorite, PressSelectionType pressSelectionType, Long categoryId,
+                                        ScrapRequest.ToggleScrapFavoriteList request){
+
+        Member member = memberService.findMember(memberDTO);
+        List<Scrap> scrapList;
+
+        // 전체 즐겨찾기
+        if(isAllFavorite){
+            Specification<Scrap> spec = Specification.where(ScrapSpecification.isAvailable())
+                    .and(ScrapSpecification.equalMember(member));
+
+            // 어떤 프레스 타입인지
+            switch (pressSelectionType){
+                case CATEGORY -> {
+                    Category category = categoryService.findCategory(categoryId);
+                    if(category.isIllegalMember(member)){
+                        throw new BaseException(ErrorCode.SCRAP_MEMBER_NOT_MATCH);
+                    }
+                    spec = spec.and(ScrapSpecification.equalCategory(category));
+                }
+                case FAVORITE -> {
+                    spec = spec.and(ScrapSpecification.isFavorite());
+                }
+            }
+
+            scrapList = scrapRepository.findAll(spec);
+        }
+        // 요청된 스크랩만 즐겨찾기
+        else{
+            // 빈 리스트인 경우
+            if(request.getScrapIdList().size() == 0){
+                throw new ValidationException("scraps", "적어도 하나 이상의 스크랩을 포함하여야 됩니다.");
+            }
+
+            scrapList = new ArrayList<>();
+            for(Long scrapId : request.getScrapIdList()){
+                Scrap scrap = findScrap(scrapId);
+
+                if(scrap.isIllegalMember(member)){
+                    throw new BaseException(ErrorCode.SCRAP_MEMBER_NOT_MATCH);
+                }
+
+                scrapList.add(scrap);
+            }
+        }
+
+        for(Scrap scrap : scrapList){
+            scrap.toggleFavorite(toggle);
+        }
+
+        return scrapList;
     }
 
     /**

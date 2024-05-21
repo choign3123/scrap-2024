@@ -1,6 +1,6 @@
 package com.example.scrap.web.scrap.dto;
 
-import com.example.scrap.validation.annotaion.ExistScraps;
+import com.example.scrap.validation.annotaion.ExistAvailableScraps;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 
@@ -9,6 +9,9 @@ import java.util.List;
 
 public class ScrapRequest {
 
+    /**
+     * 스크랩 생성
+     */
     @Getter
     public static class CreateScrap {
         @NotBlank
@@ -24,10 +27,24 @@ public class ScrapRequest {
         private String memo;
     }
 
+    /**
+     * 스크랩 삭제(목록)
+     */
     @Getter
     public static class DeleteScrapList{
 
-        @ExistScraps
+        @ExistAvailableScraps
+        @JsonProperty("scraps")
+        private List<Long> scrapIdList;
+    }
+
+    /**
+     * 스크랩 즐겨찾기(목록)
+     */
+    @Getter
+    public static class ToggleScrapFavoriteList{
+
+        @ExistAvailableScraps
         @JsonProperty("scraps")
         private List<Long> scrapIdList;
     }
