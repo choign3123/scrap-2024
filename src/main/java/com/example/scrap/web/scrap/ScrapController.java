@@ -221,7 +221,7 @@ public class ScrapController {
             if(pressSelectionTypeMissing){
                 throw new ValidationException("type", "모두 즐겨찾기일 시, 필수 입력입니다.");
             }
-            pressSelectionTypeEnum = PressSelectionType.valueOf(pressSelectionType);
+            pressSelectionTypeEnum = PressSelectionType.valueOf(pressSelectionType.toUpperCase());
 
             // 카테고리 누락 확인
             boolean categoryIdMissing = (pressSelectionTypeEnum == PressSelectionType.CATEGORY) && (categoryId == null);
