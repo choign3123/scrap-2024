@@ -117,6 +117,7 @@ public class ScrapResponse {
     @Getter
     public static class ToggleScrapFavorite{
 
+        private Long scrapId;
         private Boolean isFavorite;
     }
 
