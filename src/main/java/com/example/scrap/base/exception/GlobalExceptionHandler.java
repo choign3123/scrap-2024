@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingRequestHeaderException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -60,6 +61,14 @@ public class GlobalExceptionHandler {
         e.printStackTrace();
 
         ValidErrorResponseDTO response = new ValidErrorResponseDTO(e.getParameterName(), "필수값입니다.");
+        return new ApiResponse(new ResponseDTO(response, ErrorCode._BAD_REQUEST));
+    }
+
+    @ExceptionHandler(MissingRequestHeaderException.class)
+    protected ApiResponse handleMissingRequestHeaderException(MissingRequestHeaderException e){
+        e.printStackTrace();
+
+        ValidErrorResponseDTO response = new ValidErrorResponseDTO(e.getHeaderName(), "필수값입니다.");
         return new ApiResponse(new ResponseDTO(response, ErrorCode._BAD_REQUEST));
     }
 

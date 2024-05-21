@@ -121,4 +121,13 @@ public class Scrap extends BaseEntity {
         favorite = isFavorite;
         return favorite;
     }
+
+    /**
+     * 메모 수정
+     * @param memo
+     */
+    public void updateMemo(String memo){
+        this.memo = memo;
+    }
+
 }

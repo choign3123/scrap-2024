@@ -79,6 +79,15 @@ public interface IScrapService {
                                         ScrapRequest.ToggleScrapFavoriteList request);
 
     /**
+     * 스크랩의 메모 수정
+     * @param memberDTO
+     * @param scrapId
+     * @param request
+     * @return
+     */
+    public Scrap updateScrapMemo(MemberDTO memberDTO, Long scrapId, ScrapRequest.UpdateScrapMemo request);
+
+    /**
      * 스크랩 삭제(단건)
      * @param memberDTO
      * @param scrapId

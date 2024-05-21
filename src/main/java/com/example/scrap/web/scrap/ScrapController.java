@@ -243,6 +243,26 @@ public class ScrapController {
     }
 
     /**
+     * [PATCH] /scraps/{scrap-id}/memo
+     * [API-14] 스크랩의 메모 수정
+     * @param memberId
+     * @param scrapId
+     * @param request
+     * @return
+     */
+    @PatchMapping("/{scrap-id}/memo")
+    public ApiResponse scrapMemoModify(@RequestHeader("member-id") Long memberId, @PathVariable("scrap-id") @ExistAvailableScrap Long scrapId,
+                                       @RequestBody @Validated ScrapRequest.UpdateScrapMemo request){
+
+        MemberDTO memberDTO = new MemberDTO(memberId);
+
+        Scrap scrap = scrapService.updateScrapMemo(memberDTO, scrapId, request);
+        ScrapResponse.UpdateScrapMemo response = ScrapConverter.toUpdateScrapMemo(scrap);
+
+        return new ApiResponse(new ResponseDTO(response));
+    }
+
+    /**
      * [PATCH] /scraps/{scrap-id}/trash
      * [API-13] 스크랩 삭제 (단건)
      * @param memberId
