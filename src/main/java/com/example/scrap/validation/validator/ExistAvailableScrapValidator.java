@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -23,8 +24,8 @@ public class ExistAvailableScrapValidator implements ConstraintValidator<ExistAv
         }
 
         // 스크랩 유효성 확인
-        Scrap scrap = scrapRepository.findById(value).orElse(null);
-        if(scrap == null || !scrap.isAvailable()){
+        Optional<Scrap> scrap = scrapRepository.findById(value);
+        if(scrap.isEmpty() || !scrap.get().isAvailable()){
             return false;
         }
 

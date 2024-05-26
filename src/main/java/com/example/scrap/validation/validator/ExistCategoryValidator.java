@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -34,8 +35,8 @@ public class ExistCategoryValidator implements ConstraintValidator<ExistCategory
             return false;
         }
 
-        Category category = categoryRepository.findById(value).orElse(null);
-        if(category == null){
+        Optional<Category> category = categoryRepository.findById(value);
+        if(category.isEmpty()){
             return false;
         }
 

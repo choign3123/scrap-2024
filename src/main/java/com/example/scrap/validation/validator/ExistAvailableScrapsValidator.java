@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 import java.util.List;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -25,8 +26,8 @@ public class ExistAvailableScrapsValidator implements ConstraintValidator<ExistA
             }
 
             // 스크랩 유효성 확인
-            Scrap scrap = scrapRepository.findById(scrapId).orElse(null);
-            if(scrap == null || !scrap.isAvailable()){
+            Optional<Scrap> scrap = scrapRepository.findById(scrapId);
+            if(scrap.isEmpty() || !scrap.get().isAvailable()){
                 return false;
             }
         }
