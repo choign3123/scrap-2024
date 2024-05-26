@@ -46,9 +46,7 @@ public class ScrapServiceImpl implements IScrapService{
         Member member = memberService.findMember(memberDTO);
         Category category = categoryService.findCategory(categoryId);
 
-        if(category.isIllegalMember(member)){
-            throw new BaseException(ErrorCode.CATEGORY_MEMBER_NOT_MATCH);
-        }
+        category.checkIllegalMember(member);
 
         Scrap newScrap = ScrapConverter.toEntity(request, member, category);
 
@@ -68,9 +66,7 @@ public class ScrapServiceImpl implements IScrapService{
         Member member = memberService.findMember(memberDTO);
         Category category = categoryService.findCategory(categoryId);
 
-        if(category.isIllegalMember(member)){
-            throw new BaseException(ErrorCode.CATEGORY_MEMBER_NOT_MATCH);
-        }
+        category.checkIllegalMember(member);
 
 //        Page<Scrap> scrapPage = scrapRepository.findAllByMemberAndCategoryAndStatus(member, category, ScrapStatus.ACTIVE, pageRequest);
         Specification<Scrap> spec = Specification.where(ScrapSpecification.isAvailable())
@@ -108,9 +104,7 @@ public class ScrapServiceImpl implements IScrapService{
 
         Scrap scrap = findScrap(scrapId);
 
-        if(scrap.isIllegalMember(member)){
-            throw new BaseException(ErrorCode.SCRAP_MEMBER_NOT_MATCH);
-        }
+        scrap.checkIllegalMember(member);
 
         return scrap;
     }
@@ -127,7 +121,7 @@ public class ScrapServiceImpl implements IScrapService{
         Member member = memberService.findMember(memberDTO);
         Category category = categoryService.findCategory(categoryId);
 
-        if(category.isIllegalMember(member)){
+        if(category.checkIllegalMember(member)){
             throw new BaseException(ErrorCode.CATEGORY_MEMBER_NOT_MATCH);
         }
 
@@ -151,9 +145,7 @@ public class ScrapServiceImpl implements IScrapService{
         Member member = memberService.findMember(memberDTO);
         Scrap scrap = findScrap(scrapId);
 
-        if(scrap.isIllegalMember(member)){
-            throw new BaseException(ErrorCode.SCRAP_MEMBER_NOT_MATCH);
-        }
+        scrap.checkIllegalMember(member);
 
         scrap.toggleFavorite();
 
@@ -187,7 +179,7 @@ public class ScrapServiceImpl implements IScrapService{
                 case CATEGORY -> {
                     Category category = categoryService.findCategory(categoryId);
                     if(category.isIllegalMember(member)){
-                        throw new BaseException(ErrorCode.SCRAP_MEMBER_NOT_MATCH);
+                        throw new BaseException(ErrorCode.CATEGORY_MEMBER_NOT_MATCH_IN_SCRAP);
                     }
                     spec = spec.and(ScrapSpecification.equalCategory(category));
                 }
@@ -209,9 +201,7 @@ public class ScrapServiceImpl implements IScrapService{
             for(Long scrapId : request.getScrapIdList()){
                 Scrap scrap = findScrap(scrapId);
 
-                if(scrap.isIllegalMember(member)){
-                    throw new BaseException(ErrorCode.SCRAP_MEMBER_NOT_MATCH);
-                }
+                scrap.checkIllegalMember(member);
 
                 scrapList.add(scrap);
             }
@@ -236,9 +226,7 @@ public class ScrapServiceImpl implements IScrapService{
         Member member = memberService.findMember(memberDTO);
         Scrap scrap = findScrap(scrapId);
 
-        if(scrap.isIllegalMember(member)){
-            throw new BaseException(ErrorCode.SCRAP_MEMBER_NOT_MATCH);
-        }
+        scrap.checkIllegalMember(member);
 
         scrap.updateMemo(request.getMemo());
 
@@ -255,9 +243,7 @@ public class ScrapServiceImpl implements IScrapService{
         Member member = memberService.findMember(memberDTO);
         Scrap scrap = findScrap(scrapId);
 
-        if(scrap.isIllegalMember(member)){
-            throw new BaseException(ErrorCode.SCRAP_MEMBER_NOT_MATCH);
-        }
+        scrap.checkIllegalMember(member);
 
         scrap.toTrash();
     }
@@ -284,7 +270,7 @@ public class ScrapServiceImpl implements IScrapService{
             switch (pressSelectionType){
                 case CATEGORY -> {
                     Category category = categoryService.findCategory(categoryId);
-                    if(category.isIllegalMember(member)){
+                    if(category.checkIllegalMember(member)){
                         throw new BaseException(ErrorCode.SCRAP_MEMBER_NOT_MATCH);
                     }
                     spec = spec.and(ScrapSpecification.equalCategory(category));
@@ -306,9 +292,7 @@ public class ScrapServiceImpl implements IScrapService{
             for(Long scrapId : request.getScrapIdList()){
                 Scrap deleteScrap = findScrap(scrapId);
 
-                if(deleteScrap.isIllegalMember(member)){
-                    throw new BaseException(ErrorCode.SCRAP_MEMBER_NOT_MATCH);
-                }
+                deleteScrap.checkIllegalMember(member);
 
                 deleteScrapList.add(deleteScrap);
             }

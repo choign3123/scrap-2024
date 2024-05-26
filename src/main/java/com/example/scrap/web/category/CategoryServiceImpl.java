@@ -68,9 +68,7 @@ public class CategoryServiceImpl implements ICategoryService{
         Member member = memberService.findMember(memberDTO);
         Category category = categoryRepository.findById(categoryId).get();
 
-        if(category.isIllegalMember(member)){
-            throw new BaseException(ErrorCode.CATEGORY_MEMBER_NOT_MATCH);
-        }
+        category.checkIllegalMember(member);
 
         // 기본 카테고리는 삭제할 수 없음
         if(category.getIsDefault()){
@@ -108,7 +106,7 @@ public class CategoryServiceImpl implements ICategoryService{
         Member member = memberService.findMember(memberDTO);
         Category category = categoryRepository.findById(categoryId).get();
 
-        if(category.isIllegalMember(member)){
+        if(category.checkIllegalMember(member)){
             throw new BaseException(ErrorCode.CATEGORY_MEMBER_NOT_MATCH);
         }
 

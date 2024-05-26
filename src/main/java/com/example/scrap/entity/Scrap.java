@@ -1,5 +1,7 @@
 package com.example.scrap.entity;
 
+import com.example.scrap.base.code.ErrorCode;
+import com.example.scrap.base.exception.BaseException;
 import com.example.scrap.entity.base.BaseEntity;
 import com.example.scrap.entity.enums.ScrapStatus;
 import lombok.AccessLevel;
@@ -71,6 +73,25 @@ public class Scrap extends BaseEntity {
         category.getScrapList().add(this);
     }
 
+    /**
+     * 해당 사용자가 만든 스크랩이 맞는지 확인
+     * @param member
+     * @return if match return true, else throw BaseException
+     * @throws BaseException ErrorCode.SCRAP_MEMBER_NOT_MATCH
+     */
+    public boolean checkIllegalMember(Member member){
+        if(isIllegalMember(member)){
+            throw new BaseException(ErrorCode.SCRAP_MEMBER_NOT_MATCH);
+        }
+
+        return true;
+    }
+
+    /**
+     * 해당 사용자가 만든 스크랩이 맞는지 확인
+     * @param member
+     * @return if match return true, else return false
+     */
     public boolean isIllegalMember(Member member){
         return this.member != member;
     }
