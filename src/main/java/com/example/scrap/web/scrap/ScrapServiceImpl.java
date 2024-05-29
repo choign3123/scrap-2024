@@ -155,14 +155,13 @@ public class ScrapServiceImpl implements IScrapService{
     /**
      * 스크랩 즐겨찾기(목록)
      * @param memberDTO
-     * @param toggle
      * @param isAllFavorite
      * @param pressSelectionType
      * @param categoryId
      * @param request
      */
     @Transactional
-    public List<Scrap> toggleScrapFavoriteList(MemberDTO memberDTO, boolean toggle,
+    public List<Scrap> toggleScrapFavoriteList(MemberDTO memberDTO,
                                         boolean isAllFavorite, PressSelectionType pressSelectionType, Long categoryId,
                                         ScrapRequest.ToggleScrapFavoriteList request){
 
@@ -204,6 +203,20 @@ public class ScrapServiceImpl implements IScrapService{
                 scrap.checkIllegalMember(member);
 
                 scrapList.add(scrap);
+            }
+        }
+
+        /**
+         * 즐겨찾기 해제인지, 즐겨찾기인지 알아내기
+         * ★ ☆ ★ ☆ = 즐겨찾기 O
+         * ☆ ☆ ☆ ☆ = 즐겨찾기 O
+         * ★ ★ ★ ★ = 즐겨찾기 X
+         */
+        boolean toggle = false;
+        for(Scrap scrap : scrapList){
+            if(!scrap.getFavorite()){
+                toggle = true; // 선택된 스크랩중 하나라도 즐겨찾기X인게 있으면, 해당 스크랩 목록 전체 즐겨찾기하기.
+                break;
             }
         }
 

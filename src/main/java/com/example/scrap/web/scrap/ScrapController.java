@@ -197,7 +197,6 @@ public class ScrapController {
      * [PATCH] /scraps/favorite
      * [API-17] 스크랩 즐겨찾기 (목록)
      * @param memberId
-     * @param toggle
      * @param isAllFavorite
      * @param pressSelectionType
      * @param categoryId
@@ -206,7 +205,6 @@ public class ScrapController {
      */
     @PatchMapping("/favorite")
     public ApiResponse scrapFavoriteListToggle(@RequestHeader("member-id") Long memberId,
-                                               @RequestParam("toggle") @NotNull boolean toggle,
                                                @RequestParam(name = "all", defaultValue = "false", required = false) boolean isAllFavorite,
                                                @RequestParam(name = "type", required = false) @EnumValid(enumC = PressSelectionType.class, required = false) String pressSelectionType,
                                                @RequestParam(name = "category", required = false) @ExistCategory(required = false) Long categoryId,
@@ -228,15 +226,9 @@ public class ScrapController {
             if(categoryIdMissing){
                 throw new ValidationException("category", "CATEGORY 타입일 시, 필수 입력입니다.");
             }
-
-            // 잘못된 toggle 설정인지 확인
-            boolean wrongToggle = (pressSelectionTypeEnum == PressSelectionType.FAVORITE) && (toggle == true);
-            if(wrongToggle){
-                throw new ValidationException("toggle", "FAVORITE 타입일 시, 즐겨찾기 해제만 할 수 있습니다.");
-            }
         }
 
-        List<Scrap> scrapList = scrapService.toggleScrapFavoriteList(memberDTO, toggle, isAllFavorite, pressSelectionTypeEnum, categoryId, request);
+        List<Scrap> scrapList = scrapService.toggleScrapFavoriteList(memberDTO, isAllFavorite, pressSelectionTypeEnum, categoryId, request);
         ScrapResponse.ToggleScrapFavoriteList response = ScrapConverter.toToggleScrapFavoriteList(scrapList);
 
         return new ApiResponse(new ResponseDTO(response));
