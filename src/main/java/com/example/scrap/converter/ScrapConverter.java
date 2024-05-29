@@ -21,6 +21,7 @@ public class ScrapConverter {
                 .memo(request.getMemo())
                 .member(member)
                 .category(category)
+                .favorite(request.getIsFavorite())
                 .build();
     }
 

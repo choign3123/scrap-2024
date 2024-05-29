@@ -26,6 +26,8 @@ public class ScrapRequest {
         private String description;
 
         private String memo;
+
+        private Boolean isFavorite;
     }
 
     /**
