@@ -20,7 +20,7 @@ public interface IScrapService {
      * @param request
      * @return 생성된 스크랩
      */
-    public Scrap createScrap(MemberDTO memberDTO, Long categoryId, ScrapRequest.CreateScrap request);
+    public Scrap createScrap(MemberDTO memberDTO, Long categoryId, ScrapRequest.CreateScrapDTO request);
 
     /**
      * 스크랩 전체 조회 - 카테고리별
@@ -75,7 +75,17 @@ public interface IScrapService {
      */
     public List<Scrap> toggleScrapFavoriteList(MemberDTO memberDTO,
                                         boolean isAllFavorite, PressSelectionType pressSelectionType, Long categoryId,
-                                        ScrapRequest.ToggleScrapFavoriteList request);
+                                        ScrapRequest.ToggleScrapFavoriteListDTO request);
+
+    /**
+     * 스크랩 이동하기 (단건)
+     * @param memberDTO
+     * @param scrapId
+     * @param request
+     * @return
+     */
+    @Transactional
+    public Scrap moveCategoryOfScrap(MemberDTO memberDTO, Long scrapId, ScrapRequest.MoveCategoryOfScrapDTO request);
 
     /**
      * 스크랩의 메모 수정
@@ -84,7 +94,7 @@ public interface IScrapService {
      * @param request
      * @return
      */
-    public Scrap updateScrapMemo(MemberDTO memberDTO, Long scrapId, ScrapRequest.UpdateScrapMemo request);
+    public Scrap updateScrapMemo(MemberDTO memberDTO, Long scrapId, ScrapRequest.UpdateScrapMemoDTO request);
 
     /**
      * 스크랩 삭제(단건)
@@ -101,5 +111,5 @@ public interface IScrapService {
      * @param categoryId
      * @param request
      */
-    public void deleteScrapList(MemberDTO memberDTO, boolean isAllDelete, PressSelectionType pressSelectionType, Long categoryId, ScrapRequest.DeleteScrapList request);
+    public void deleteScrapList(MemberDTO memberDTO, boolean isAllDelete, PressSelectionType pressSelectionType, Long categoryId, ScrapRequest.DeleteScrapListDTO request);
 }

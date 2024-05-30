@@ -12,7 +12,7 @@ import java.util.List;
 
 public class ScrapConverter {
 
-    public static Scrap toEntity(ScrapRequest.CreateScrap request, Member member, Category category){
+    public static Scrap toEntity(ScrapRequest.CreateScrapDTO request, Member member, Category category){
         return Scrap.builder()
                 .scrapURL(request.getScrapURL())
                 .imageURL(request.getImageURL())
@@ -142,6 +142,14 @@ public class ScrapConverter {
         return ScrapResponse.UpdateScrapMemo.builder()
                 .scrapId(scrap.getId())
                 .memo(scrap.getMemo())
+                .build();
+    }
+
+    public static ScrapResponse.MoveCategoryOfScrap toMoveCategoryOfScrap(Scrap scrap){
+
+        return ScrapResponse.MoveCategoryOfScrap.builder()
+                .scrapId(scrap.getId())
+                .categoryId(scrap.getCategory().getId())
                 .build();
     }
 }

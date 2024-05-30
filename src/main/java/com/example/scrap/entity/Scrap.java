@@ -97,6 +97,29 @@ public class Scrap extends BaseEntity {
     }
 
     /**
+     * 해당 카테고리에 속한 스크랩이 맞는지 확인
+     * @param category
+     * @return if match return true, else throw BaseException
+     * @throws BaseException ErrorCode.SCRAP_MEMBER_NOT_MATCH
+     */
+    public boolean checkIllegalCategory(Category category){
+        if(isIllegalCategory(category)){
+            throw new BaseException(ErrorCode.SCRAP_CATEGORY_NOT_MATCH);
+        }
+
+        return true;
+    }
+
+    /**
+     * 해당 사용자가 만든 스크랩이 맞는지 확인
+     * @param category
+     * @return if match return true, else return false
+     */
+    public boolean isIllegalCategory(Category category){
+        return this.category != category;
+    }
+
+    /**
      * 스크랩 유효성 확인
      * @return if status is ACTIVE return true, else return false.
      */

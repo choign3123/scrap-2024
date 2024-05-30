@@ -13,7 +13,9 @@ import com.example.scrap.web.category.ICategoryService;
 import com.example.scrap.web.member.IMemberService;
 import com.example.scrap.web.member.MemberDTO;
 import com.example.scrap.web.scrap.dto.ScrapRequest;
+import com.example.scrap.web.scrap.dto.ScrapResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -28,6 +30,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
+@Slf4j
 public class ScrapServiceImpl implements IScrapService{
 
     private final IMemberService memberService;
@@ -42,7 +45,7 @@ public class ScrapServiceImpl implements IScrapService{
      * @return 생성된 스크랩
      */
     @Transactional
-    public Scrap createScrap(MemberDTO memberDTO, Long categoryId, ScrapRequest.CreateScrap request){
+    public Scrap createScrap(MemberDTO memberDTO, Long categoryId, ScrapRequest.CreateScrapDTO request){
         Member member = memberService.findMember(memberDTO);
         Category category = categoryService.findCategory(categoryId);
 
@@ -163,7 +166,7 @@ public class ScrapServiceImpl implements IScrapService{
     @Transactional
     public List<Scrap> toggleScrapFavoriteList(MemberDTO memberDTO,
                                         boolean isAllFavorite, PressSelectionType pressSelectionType, Long categoryId,
-                                        ScrapRequest.ToggleScrapFavoriteList request){
+                                        ScrapRequest.ToggleScrapFavoriteListDTO request){
 
         Member member = memberService.findMember(memberDTO);
         List<Scrap> scrapList;
@@ -228,6 +231,31 @@ public class ScrapServiceImpl implements IScrapService{
     }
 
     /**
+     * 스크랩 이동하기 (단건)
+     * @param memberDTO
+     * @param scrapId
+     * @param request
+     * @return
+     */
+    @Transactional
+    public Scrap moveCategoryOfScrap(MemberDTO memberDTO, Long scrapId, ScrapRequest.MoveCategoryOfScrapDTO request){
+        Member member = memberService.findMember(memberDTO);
+        Scrap scrap = findScrap(scrapId);
+        Category moveCategory = categoryService.findCategory(request.getMoveCategoryId());
+
+        // 해당 스크랩에 접근할 수 있는지 확인
+        scrap.checkIllegalMember(member);
+        if(moveCategory.isIllegalMember(member)){
+            throw new BaseException(ErrorCode.CATEGORY_MEMBER_NOT_MATCH_IN_SCRAP);
+        }
+
+        // 스크랩 이동하기
+        scrap.moveCategory(moveCategory);
+
+        return scrap;
+    }
+
+    /**
      * 스크랩의 메모 수정
      * @param memberDTO
      * @param scrapId
@@ -235,7 +263,7 @@ public class ScrapServiceImpl implements IScrapService{
      * @return
      */
     @Transactional
-    public Scrap updateScrapMemo(MemberDTO memberDTO, Long scrapId, ScrapRequest.UpdateScrapMemo request){
+    public Scrap updateScrapMemo(MemberDTO memberDTO, Long scrapId, ScrapRequest.UpdateScrapMemoDTO request){
         Member member = memberService.findMember(memberDTO);
         Scrap scrap = findScrap(scrapId);
 
@@ -270,7 +298,7 @@ public class ScrapServiceImpl implements IScrapService{
      * @param request
      */
     @Transactional
-    public void deleteScrapList(MemberDTO memberDTO, boolean isAllDelete, PressSelectionType pressSelectionType, Long categoryId, ScrapRequest.DeleteScrapList request){
+    public void deleteScrapList(MemberDTO memberDTO, boolean isAllDelete, PressSelectionType pressSelectionType, Long categoryId, ScrapRequest.DeleteScrapListDTO request){
         Member member = memberService.findMember(memberDTO);
         List<Scrap> deleteScrapList = new ArrayList<>();
 

@@ -33,7 +33,7 @@ public class SearchController {
     private final ISearchService searchService;
 
     /**
-     * [POST] /search?sort=&direction=&page=&size=&q=
+     * [POST] /search
      * [API-22] 스크랩 검색하기
      * @param memberId
      * @param request

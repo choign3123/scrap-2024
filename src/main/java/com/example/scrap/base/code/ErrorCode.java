@@ -28,7 +28,8 @@ public enum ErrorCode implements BaseCode{
 
     // Scrap Error
     SCRAP_NOT_FOUND(HttpStatus.NOT_FOUND, "SCRAP001", "해당하는 스크랩이 존재하지 않습니다."),
-    SCRAP_MEMBER_NOT_MATCH(HttpStatus.BAD_REQUEST, "SCRAP002", "해당 스크랩에 접근할 수 없습니다.")
+    SCRAP_MEMBER_NOT_MATCH(HttpStatus.BAD_REQUEST, "SCRAP002", "해당 스크랩에 접근할 수 없습니다."),
+    SCRAP_CATEGORY_NOT_MATCH(HttpStatus.BAD_REQUEST, "SCRAP003", "해당 스크랩에 접근할 수 없습니다.")
     ;
 
     private final HttpStatus httpStatus;
