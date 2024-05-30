@@ -245,7 +245,6 @@ public class ScrapServiceImpl implements IScrapService{
 
         // 해당 스크랩에 접근할 수 있는지 확인
         scrap.checkIllegalMember(member);
-        scrap.checkIllegalCategory(moveCategory);
         if(moveCategory.isIllegalMember(member)){
             throw new BaseException(ErrorCode.CATEGORY_MEMBER_NOT_MATCH_IN_SCRAP);
         }
