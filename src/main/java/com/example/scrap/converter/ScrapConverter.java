@@ -144,4 +144,12 @@ public class ScrapConverter {
                 .memo(scrap.getMemo())
                 .build();
     }
+
+    public static ScrapResponse.MoveCategoryOfScrap toMoveCategoryOfScrap(Scrap scrap){
+
+        return ScrapResponse.MoveCategoryOfScrap.builder()
+                .scrapId(scrap.getId())
+                .categoryId(scrap.getCategory().getId())
+                .build();
+    }
 }
