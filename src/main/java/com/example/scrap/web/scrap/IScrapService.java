@@ -7,6 +7,7 @@ import com.example.scrap.web.scrap.dto.ScrapRequest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -75,6 +76,16 @@ public interface IScrapService {
     public List<Scrap> toggleScrapFavoriteList(MemberDTO memberDTO,
                                         boolean isAllFavorite, PressSelectionType pressSelectionType, Long categoryId,
                                         ScrapRequest.ToggleScrapFavoriteListDTO request);
+
+    /**
+     * 스크랩 이동하기 (단건)
+     * @param memberDTO
+     * @param scrapId
+     * @param request
+     * @return
+     */
+    @Transactional
+    public Scrap moveCategoryOfScrap(MemberDTO memberDTO, Long scrapId, ScrapRequest.MoveCategoryOfScrapDTO request);
 
     /**
      * 스크랩의 메모 수정

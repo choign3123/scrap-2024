@@ -232,6 +232,26 @@ public class ScrapController {
     }
 
     /**
+     * [PATCH] /scraps/{scrap-id}/move
+     * [API-15] 스크랩 이동하기 (단건)
+     * @param memberId
+     * @param scrapId
+     * @param request
+     * @return
+     */
+    @PatchMapping("/{scrap-id}/move")
+    public ApiResponse categoryOfScrapMove(@RequestHeader("member-id") Long memberId, @PathVariable("scrap-id") @ExistAvailableScrap Long scrapId,
+                                           @RequestBody @Validated ScrapRequest.MoveCategoryOfScrapDTO request){
+
+        MemberDTO memberDTO = new MemberDTO(memberId);
+
+        Scrap scrap = scrapService.moveCategoryOfScrap(memberDTO, scrapId, request);
+        ScrapResponse.MoveCategoryOfScrap response = ScrapConverter.toMoveCategoryOfScrap(scrap);
+
+        return new ApiResponse(new ResponseDTO(response));
+    }
+
+    /**
      * [PATCH] /scraps/{scrap-id}/memo
      * [API-14] 스크랩의 메모 수정
      * @param memberId

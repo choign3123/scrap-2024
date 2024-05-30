@@ -13,7 +13,9 @@ import com.example.scrap.web.category.ICategoryService;
 import com.example.scrap.web.member.IMemberService;
 import com.example.scrap.web.member.MemberDTO;
 import com.example.scrap.web.scrap.dto.ScrapRequest;
+import com.example.scrap.web.scrap.dto.ScrapResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -28,6 +30,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
+@Slf4j
 public class ScrapServiceImpl implements IScrapService{
 
     private final IMemberService memberService;
@@ -225,6 +228,32 @@ public class ScrapServiceImpl implements IScrapService{
         }
 
         return scrapList;
+    }
+
+    /**
+     * 스크랩 이동하기 (단건)
+     * @param memberDTO
+     * @param scrapId
+     * @param request
+     * @return
+     */
+    @Transactional
+    public Scrap moveCategoryOfScrap(MemberDTO memberDTO, Long scrapId, ScrapRequest.MoveCategoryOfScrapDTO request){
+        Member member = memberService.findMember(memberDTO);
+        Scrap scrap = findScrap(scrapId);
+        Category moveCategory = categoryService.findCategory(request.getMoveCategoryId());
+
+        // 해당 스크랩에 접근할 수 있는지 확인
+        scrap.checkIllegalMember(member);
+        scrap.checkIllegalCategory(moveCategory);
+        if(moveCategory.isIllegalMember(member)){
+            throw new BaseException(ErrorCode.CATEGORY_MEMBER_NOT_MATCH_IN_SCRAP);
+        }
+
+        // 스크랩 이동하기
+        scrap.moveCategory(moveCategory);
+
+        return scrap;
     }
 
     /**
