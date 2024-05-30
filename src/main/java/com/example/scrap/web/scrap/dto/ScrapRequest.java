@@ -14,7 +14,7 @@ public class ScrapRequest {
      * 스크랩 생성
      */
     @Getter
-    public static class CreateScrap {
+    public static class CreateScrapDTO {
         @NotBlank
         private String scrapURL;
 
@@ -34,7 +34,7 @@ public class ScrapRequest {
      * 스크랩의 메모 수정
      */
     @Getter
-    public static class UpdateScrapMemo{
+    public static class UpdateScrapMemoDTO {
         @NotNull
         private String memo;
     }
@@ -43,7 +43,7 @@ public class ScrapRequest {
      * 스크랩 삭제(목록)
      */
     @Getter
-    public static class DeleteScrapList{
+    public static class DeleteScrapListDTO {
 
         @ExistAvailableScraps
         @JsonProperty("scraps")
@@ -54,7 +54,7 @@ public class ScrapRequest {
      * 스크랩 즐겨찾기(목록)
      */
     @Getter
-    public static class ToggleScrapFavoriteList{
+    public static class ToggleScrapFavoriteListDTO {
 
         @ExistAvailableScraps
         @JsonProperty("scraps")

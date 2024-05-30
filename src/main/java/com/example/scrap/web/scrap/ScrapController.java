@@ -6,8 +6,6 @@ import com.example.scrap.base.response.ResponseDTO;
 import com.example.scrap.converter.ScrapConverter;
 import com.example.scrap.entity.Scrap;
 import com.example.scrap.validation.annotaion.*;
-import com.example.scrap.validation.validator.EnumValidValidator;
-import com.example.scrap.validation.validator.ExistCategoriesValidator;
 import com.example.scrap.web.baseDTO.Data;
 import com.example.scrap.web.baseDTO.PressSelectionType;
 import com.example.scrap.web.baseDTO.Sorts;
@@ -24,7 +22,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.data.domain.Sort.Direction;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @RestController
@@ -46,7 +43,7 @@ public class ScrapController {
      */
     @PostMapping("/{category-id}")
     public ApiResponse scrapSave(@RequestHeader("member-id") Long memberId, @PathVariable("category-id") @ExistCategory Long categoryId,
-                                 @RequestBody @Validated ScrapRequest.CreateScrap request){
+                                 @RequestBody @Validated ScrapRequest.CreateScrapDTO request){
 
         MemberDTO memberDTO = new MemberDTO(memberId);
 
@@ -208,7 +205,7 @@ public class ScrapController {
                                                @RequestParam(name = "all", defaultValue = "false", required = false) boolean isAllFavorite,
                                                @RequestParam(name = "type", required = false) @EnumValid(enumC = PressSelectionType.class, required = false) String pressSelectionType,
                                                @RequestParam(name = "category", required = false) @ExistCategory(required = false) Long categoryId,
-                                               @RequestBody @Validated ScrapRequest.ToggleScrapFavoriteList request){
+                                               @RequestBody @Validated ScrapRequest.ToggleScrapFavoriteListDTO request){
 
         MemberDTO memberDTO = new MemberDTO(memberId);
 
@@ -244,7 +241,7 @@ public class ScrapController {
      */
     @PatchMapping("/{scrap-id}/memo")
     public ApiResponse scrapMemoModify(@RequestHeader("member-id") Long memberId, @PathVariable("scrap-id") @ExistAvailableScrap Long scrapId,
-                                       @RequestBody @Validated ScrapRequest.UpdateScrapMemo request){
+                                       @RequestBody @Validated ScrapRequest.UpdateScrapMemoDTO request){
 
         MemberDTO memberDTO = new MemberDTO(memberId);
 
@@ -282,7 +279,7 @@ public class ScrapController {
      * @return
      */
     @PatchMapping("/trash")
-    public ApiResponse scrapListRemove(@RequestHeader("member-id") Long memberId, @RequestBody @Validated ScrapRequest.DeleteScrapList request,
+    public ApiResponse scrapListRemove(@RequestHeader("member-id") Long memberId, @RequestBody @Validated ScrapRequest.DeleteScrapListDTO request,
                                        @RequestParam(name = "all", defaultValue = "false", required = false) boolean isAllDelete,
                                        @RequestParam(name = "type", required = false) @EnumValid(enumC = PressSelectionType.class, required = false) String pressSelectionType,
                                        @RequestParam(name = "category", required = false) @ExistCategory(required = false) Long categoryId){

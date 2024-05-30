@@ -42,7 +42,7 @@ public class ScrapServiceImpl implements IScrapService{
      * @return 생성된 스크랩
      */
     @Transactional
-    public Scrap createScrap(MemberDTO memberDTO, Long categoryId, ScrapRequest.CreateScrap request){
+    public Scrap createScrap(MemberDTO memberDTO, Long categoryId, ScrapRequest.CreateScrapDTO request){
         Member member = memberService.findMember(memberDTO);
         Category category = categoryService.findCategory(categoryId);
 
@@ -163,7 +163,7 @@ public class ScrapServiceImpl implements IScrapService{
     @Transactional
     public List<Scrap> toggleScrapFavoriteList(MemberDTO memberDTO,
                                         boolean isAllFavorite, PressSelectionType pressSelectionType, Long categoryId,
-                                        ScrapRequest.ToggleScrapFavoriteList request){
+                                        ScrapRequest.ToggleScrapFavoriteListDTO request){
 
         Member member = memberService.findMember(memberDTO);
         List<Scrap> scrapList;
@@ -235,7 +235,7 @@ public class ScrapServiceImpl implements IScrapService{
      * @return
      */
     @Transactional
-    public Scrap updateScrapMemo(MemberDTO memberDTO, Long scrapId, ScrapRequest.UpdateScrapMemo request){
+    public Scrap updateScrapMemo(MemberDTO memberDTO, Long scrapId, ScrapRequest.UpdateScrapMemoDTO request){
         Member member = memberService.findMember(memberDTO);
         Scrap scrap = findScrap(scrapId);
 
@@ -270,7 +270,7 @@ public class ScrapServiceImpl implements IScrapService{
      * @param request
      */
     @Transactional
-    public void deleteScrapList(MemberDTO memberDTO, boolean isAllDelete, PressSelectionType pressSelectionType, Long categoryId, ScrapRequest.DeleteScrapList request){
+    public void deleteScrapList(MemberDTO memberDTO, boolean isAllDelete, PressSelectionType pressSelectionType, Long categoryId, ScrapRequest.DeleteScrapListDTO request){
         Member member = memberService.findMember(memberDTO);
         List<Scrap> deleteScrapList = new ArrayList<>();
 

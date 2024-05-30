@@ -12,7 +12,7 @@ import java.util.List;
 
 public class ScrapConverter {
 
-    public static Scrap toEntity(ScrapRequest.CreateScrap request, Member member, Category category){
+    public static Scrap toEntity(ScrapRequest.CreateScrapDTO request, Member member, Category category){
         return Scrap.builder()
                 .scrapURL(request.getScrapURL())
                 .imageURL(request.getImageURL())
