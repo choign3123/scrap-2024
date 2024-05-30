@@ -151,4 +151,14 @@ public class ScrapResponse {
         private Long scrapId;
         private String memo;
     }
+
+    /**
+     * 스크랩 이동하기 (단건)
+     */
+    @Builder
+    @Getter
+    public static class MoveCategoryOfScrap {
+        private Long scrapId;
+        private Long categoryId;
+    }
 }

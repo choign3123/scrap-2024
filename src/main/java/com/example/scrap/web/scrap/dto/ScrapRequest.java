@@ -1,6 +1,7 @@
 package com.example.scrap.web.scrap.dto;
 
 import com.example.scrap.validation.annotaion.ExistAvailableScraps;
+import com.example.scrap.validation.annotaion.ExistCategory;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 
@@ -59,5 +60,16 @@ public class ScrapRequest {
         @ExistAvailableScraps
         @JsonProperty("scraps")
         private List<Long> scrapIdList;
+    }
+
+    /**
+     * 스크랩 이동하기 (단건)
+     */
+    @Getter
+    public static class MoveCategoryOfScrapDTO {
+
+        @ExistCategory
+        @JsonProperty("moveCategory")
+        private Long moveCategoryId;
     }
 }
