@@ -68,13 +68,12 @@ public interface IScrapService {
     /**
      * 스크랩 즐겨찾기(목록)
      * @param memberDTO
-     * @param toggle
      * @param isAllFavorite
      * @param pressSelectionType
      * @param categoryId
      * @param request
      */
-    public List<Scrap> toggleScrapFavoriteList(MemberDTO memberDTO, boolean toggle,
+    public List<Scrap> toggleScrapFavoriteList(MemberDTO memberDTO,
                                         boolean isAllFavorite, PressSelectionType pressSelectionType, Long categoryId,
                                         ScrapRequest.ToggleScrapFavoriteList request);
 
