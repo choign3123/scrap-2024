@@ -72,4 +72,19 @@ public class ScrapRequest {
         @JsonProperty("moveCategory")
         private Long moveCategoryId;
     }
+
+    /**
+     * 스크랩 이동하기 (목록)
+     */
+    @Getter
+    public static class MoveCategoryOfScrapsDTO {
+
+        @ExistAvailableScraps
+        @JsonProperty("scraps")
+        private List<Long> scrapIdList;
+
+        @ExistCategory
+        @JsonProperty("moveCategory")
+        private Long moveCategoryId;
+    }
 }

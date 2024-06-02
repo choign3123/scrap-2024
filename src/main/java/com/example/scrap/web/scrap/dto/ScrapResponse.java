@@ -161,4 +161,24 @@ public class ScrapResponse {
         private Long scrapId;
         private Long categoryId;
     }
+
+    /**
+     * 스크랩 이동하기 (목록)
+     */
+    @Builder
+    @Getter
+    public static class MoveCategoryOfScraps{
+
+        private int total;
+
+        @JsonProperty("scraps")
+        private List<ScrapDTO> scrapDTOList;
+
+        @Getter
+        @Builder
+        public static class ScrapDTO{
+            private Long scrapId;
+            private Long categoryId;
+        }
+    }
 }
