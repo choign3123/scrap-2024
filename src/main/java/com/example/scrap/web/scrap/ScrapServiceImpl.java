@@ -169,44 +169,15 @@ public class ScrapServiceImpl implements IScrapService{
                                         ScrapRequest.ToggleScrapFavoriteListDTO request){
 
         Member member = memberService.findMember(memberDTO);
-        List<Scrap> scrapList;
+        List<Scrap> favoriteScrapList;
 
         // 전체 즐겨찾기
         if(isAllFavorite){
-            Specification<Scrap> spec = Specification.where(ScrapSpecification.isAvailable())
-                    .and(ScrapSpecification.equalMember(member));
-
-            // 어떤 프레스 타입인지
-            switch (pressSelectionType){
-                case CATEGORY -> {
-                    Category category = categoryService.findCategory(categoryId);
-                    if(category.isIllegalMember(member)){
-                        throw new BaseException(ErrorCode.CATEGORY_MEMBER_NOT_MATCH_IN_SCRAP);
-                    }
-                    spec = spec.and(ScrapSpecification.equalCategory(category));
-                }
-                case FAVORITE -> {
-                    spec = spec.and(ScrapSpecification.isFavorite());
-                }
-            }
-
-            scrapList = scrapRepository.findAll(spec);
+            favoriteScrapList = findAllByPressSelection(member, pressSelectionType, categoryId);
         }
         // 요청된 스크랩만 즐겨찾기
         else{
-            // 빈 리스트인 경우
-            if(request.getScrapIdList().size() == 0){
-                throw new ValidationException("scraps", "적어도 하나 이상의 스크랩을 포함하여야 됩니다.");
-            }
-
-            scrapList = new ArrayList<>();
-            for(Long scrapId : request.getScrapIdList()){
-                Scrap scrap = findScrap(scrapId);
-
-                scrap.checkIllegalMember(member);
-
-                scrapList.add(scrap);
-            }
+            favoriteScrapList = findAllByRequest(request.getScrapIdList(), member);
         }
 
         /**
@@ -216,18 +187,18 @@ public class ScrapServiceImpl implements IScrapService{
          * ★ ★ ★ ★ = 즐겨찾기 X
          */
         boolean toggle = false;
-        for(Scrap scrap : scrapList){
+        for(Scrap scrap : favoriteScrapList){
             if(!scrap.getFavorite()){
                 toggle = true; // 선택된 스크랩중 하나라도 즐겨찾기X인게 있으면, 해당 스크랩 목록 전체 즐겨찾기하기.
                 break;
             }
         }
 
-        for(Scrap scrap : scrapList){
+        for(Scrap scrap : favoriteScrapList){
             scrap.toggleFavorite(toggle);
         }
 
-        return scrapList;
+        return favoriteScrapList;
     }
 
     /**
@@ -253,6 +224,44 @@ public class ScrapServiceImpl implements IScrapService{
         scrap.moveCategory(moveCategory);
 
         return scrap;
+    }
+
+    /**
+     * 스크랩 이동하기 (목록)
+     * @param memberDTO
+     * @param request
+     * @param isAllMove
+     * @param pressSelectionType
+     * @param categoryId
+     * @return
+     */
+    @Transactional
+    public List<Scrap> moveCategoryOfScraps(MemberDTO memberDTO, ScrapRequest.MoveCategoryOfScrapsDTO request,
+                                            boolean isAllMove, PressSelectionType pressSelectionType, Long categoryId){
+
+        Member member = memberService.findMember(memberDTO);
+        Category moveCategory = categoryService.findCategory(request.getMoveCategoryId());
+        List<Scrap> moveScrapList;
+
+        // 해당 스크랩에 접근할 수 있는지 확인
+        if(moveCategory.isIllegalMember(member)){
+            throw new BaseException(ErrorCode.CATEGORY_MEMBER_NOT_MATCH_IN_SCRAP);
+        }
+
+        // 전체 이동하기
+        if(isAllMove){
+            moveScrapList = findAllByPressSelection(member, pressSelectionType, categoryId);
+        }
+        // 요청된 스크랩만 이동하기
+        else{
+            moveScrapList = findAllByRequest(request.getScrapIdList(), member);
+        }
+
+        for(Scrap scrap : moveScrapList){
+            scrap.moveCategory(moveCategory);
+        }
+
+        return moveScrapList;
     }
 
     /**
@@ -300,43 +309,15 @@ public class ScrapServiceImpl implements IScrapService{
     @Transactional
     public void deleteScrapList(MemberDTO memberDTO, boolean isAllDelete, PressSelectionType pressSelectionType, Long categoryId, ScrapRequest.DeleteScrapListDTO request){
         Member member = memberService.findMember(memberDTO);
-        List<Scrap> deleteScrapList = new ArrayList<>();
+        List<Scrap> deleteScrapList;
 
         // 모든 스크랩 삭제
         if(isAllDelete){
-            Specification<Scrap> spec = Specification.where(ScrapSpecification.isAvailable())
-                    .and(ScrapSpecification.equalMember(member));
-
-            // 어떤 프레스 타입인지
-            switch (pressSelectionType){
-                case CATEGORY -> {
-                    Category category = categoryService.findCategory(categoryId);
-                    if(category.checkIllegalMember(member)){
-                        throw new BaseException(ErrorCode.SCRAP_MEMBER_NOT_MATCH);
-                    }
-                    spec = spec.and(ScrapSpecification.equalCategory(category));
-                }
-                case FAVORITE -> {
-                    spec = spec.and(ScrapSpecification.isFavorite());
-                }
-            }
-
-            deleteScrapList = scrapRepository.findAll(spec);
+            deleteScrapList = findAllByPressSelection(member, pressSelectionType, categoryId);
         }
         // 요청된 스크랩만 삭제
         else{
-            // 빈 리스트인 경우
-            if(request.getScrapIdList().size() == 0){
-                throw new ValidationException("scraps", "적어도 하나 이상의 스크랩을 포함하여야 됩니다.");
-            }
-
-            for(Long scrapId : request.getScrapIdList()){
-                Scrap deleteScrap = findScrap(scrapId);
-
-                deleteScrap.checkIllegalMember(member);
-
-                deleteScrapList.add(deleteScrap);
-            }
+            deleteScrapList = findAllByRequest(request.getScrapIdList(), member);
         }
 
         for(Scrap scrap : deleteScrapList){
@@ -346,5 +327,58 @@ public class ScrapServiceImpl implements IScrapService{
 
     public Scrap findScrap(Long scrapId){
         return scrapRepository.findById(scrapId).get();
+    }
+
+    /**
+     * 프레스 타입에 따른 스크랩 조회
+     * @param member
+     * @param pressSelectionType
+     * @param categoryId
+     * @return
+     * @throws BaseException CATEGORY_MEMBER_NOT_MATCH_IN_SCRAP
+     */
+    private List<Scrap> findAllByPressSelection(Member member, PressSelectionType pressSelectionType, Long categoryId){
+        Specification<Scrap> spec = Specification.where(ScrapSpecification.isAvailable())
+                .and(ScrapSpecification.equalMember(member));
+
+        // 어떤 프레스 타입인지
+        switch (pressSelectionType){
+            case CATEGORY -> {
+                Category category = categoryService.findCategory(categoryId);
+                if(category.isIllegalMember(member)){
+                    throw new BaseException(ErrorCode.CATEGORY_MEMBER_NOT_MATCH_IN_SCRAP);
+                }
+                spec = spec.and(ScrapSpecification.equalCategory(category));
+            }
+            case FAVORITE -> {
+                spec = spec.and(ScrapSpecification.isFavorite());
+            }
+        }
+
+        return scrapRepository.findAll(spec);
+    }
+
+    /**
+     * 요청된 스크랩 조회
+     * @param scrapIdList
+     * @param member
+     * @return
+     * @throws ValidationException if scrapIdList empty
+     */
+    private List<Scrap> findAllByRequest(List<Long> scrapIdList, Member member){
+        List<Scrap> scrapList = new ArrayList<>();
+
+        if(scrapIdList.isEmpty()){
+            throw new ValidationException("scraps", "적어도 하나 이상의 스크랩을 포함하여야 됩니다.");
+        }
+        for(Long scrapId : scrapIdList){
+            Scrap scrap = findScrap(scrapId);
+
+            scrap.checkIllegalMember(member);
+
+            scrapList.add(scrap);
+        }
+
+        return scrapList;
     }
 }

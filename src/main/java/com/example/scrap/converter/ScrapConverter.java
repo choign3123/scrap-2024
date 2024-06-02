@@ -152,4 +152,21 @@ public class ScrapConverter {
                 .categoryId(scrap.getCategory().getId())
                 .build();
     }
+
+    public static ScrapResponse.MoveCategoryOfScraps toMoveCategoryOfScraps(List<Scrap> scrapList){
+
+        List<ScrapResponse.MoveCategoryOfScraps.ScrapDTO> scrapDTOList = scrapList.stream()
+                .map(scrap -> {
+                    return ScrapResponse.MoveCategoryOfScraps.ScrapDTO.builder()
+                            .scrapId(scrap.getId())
+                            .categoryId(scrap.getCategory().getId())
+                            .build();
+                })
+                .toList();
+
+        return ScrapResponse.MoveCategoryOfScraps.builder()
+                .total(scrapList.size())
+                .scrapDTOList(scrapDTOList)
+                .build();
+    }
 }
