@@ -84,8 +84,19 @@ public interface IScrapService {
      * @param request
      * @return
      */
-    @Transactional
     public Scrap moveCategoryOfScrap(MemberDTO memberDTO, Long scrapId, ScrapRequest.MoveCategoryOfScrapDTO request);
+
+    /**
+     * 스크랩 이동하기 (목록)
+     * @param memberDTO
+     * @param request
+     * @param isAllMove
+     * @param pressSelectionType
+     * @param categoryId
+     * @return
+     */
+    public List<Scrap> moveCategoryOfScraps(MemberDTO memberDTO, ScrapRequest.MoveCategoryOfScrapsDTO request,
+                                            boolean isAllMove, PressSelectionType pressSelectionType, Long categoryId);
 
     /**
      * 스크랩의 메모 수정

@@ -195,7 +195,7 @@ public class ScrapController {
      * [API-17] 스크랩 즐겨찾기 (목록)
      * @param memberId
      * @param isAllFavorite
-     * @param pressSelectionType
+     * @param pressSelectionStr
      * @param categoryId
      * @param request
      * @return
@@ -203,29 +203,22 @@ public class ScrapController {
     @PatchMapping("/favorite")
     public ApiResponse scrapFavoriteListToggle(@RequestHeader("member-id") Long memberId,
                                                @RequestParam(name = "all", defaultValue = "false", required = false) boolean isAllFavorite,
-                                               @RequestParam(name = "type", required = false) @EnumValid(enumC = PressSelectionType.class, required = false) String pressSelectionType,
+                                               @RequestParam(name = "type", required = false) @EnumValid(enumC = PressSelectionType.class, required = false) String pressSelectionStr,
                                                @RequestParam(name = "category", required = false) @ExistCategory(required = false) Long categoryId,
                                                @RequestBody @Validated ScrapRequest.ToggleScrapFavoriteListDTO request){
 
         MemberDTO memberDTO = new MemberDTO(memberId);
 
-        PressSelectionType pressSelectionTypeEnum = null;
+        PressSelectionType pressSelectionType = null;
         if(isAllFavorite){
             // 프레스 선택 타입 누락 확인
-            boolean pressSelectionTypeMissing = (pressSelectionType == null);
-            if(pressSelectionTypeMissing){
-                throw new ValidationException("type", "모두 즐겨찾기일 시, 필수 입력입니다.");
-            }
-            pressSelectionTypeEnum = PressSelectionType.valueOf(pressSelectionType.toUpperCase());
+            pressSelectionType = checkPressSelectionTypeMissing(pressSelectionStr);
 
             // 카테고리 누락 확인
-            boolean categoryIdMissing = (pressSelectionTypeEnum == PressSelectionType.CATEGORY) && (categoryId == null);
-            if(categoryIdMissing){
-                throw new ValidationException("category", "CATEGORY 타입일 시, 필수 입력입니다.");
-            }
+            checkCategoryMissing(categoryId, pressSelectionType);
         }
 
-        List<Scrap> scrapList = scrapService.toggleScrapFavoriteList(memberDTO, isAllFavorite, pressSelectionTypeEnum, categoryId, request);
+        List<Scrap> scrapList = scrapService.toggleScrapFavoriteList(memberDTO, isAllFavorite, pressSelectionType, categoryId, request);
         ScrapResponse.ToggleScrapFavoriteList response = ScrapConverter.toToggleScrapFavoriteList(scrapList);
 
         return new ApiResponse(new ResponseDTO(response));
@@ -247,6 +240,39 @@ public class ScrapController {
 
         Scrap scrap = scrapService.moveCategoryOfScrap(memberDTO, scrapId, request);
         ScrapResponse.MoveCategoryOfScrap response = ScrapConverter.toMoveCategoryOfScrap(scrap);
+
+        return new ApiResponse(new ResponseDTO(response));
+    }
+
+    /**
+     * [PATCH] /scraps/move
+     * [API-19] 스크랩 이동하기 (목록)
+     * @param memberId
+     * @param request
+     * @param isAllMove
+     * @param pressSelectionStr
+     * @param categoryId
+     * @return
+     */
+    @PatchMapping("/move")
+    public ApiResponse categoryOfScrapsMove(@RequestHeader("member-id") Long memberId, @RequestBody @Validated ScrapRequest.MoveCategoryOfScrapsDTO request,
+                                            @RequestParam(name = "all", defaultValue = "false", required = false) boolean isAllMove,
+                                            @RequestParam(name = "type", required = false) @EnumValid(enumC = PressSelectionType.class, required = false) String pressSelectionStr,
+                                            @RequestParam(name = "category", required = false) @ExistCategory(required = false) Long categoryId){
+
+        MemberDTO memberDTO = new MemberDTO(memberId);
+
+        PressSelectionType pressSelectionType = null;
+        if(isAllMove){
+            // 프레스 선택 타입 누락 확인
+            pressSelectionType = checkPressSelectionTypeMissing(pressSelectionStr);
+
+            // 카테고리 누락 확인
+            checkCategoryMissing(categoryId, pressSelectionType);
+        }
+
+        List<Scrap> scrapList = scrapService.moveCategoryOfScraps(memberDTO, request, isAllMove, pressSelectionType, categoryId);
+        ScrapResponse.MoveCategoryOfScraps response = ScrapConverter.toMoveCategoryOfScraps(scrapList);
 
         return new ApiResponse(new ResponseDTO(response));
     }
@@ -294,38 +320,60 @@ public class ScrapController {
      * @param memberId
      * @param request
      * @param isAllDelete
-     * @param pressSelectionType
+     * @param pressSelectionStr
      * @param categoryId
      * @return
      */
     @PatchMapping("/trash")
     public ApiResponse scrapListRemove(@RequestHeader("member-id") Long memberId, @RequestBody @Validated ScrapRequest.DeleteScrapListDTO request,
                                        @RequestParam(name = "all", defaultValue = "false", required = false) boolean isAllDelete,
-                                       @RequestParam(name = "type", required = false) @EnumValid(enumC = PressSelectionType.class, required = false) String pressSelectionType,
+                                       @RequestParam(name = "type", required = false) @EnumValid(enumC = PressSelectionType.class, required = false) String pressSelectionStr,
                                        @RequestParam(name = "category", required = false) @ExistCategory(required = false) Long categoryId){
 
         MemberDTO memberDTO = new MemberDTO(memberId);
 
         // string -> enum
-        PressSelectionType pressSelectionTypeEnum = null;
+        PressSelectionType pressSelectionType = null;
         if(isAllDelete){
             // 프레스 선택 타입 누락
-            if(pressSelectionType == null){
-                throw new ValidationException("type", "모두 삭제일 시, 필수 입력입니다.");
-            }
-            pressSelectionTypeEnum = PressSelectionType.valueOf(pressSelectionType.toUpperCase());
+            pressSelectionType = checkPressSelectionTypeMissing(pressSelectionStr);
 
             // 카테고리 누락
-            boolean categoryIdNeed = (pressSelectionTypeEnum == PressSelectionType.CATEGORY);
-            boolean categoryIdMissing = categoryIdNeed && categoryId == null;
-            if(categoryIdMissing){
-                throw new ValidationException("category", "CATEGORY 타입일 시, 필수 입력입니다.");
-            }
+            checkCategoryMissing(categoryId, pressSelectionType);
         }
 
-        scrapService.deleteScrapList(memberDTO, isAllDelete, pressSelectionTypeEnum, categoryId, request);
+        scrapService.deleteScrapList(memberDTO, isAllDelete, pressSelectionType, categoryId, request);
 
         return new ApiResponse(new ResponseDTO<Void>());
     }
 
+    /**
+     * 프레스 선택 타입 누락 확인
+     * @param pressSelectionStr
+     * @return PressSelectionType.enum
+     */
+    private PressSelectionType checkPressSelectionTypeMissing(String pressSelectionStr){
+        boolean pressSelectionTypeMissing = (pressSelectionStr == null);
+        if(pressSelectionTypeMissing){
+            throw new ValidationException("type", "전체 선택일 시, 필수 입력입니다.");
+        }
+
+        return PressSelectionType.valueOf(pressSelectionStr.toUpperCase());
+    }
+
+    /**
+     * 카테고리 누락 확인
+     * @param categoryId
+     * @param pressSelectionType
+     * @return if category missing throw ValidationException, else return true
+     * @throws ValidationException
+     */
+    private boolean checkCategoryMissing(Long categoryId, PressSelectionType pressSelectionType){
+        boolean categoryIdMissing = (pressSelectionType == PressSelectionType.CATEGORY) && (categoryId == null);
+        if(categoryIdMissing){
+            throw new ValidationException("category", "CATEGORY 타입일 시, 필수 입력입니다.");
+        }
+
+        return true;
+    }
 }
