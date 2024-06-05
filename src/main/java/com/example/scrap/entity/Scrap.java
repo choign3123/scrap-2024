@@ -36,7 +36,7 @@ public class Scrap extends BaseEntity {
 
     @Column(nullable = false)
     @ColumnDefault("false")
-    private Boolean favorite;
+    private Boolean isFavorite;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -52,13 +52,13 @@ public class Scrap extends BaseEntity {
     private Category category;
 
     @Builder
-    public Scrap(String scrapURL, String title, String imageURL, String description, String memo, Boolean favorite, ScrapStatus status, Member member, Category category) {
+    public Scrap(String scrapURL, String title, String imageURL, String description, String memo, Boolean isFavorite, ScrapStatus status, Member member, Category category) {
         this.scrapURL = scrapURL;
         this.title = title;
         this.imageURL = imageURL;
         this.description = description;
         this.memo = memo;
-        this.favorite = favorite == null ? false : favorite;
+        this.isFavorite = isFavorite == null ? false : isFavorite;
         this.status = status == null ? ScrapStatus.ACTIVE : status;
         setMember(member);
         setCategory(category);
@@ -152,8 +152,8 @@ public class Scrap extends BaseEntity {
      * @return true=즐겨찾기 됨. false=즐겨찾기 해제
      */
     public boolean toggleFavorite(){
-        favorite = !favorite;
-        return favorite;
+        isFavorite = !isFavorite;
+        return isFavorite;
     }
 
     /**
@@ -162,8 +162,8 @@ public class Scrap extends BaseEntity {
      * @return
      */
     public boolean toggleFavorite(boolean isFavorite){
-        favorite = isFavorite;
-        return favorite;
+        isFavorite = isFavorite;
+        return isFavorite;
     }
 
     /**

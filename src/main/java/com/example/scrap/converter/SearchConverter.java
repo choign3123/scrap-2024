@@ -19,7 +19,7 @@ public class SearchConverter {
                             .scrapTitle(scrap.getTitle())
                             .scrapURL(scrap.getScrapURL())
                             .imageURL(scrap.getImageURL())
-                            .isFavorite(scrap.getFavorite())
+                            .isFavorite(scrap.getIsFavorite())
                             .scrapDate(scrap.getCreatedAt().toLocalDate())
                             .build();
                 })
