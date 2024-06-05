@@ -111,6 +111,27 @@ public class ScrapResponse {
     }
 
     /**
+     * 스크랩 전체 공유하기
+     */
+    @Builder
+    @Getter
+    public static class ShareAllScrap {
+
+        private int total;
+
+        @JsonProperty("scraps")
+        private List<ScrapDTO> scrapDTOList;
+
+        @Builder
+        @Getter
+        public static class ScrapDTO {
+            private Long scrapId;
+            private String title;
+            private String scrapURL;
+        }
+    }
+
+    /**
      * 스크랩 즐겨찾기(단건)
      */
     @Builder
