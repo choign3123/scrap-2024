@@ -42,7 +42,7 @@ public class ScrapSpecification {
     }
 
     public static Specification<Scrap> isFavorite(){
-        return (root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("favorite"), true);
+        return (root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("isFavorite"), true);
     }
 
     public static Specification<Scrap> inCategory(List<Long> categoryIdList) {

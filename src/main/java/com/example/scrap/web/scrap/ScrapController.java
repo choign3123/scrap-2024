@@ -173,6 +173,29 @@ public class ScrapController {
     }
 
     /**
+     * [GET] /scraps/share
+     * [API-31] 스크랩 전체 공유하기
+     * @param memberId
+     * @param pressSelectionStr
+     * @param categoryId
+     * @return
+     */
+    @GetMapping("/share")
+    public ApiResponse allScrapShare(@RequestHeader("member-id") Long memberId,
+                                     @RequestParam(name = "type", required = false) @EnumValid(enumC = PressSelectionType.class) String pressSelectionStr,
+                                     @RequestParam(name = "category", required = false) @ExistCategory(required = false) Long categoryId){
+
+        MemberDTO memberDTO = new MemberDTO(memberId);
+
+        PressSelectionType pressSelectionType = PressSelectionType.valueOf(pressSelectionStr.toUpperCase());
+
+        List<Scrap> scrapList = scrapService.shareAllScrap(memberDTO, pressSelectionType, categoryId);
+        ScrapResponse.ShareAllScrap response = ScrapConverter.toShareAllScrap(scrapList);
+
+        return new ApiResponse(new ResponseDTO(response));
+    }
+
+    /**
      * [PATCH] /scraps/{scrap-id}/favorite
      * [API-16] 스크랩 즐겨찾기 (단건)
      * @param memberId

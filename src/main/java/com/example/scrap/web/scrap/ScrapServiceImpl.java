@@ -137,6 +137,20 @@ public class ScrapServiceImpl implements IScrapService{
     }
 
     /**
+     * 스크랩 전체 공유하기
+     * @param memberDTO
+     * @param pressSelectionType
+     * @param categoryId
+     * @return
+     */
+    public List<Scrap> shareAllScrap(MemberDTO memberDTO, PressSelectionType pressSelectionType, Long categoryId){
+
+        Member member = memberService.findMember(memberDTO);
+
+        return findAllByPressSelection(member, pressSelectionType, categoryId);
+    }
+
+    /**
      * 스크랩 즐겨찾기(단건)
      * @param memberDTO
      * @param scrapId
