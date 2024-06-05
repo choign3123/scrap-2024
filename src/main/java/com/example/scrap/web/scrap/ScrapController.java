@@ -189,6 +189,8 @@ public class ScrapController {
 
         PressSelectionType pressSelectionType = PressSelectionType.valueOf(pressSelectionStr.toUpperCase());
 
+        checkCategoryMissing(categoryId, pressSelectionType);
+
         List<Scrap> scrapList = scrapService.shareAllScrap(memberDTO, pressSelectionType, categoryId);
         ScrapResponse.ShareAllScrap response = ScrapConverter.toShareAllScrap(scrapList);
 
