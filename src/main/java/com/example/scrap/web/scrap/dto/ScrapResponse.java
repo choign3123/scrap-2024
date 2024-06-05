@@ -118,6 +118,8 @@ public class ScrapResponse {
     public static class ShareAllScrap {
 
         private int total;
+
+        @JsonProperty("scraps")
         private List<ScrapDTO> scrapDTOList;
 
         @Builder

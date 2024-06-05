@@ -169,4 +169,22 @@ public class ScrapConverter {
                 .scrapDTOList(scrapDTOList)
                 .build();
     }
+
+    public static ScrapResponse.ShareAllScrap toShareAllScrap(List<Scrap> scrapList){
+
+        List<ScrapResponse.ShareAllScrap.ScrapDTO> scrapDTOList = scrapList.stream()
+                .map(scrap -> {
+                    return ScrapResponse.ShareAllScrap.ScrapDTO.builder()
+                            .scrapId(scrap.getId())
+                            .title(scrap.getTitle())
+                            .scrapURL(scrap.getScrapURL())
+                            .build();
+                })
+                .toList();
+
+        return ScrapResponse.ShareAllScrap.builder()
+                .scrapDTOList(scrapDTOList)
+                .total(scrapList.size())
+                .build();
+    }
 }
