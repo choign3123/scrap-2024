@@ -13,7 +13,6 @@ import com.example.scrap.web.category.ICategoryService;
 import com.example.scrap.web.member.IMemberService;
 import com.example.scrap.web.member.MemberDTO;
 import com.example.scrap.web.scrap.dto.ScrapRequest;
-import com.example.scrap.web.scrap.dto.ScrapResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -188,7 +187,7 @@ public class ScrapServiceImpl implements IScrapService{
          */
         boolean toggle = false;
         for(Scrap scrap : favoriteScrapList){
-            if(!scrap.getFavorite()){
+            if(!scrap.getIsFavorite()){
                 toggle = true; // 선택된 스크랩중 하나라도 즐겨찾기X인게 있으면, 해당 스크랩 목록 전체 즐겨찾기하기.
                 break;
             }

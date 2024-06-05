@@ -21,7 +21,7 @@ public class ScrapConverter {
                 .memo(request.getMemo())
                 .member(member)
                 .category(category)
-                .favorite(request.getIsFavorite())
+                .isFavorite(request.getIsFavorite())
                 .build();
     }
 
@@ -31,7 +31,7 @@ public class ScrapConverter {
                 .title(scrap.getTitle())
                 .scrapURL(scrap.getScrapURL())
                 .imageURL(scrap.getImageURL())
-                .isFavorite(scrap.getFavorite())
+                .isFavorite(scrap.getIsFavorite())
                 .scrapDate(scrap.getCreatedAt().toLocalDate())
                 .build();
     }
@@ -46,7 +46,7 @@ public class ScrapConverter {
                             .title(scrap.getTitle())
                             .scrapURL(scrap.getScrapURL())
                             .imageURL(scrap.getImageURL())
-                            .isFavorite(scrap.getFavorite())
+                            .isFavorite(scrap.getIsFavorite())
                             .scrapDate(scrap.getCreatedAt().toLocalDate())
                             .build();
                 })
@@ -66,7 +66,7 @@ public class ScrapConverter {
                 .imageURL(scrap.getImageURL())
                 .description(scrap.getDescription())
                 .memo(scrap.getMemo())
-                .isFavorite(scrap.getFavorite())
+                .isFavorite(scrap.getIsFavorite())
                 .build();
     }
 
@@ -100,7 +100,7 @@ public class ScrapConverter {
                             .title(scrap.getTitle())
                             .scrapURL(scrap.getScrapURL())
                             .imageURL(scrap.getImageURL())
-                            .isFavorite(scrap.getFavorite())
+                            .isFavorite(scrap.getIsFavorite())
                             .scrapDate(scrap.getCreatedAt().toLocalDate())
                             .build();
                 })
@@ -116,7 +116,7 @@ public class ScrapConverter {
 
         return ScrapResponse.ToggleScrapFavorite.builder()
                 .scrapId(scrap.getId())
-                .isFavorite(scrap.getFavorite())
+                .isFavorite(scrap.getIsFavorite())
                 .build();
     }
 
@@ -126,7 +126,7 @@ public class ScrapConverter {
                 .map(scrap -> {
                     return ScrapResponse.ToggleScrapFavoriteList.ScrapDTO.builder()
                             .scrapId(scrap.getId())
-                            .isFavorite(scrap.getFavorite())
+                            .isFavorite(scrap.getIsFavorite())
                             .build();
                 })
                 .toList();
