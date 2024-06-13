@@ -1,12 +1,12 @@
-package com.example.scrap.base.exception;
+package com.example.scrap.base.exception.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @AllArgsConstructor
 @Getter
-public class ValidErrorResponseDTO {
+public class ValidationErrorDTO {
 
     private String field;
-    private String cause;
+    private String reason;
 }

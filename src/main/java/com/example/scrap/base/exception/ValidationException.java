@@ -7,17 +7,17 @@ import lombok.Getter;
 public class ValidationException extends RuntimeException{
 
     private String filed;
-    private String causes;
+    private String reason;
     private ErrorCode errorCode;
 
-    public ValidationException(String filed, String causes){
-        this(filed, causes, ErrorCode._BAD_REQUEST);
+    public ValidationException(String filed, String reason){
+        this(filed, reason, ErrorCode._BAD_REQUEST);
     }
 
-    public ValidationException(String filed, String causes, ErrorCode errorCode){
-        super(filed + ": " + causes);
+    public ValidationException(String filed, String reason, ErrorCode errorCode){
+        super(filed + ": " + reason);
         this.filed = filed;
-        this.causes = causes;
+        this.reason = reason;
         this.errorCode = errorCode;
     }
 }

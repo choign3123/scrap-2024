@@ -1,7 +1,6 @@
 package com.example.scrap.web.search;
 
 import com.example.scrap.base.exception.ValidationException;
-import com.example.scrap.base.response.ApiResponse;
 import com.example.scrap.base.response.ResponseDTO;
 import com.example.scrap.converter.SearchConverter;
 import com.example.scrap.entity.Scrap;
@@ -18,6 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -45,12 +45,12 @@ public class SearchController {
      * @return
      */
     @PostMapping
-    public ApiResponse scrapSearch(@RequestHeader("member-id") Long memberId, @RequestBody @Validated SearchRequest.FindScrapDTO request,
-                                   @RequestParam(name = "sort", defaultValue = "SCRAP_DATE") @EnumValid(enumC = Sorts.class) String sort,
-                                   @RequestParam(name = "direction", defaultValue = "ASC") @EnumValid(enumC = Sort.Direction.class) String direction,
-                                   @RequestParam(name = "page", defaultValue = "1") @PagingPage int page,
-                                   @RequestParam(name = "size", defaultValue = Data.PAGING_SIZE) @PagingSize int size,
-                                   @RequestParam(name = "q") @NotBlank String query){
+    public ResponseEntity<ResponseDTO> scrapSearch(@RequestHeader("member-id") Long memberId, @RequestBody @Validated SearchRequest.FindScrapDTO request,
+                                                   @RequestParam(name = "sort", defaultValue = "SCRAP_DATE") @EnumValid(enumC = Sorts.class) String sort,
+                                                   @RequestParam(name = "direction", defaultValue = "ASC") @EnumValid(enumC = Sort.Direction.class) String direction,
+                                                   @RequestParam(name = "page", defaultValue = "1") @PagingPage int page,
+                                                   @RequestParam(name = "size", defaultValue = Data.PAGING_SIZE) @PagingSize int size,
+                                                   @RequestParam(name = "q") @NotBlank String query){
 
         MemberDTO memberDTO = new MemberDTO(memberId);
 
@@ -77,6 +77,6 @@ public class SearchController {
         Page<Scrap> scrapPage = searchService.findScrap(memberDTO, request, pageRequest, query);
         SearchResponse.FindScrapDTO response = SearchConverter.toFindScrapDTO(scrapPage);
 
-        return new ApiResponse(new ResponseDTO(response));
+        return ResponseEntity.ok(new ResponseDTO(response));
     }
 }
