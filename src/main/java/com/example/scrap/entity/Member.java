@@ -1,16 +1,13 @@
 package com.example.scrap.entity;
 
 import com.example.scrap.entity.base.BaseEntity;
-import com.example.scrap.entity.enums.MemberStatus;
-import com.example.scrap.entity.enums.SocialType;
+import com.example.scrap.entity.enums.SnsType;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -22,18 +19,18 @@ public class Member extends BaseEntity {
     private Long id;
 
     @Column(length = 50, nullable = false)
-    private String email;
+    private String name;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private SocialType socialType;
+    private SnsType snsType;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    @ColumnDefault("'ACTIVE'")
-    private MemberStatus status;
+    @Column(length = 45, nullable = false)
+    private String snsId;
 
-    private Date unregisterDate;
+    @OneToOne(optional = false)
+    @JoinColumn(name = "member_log_id")
+    private MemberLog memberLog;
 
     @OneToMany(mappedBy = "member")
     private List<Category> categoryList = new ArrayList<>();
