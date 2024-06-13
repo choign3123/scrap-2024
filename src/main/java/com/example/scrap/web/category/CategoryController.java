@@ -1,6 +1,5 @@
 package com.example.scrap.web.category;
 
-import com.example.scrap.base.response.ApiResponse;
 import com.example.scrap.base.response.ResponseDTO;
 import com.example.scrap.converter.CategoryConverter;
 import com.example.scrap.entity.Category;
@@ -10,6 +9,7 @@ import com.example.scrap.web.category.dto.CategoryResponse;
 import com.example.scrap.web.member.MemberDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -33,7 +33,7 @@ public class CategoryController {
      * @return
      */
     @PostMapping()
-    public ApiResponse categorySave(@RequestHeader("member-id") Long memberId, @RequestBody @Valid CategoryRequest.CreateCategoryDTO request){
+    public ResponseEntity<ResponseDTO> categorySave(@RequestHeader("member-id") Long memberId, @RequestBody @Valid CategoryRequest.CreateCategoryDTO request){
 
         MemberDTO memberDTO = new MemberDTO(memberId);
 
@@ -41,7 +41,7 @@ public class CategoryController {
 
         CategoryResponse.CreateCategoryDTO response = CategoryConverter.toCreateCategoryDTO(newCategory);
 
-        return new ApiResponse(new ResponseDTO<>(response));
+        return ResponseEntity.ok(new ResponseDTO(response));
     }
 
     /**
@@ -51,14 +51,14 @@ public class CategoryController {
      * @return
      */
     @GetMapping()
-    public ApiResponse categoryWholeList(@RequestHeader("member-id") Long memberId){
+    public ResponseEntity<ResponseDTO> categoryWholeList(@RequestHeader("member-id") Long memberId){
 
         MemberDTO memberDTO = new MemberDTO(memberId);
 
         List<Category> categoryList = categoryService.getCategoryWholeList(memberDTO);
         CategoryResponse.GetCategoryListDTO response = CategoryConverter.toGetCategoryListDTO(categoryList);
 
-        return new ApiResponse(new ResponseDTO<>(response));
+        return ResponseEntity.ok(new ResponseDTO(response));
     }
 
 
@@ -69,14 +69,14 @@ public class CategoryController {
      * @return
      */
     @GetMapping("/selection")
-    public ApiResponse categoryListForSelection(@RequestHeader("member-id") Long memberId){
+    public ResponseEntity<ResponseDTO> categoryListForSelection(@RequestHeader("member-id") Long memberId){
 
         MemberDTO memberDTO = new MemberDTO(memberId);
 
         List<Category> categoryList = categoryService.getCategoryWholeList(memberDTO);
         CategoryResponse.GetCategoryListForSelectionDTO response = CategoryConverter.toGetCategoryListForSelectionDTO(categoryList);
 
-        return new ApiResponse(new ResponseDTO<>(response));
+        return ResponseEntity.ok(new ResponseDTO(response));
     }
 
     /**
@@ -88,14 +88,14 @@ public class CategoryController {
      * @return
      */
     @DeleteMapping("/{category-id}")
-    public ApiResponse categoryRemove(@RequestHeader("member-id") Long memberId, @PathVariable("category-id") @ExistCategory Long categoryId,
+    public ResponseEntity<ResponseDTO> categoryRemove(@RequestHeader("member-id") Long memberId, @PathVariable("category-id") @ExistCategory Long categoryId,
                                       @RequestParam("allow_delete_scrap") Boolean allowDeleteScrap){
 
         MemberDTO memberDTO = new MemberDTO(memberId);
 
         categoryService.deleteCategory(memberDTO, categoryId, allowDeleteScrap);
 
-        return new ApiResponse(new ResponseDTO<Void>());
+        return ResponseEntity.ok(new ResponseDTO());
     }
 
     /** [PATCH] /categories/{category-id}/title
@@ -106,7 +106,7 @@ public class CategoryController {
      * @return
      */
     @PatchMapping("/{category-id}/title")
-    public ApiResponse categoryTitleModify(@RequestHeader("member-id") Long memberId, @PathVariable("category-id") @ExistCategory Long categoryId,
+    public ResponseEntity<ResponseDTO> categoryTitleModify(@RequestHeader("member-id") Long memberId, @PathVariable("category-id") @ExistCategory Long categoryId,
                                            @RequestBody @Valid CategoryRequest.UpdateCategoryTitleDTO request){
 
         MemberDTO memberDTO = new MemberDTO(memberId);
@@ -114,7 +114,7 @@ public class CategoryController {
         Category category = categoryService.updateCategoryTitle(memberDTO, categoryId, request);
         CategoryResponse.UpdateCategoryTitleDTO response = CategoryConverter.toUpdateCategoryTitleDTO(category);
 
-        return new ApiResponse(new ResponseDTO<>(response));
+        return ResponseEntity.ok(new ResponseDTO(response));
     }
 
     /**
@@ -125,14 +125,14 @@ public class CategoryController {
      * @return
      */
     @PatchMapping("/sequence")
-    public ApiResponse categorySequenceModify(@RequestHeader("member-id") Long memberId, @RequestBody @Validated CategoryRequest.UpdateCategorySequenceDTO request){
+    public ResponseEntity<ResponseDTO> categorySequenceModify(@RequestHeader("member-id") Long memberId, @RequestBody @Validated CategoryRequest.UpdateCategorySequenceDTO request){
 
         MemberDTO memberDTO = new MemberDTO(memberId);
 
         List<Category> categoryList = categoryService.updateCategorySequence(memberDTO, request);
         CategoryResponse.UpdateCategorySequenceDTO response = CategoryConverter.toUpdateCategorySequenceDTO(categoryList);
 
-        return new ApiResponse(new ResponseDTO<>(response));
+        return ResponseEntity.ok(new ResponseDTO(response));
     }
 
 }

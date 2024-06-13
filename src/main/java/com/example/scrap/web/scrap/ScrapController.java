@@ -1,7 +1,6 @@
 package com.example.scrap.web.scrap;
 
 import com.example.scrap.base.exception.ValidationException;
-import com.example.scrap.base.response.ApiResponse;
 import com.example.scrap.base.response.ResponseDTO;
 import com.example.scrap.converter.ScrapConverter;
 import com.example.scrap.entity.Scrap;
@@ -17,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.data.domain.Sort.Direction;
@@ -42,16 +42,15 @@ public class ScrapController {
      * @return
      */
     @PostMapping("/{category-id}")
-    public ApiResponse scrapSave(@RequestHeader("member-id") Long memberId, @PathVariable("category-id") @ExistCategory Long categoryId,
-                                 @RequestBody @Validated ScrapRequest.CreateScrapDTO request){
+    public ResponseEntity<ResponseDTO> scrapSave(@RequestHeader("member-id") Long memberId, @PathVariable("category-id") @ExistCategory Long categoryId,
+                                                 @RequestBody @Validated ScrapRequest.CreateScrapDTO request){
 
         MemberDTO memberDTO = new MemberDTO(memberId);
 
         Scrap newScrap = scrapService.createScrap(memberDTO, categoryId, request);
-
         ScrapResponse.CreateScrapDTO response = ScrapConverter.toCreateScrapDTO(newScrap);
 
-        return new ApiResponse(new ResponseDTO<ScrapResponse.CreateScrapDTO>(response));
+        return ResponseEntity.ok(new ResponseDTO(response));
     }
 
     /**
@@ -66,7 +65,7 @@ public class ScrapController {
      * @return
      */
     @GetMapping()
-    public ApiResponse scrapListByCategory(@RequestHeader("member-id") Long memberId,
+    public ResponseEntity<ResponseDTO> scrapListByCategory(@RequestHeader("member-id") Long memberId,
                                            @RequestParam("category") @ExistCategory Long categoryId,
                                            @RequestParam(name = "sort", defaultValue = "SCRAP_DATE") @EnumValid(enumC = Sorts.class) String sort,
                                            @RequestParam(name = "direction", defaultValue = "ASC") @EnumValid(enumC = Direction.class) String direction,
@@ -85,10 +84,9 @@ public class ScrapController {
         PageRequest pageRequest = PageRequest.of(page-1, size, directionEnum, sortsEnum.getName());
 
         Page<Scrap> scrapPage = scrapService.getScrapListByCategory(memberDTO, categoryId, pageRequest);
-
         ScrapResponse.GetScrapListByCategory response = ScrapConverter.toGetScrapListByCategory(scrapPage);
 
-        return new ApiResponse(new ResponseDTO(response));
+        return ResponseEntity.ok(new ResponseDTO(response));
     }
 
     /**
@@ -102,7 +100,7 @@ public class ScrapController {
      * @return
      */
     @GetMapping("/favorite")
-    public ApiResponse favoriteScrapList(@RequestHeader("member-id") Long memberId,
+    public ResponseEntity<ResponseDTO> favoriteScrapList(@RequestHeader("member-id") Long memberId,
                                          @RequestParam(name = "sort", defaultValue = "SCRAP_DATE") @EnumValid(enumC = Sorts.class) String sort,
                                          @RequestParam(name = "direction", defaultValue = "ASC") @EnumValid(enumC = Direction.class) String direction,
                                          @RequestParam(name = "page", defaultValue = "1") @PagingPage int page,
@@ -119,7 +117,7 @@ public class ScrapController {
         Page<Scrap> scrapPage = scrapService.getFavoriteScrapList(memberDTO, pageRequest);
         ScrapResponse.GetFavoriteScrapList response = ScrapConverter.toGetFavoriteScrapList(scrapPage);
 
-        return new ApiResponse(new ResponseDTO(response));
+        return ResponseEntity.ok(new ResponseDTO(response));
 
     }
 
@@ -131,14 +129,13 @@ public class ScrapController {
      * @return
      */
     @GetMapping("/{scrap-id}")
-    public ApiResponse scrapDetails(@RequestHeader("member-id") Long memberId, @PathVariable("scrap-id") @ExistAvailableScrap Long scrapId){
+    public ResponseEntity<ResponseDTO> scrapDetails(@RequestHeader("member-id") Long memberId, @PathVariable("scrap-id") @ExistAvailableScrap Long scrapId){
         MemberDTO memberDTO = new MemberDTO(memberId);
 
         Scrap scrap = scrapService.getScrapDetails(memberDTO, scrapId);
-
         ScrapResponse.GetScrapDetails response = ScrapConverter.toGetScrapDetails(scrap);
 
-        return new ApiResponse(new ResponseDTO<>(response));
+        return ResponseEntity.ok(new ResponseDTO(response));
     }
 
     /**
@@ -152,7 +149,7 @@ public class ScrapController {
      * @return
      */
     @GetMapping("/search/title")
-    public ApiResponse scrapSearchByTitle(@RequestHeader("member-id") Long memberId,
+    public ResponseEntity<ResponseDTO> scrapSearchByTitle(@RequestHeader("member-id") Long memberId,
                                           @RequestParam("category") @ExistCategory Long categoryId,
                                           @RequestParam("q") @NotBlank String query,
                                           @RequestParam(name = "sort", defaultValue = "SCRAP_DATE") @EnumValid(enumC = Sorts.class) String sorts,
@@ -169,7 +166,7 @@ public class ScrapController {
         List<Scrap> scrapList = scrapService.findScrapByTitle(memberDTO, categoryId, query, sortWay);
         ScrapResponse.FindScrapByTitle response = ScrapConverter.toFindScrapByTitle(scrapList);
 
-        return new ApiResponse(new ResponseDTO(response));
+        return ResponseEntity.ok(new ResponseDTO(response));
     }
 
     /**
@@ -181,7 +178,7 @@ public class ScrapController {
      * @return
      */
     @GetMapping("/share")
-    public ApiResponse allScrapShare(@RequestHeader("member-id") Long memberId,
+    public ResponseEntity<ResponseDTO> allScrapShare(@RequestHeader("member-id") Long memberId,
                                      @RequestParam(name = "type", required = false) @EnumValid(enumC = PressSelectionType.class) String pressSelectionStr,
                                      @RequestParam(name = "category", required = false) @ExistCategory(required = false) Long categoryId){
 
@@ -194,7 +191,7 @@ public class ScrapController {
         List<Scrap> scrapList = scrapService.shareAllScrap(memberDTO, pressSelectionType, categoryId);
         ScrapResponse.ShareAllScrap response = ScrapConverter.toShareAllScrap(scrapList);
 
-        return new ApiResponse(new ResponseDTO(response));
+        return ResponseEntity.ok(new ResponseDTO(response));
     }
 
     /**
@@ -205,14 +202,14 @@ public class ScrapController {
      * @return
      */
     @PatchMapping("{scrap-id}/favorite")
-    public ApiResponse scrapFavoriteToggle(@RequestHeader("member-id") Long memberId, @PathVariable("scrap-id") @ExistAvailableScrap Long scrapId){
+    public ResponseEntity<ResponseDTO> scrapFavoriteToggle(@RequestHeader("member-id") Long memberId, @PathVariable("scrap-id") @ExistAvailableScrap Long scrapId){
 
         MemberDTO memberDTO = new MemberDTO(memberId);
 
         Scrap scrap = scrapService.toggleScrapFavorite(memberDTO, scrapId);
         ScrapResponse.ToggleScrapFavorite response = ScrapConverter.toToggleScrapFavorite(scrap);
 
-        return new ApiResponse(new ResponseDTO(response));
+        return ResponseEntity.ok(new ResponseDTO(response));
     }
 
     /**
@@ -226,7 +223,7 @@ public class ScrapController {
      * @return
      */
     @PatchMapping("/favorite")
-    public ApiResponse scrapFavoriteListToggle(@RequestHeader("member-id") Long memberId,
+    public ResponseEntity<ResponseDTO> scrapFavoriteListToggle(@RequestHeader("member-id") Long memberId,
                                                @RequestParam(name = "all", defaultValue = "false", required = false) boolean isAllFavorite,
                                                @RequestParam(name = "type", required = false) @EnumValid(enumC = PressSelectionType.class, required = false) String pressSelectionStr,
                                                @RequestParam(name = "category", required = false) @ExistCategory(required = false) Long categoryId,
@@ -246,7 +243,7 @@ public class ScrapController {
         List<Scrap> scrapList = scrapService.toggleScrapFavoriteList(memberDTO, isAllFavorite, pressSelectionType, categoryId, request);
         ScrapResponse.ToggleScrapFavoriteList response = ScrapConverter.toToggleScrapFavoriteList(scrapList);
 
-        return new ApiResponse(new ResponseDTO(response));
+        return ResponseEntity.ok(new ResponseDTO(response));
     }
 
     /**
@@ -258,7 +255,7 @@ public class ScrapController {
      * @return
      */
     @PatchMapping("/{scrap-id}/move")
-    public ApiResponse categoryOfScrapMove(@RequestHeader("member-id") Long memberId, @PathVariable("scrap-id") @ExistAvailableScrap Long scrapId,
+    public ResponseEntity<ResponseDTO> categoryOfScrapMove(@RequestHeader("member-id") Long memberId, @PathVariable("scrap-id") @ExistAvailableScrap Long scrapId,
                                            @RequestBody @Validated ScrapRequest.MoveCategoryOfScrapDTO request){
 
         MemberDTO memberDTO = new MemberDTO(memberId);
@@ -266,7 +263,7 @@ public class ScrapController {
         Scrap scrap = scrapService.moveCategoryOfScrap(memberDTO, scrapId, request);
         ScrapResponse.MoveCategoryOfScrap response = ScrapConverter.toMoveCategoryOfScrap(scrap);
 
-        return new ApiResponse(new ResponseDTO(response));
+        return ResponseEntity.ok(new ResponseDTO(response));
     }
 
     /**
@@ -280,7 +277,7 @@ public class ScrapController {
      * @return
      */
     @PatchMapping("/move")
-    public ApiResponse categoryOfScrapsMove(@RequestHeader("member-id") Long memberId, @RequestBody @Validated ScrapRequest.MoveCategoryOfScrapsDTO request,
+    public ResponseEntity<ResponseDTO> categoryOfScrapsMove(@RequestHeader("member-id") Long memberId, @RequestBody @Validated ScrapRequest.MoveCategoryOfScrapsDTO request,
                                             @RequestParam(name = "all", defaultValue = "false", required = false) boolean isAllMove,
                                             @RequestParam(name = "type", required = false) @EnumValid(enumC = PressSelectionType.class, required = false) String pressSelectionStr,
                                             @RequestParam(name = "category", required = false) @ExistCategory(required = false) Long categoryId){
@@ -299,7 +296,7 @@ public class ScrapController {
         List<Scrap> scrapList = scrapService.moveCategoryOfScraps(memberDTO, request, isAllMove, pressSelectionType, categoryId);
         ScrapResponse.MoveCategoryOfScraps response = ScrapConverter.toMoveCategoryOfScraps(scrapList);
 
-        return new ApiResponse(new ResponseDTO(response));
+        return ResponseEntity.ok(new ResponseDTO(response));
     }
 
     /**
@@ -311,7 +308,7 @@ public class ScrapController {
      * @return
      */
     @PatchMapping("/{scrap-id}/memo")
-    public ApiResponse scrapMemoModify(@RequestHeader("member-id") Long memberId, @PathVariable("scrap-id") @ExistAvailableScrap Long scrapId,
+    public ResponseEntity<ResponseDTO> scrapMemoModify(@RequestHeader("member-id") Long memberId, @PathVariable("scrap-id") @ExistAvailableScrap Long scrapId,
                                        @RequestBody @Validated ScrapRequest.UpdateScrapMemoDTO request){
 
         MemberDTO memberDTO = new MemberDTO(memberId);
@@ -319,7 +316,7 @@ public class ScrapController {
         Scrap scrap = scrapService.updateScrapMemo(memberDTO, scrapId, request);
         ScrapResponse.UpdateScrapMemo response = ScrapConverter.toUpdateScrapMemo(scrap);
 
-        return new ApiResponse(new ResponseDTO(response));
+        return ResponseEntity.ok(new ResponseDTO(response));
     }
 
     /**
@@ -330,13 +327,13 @@ public class ScrapController {
      * @return
      */
     @PatchMapping("/{scrap-id}/trash")
-    public ApiResponse scrapRemove(@RequestHeader("member-id") Long memberId, @PathVariable("scrap-id") @ExistAvailableScrap Long scrapId){
+    public ResponseEntity<ResponseDTO> scrapRemove(@RequestHeader("member-id") Long memberId, @PathVariable("scrap-id") @ExistAvailableScrap Long scrapId){
 
         MemberDTO memberDTO = new MemberDTO(memberId);
 
         scrapService.deleteScrap(memberDTO, scrapId);
 
-        return new ApiResponse(new ResponseDTO<Void>());
+        return ResponseEntity.ok(new ResponseDTO<Void>());
     }
 
     /**
@@ -350,7 +347,7 @@ public class ScrapController {
      * @return
      */
     @PatchMapping("/trash")
-    public ApiResponse scrapListRemove(@RequestHeader("member-id") Long memberId, @RequestBody @Validated ScrapRequest.DeleteScrapListDTO request,
+    public ResponseEntity<ResponseDTO> scrapListRemove(@RequestHeader("member-id") Long memberId, @RequestBody @Validated ScrapRequest.DeleteScrapListDTO request,
                                        @RequestParam(name = "all", defaultValue = "false", required = false) boolean isAllDelete,
                                        @RequestParam(name = "type", required = false) @EnumValid(enumC = PressSelectionType.class, required = false) String pressSelectionStr,
                                        @RequestParam(name = "category", required = false) @ExistCategory(required = false) Long categoryId){
@@ -369,7 +366,7 @@ public class ScrapController {
 
         scrapService.deleteScrapList(memberDTO, isAllDelete, pressSelectionType, categoryId, request);
 
-        return new ApiResponse(new ResponseDTO<Void>());
+        return ResponseEntity.ok(new ResponseDTO<Void>());
     }
 
     /**
