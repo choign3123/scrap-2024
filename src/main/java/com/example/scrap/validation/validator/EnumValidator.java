@@ -1,12 +1,11 @@
 package com.example.scrap.validation.validator;
 
 import com.example.scrap.validation.annotaion.EnumValid;
-import com.example.scrap.validation.annotaion.PagingSize;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
-public class EnumValidValidator implements ConstraintValidator<EnumValid, String> {
+public class EnumValidator implements ConstraintValidator<EnumValid, String> {
 
     private Class<? extends Enum<?>> enumType;
     private boolean required;
@@ -23,6 +22,10 @@ public class EnumValidValidator implements ConstraintValidator<EnumValid, String
         boolean nullable = !required && value == null;
         if(nullable){
             return true;
+        }
+
+        if(value == null){
+            return false;
         }
 
         Enum<?>[] enums = enumType.getEnumConstants();
