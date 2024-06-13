@@ -21,7 +21,6 @@ public class SearchRequest {
 
         @EnumsValid(enumC = SearchScopeType.class)
         @NotEmpty
-        @JsonProperty(value = "searchScope")
         private List<String> searchScope;
 
         @ExistCategories

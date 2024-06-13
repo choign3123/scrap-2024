@@ -1,13 +1,12 @@
 package com.example.scrap.validation.validator;
 
-import com.example.scrap.validation.annotaion.EnumValid;
 import com.example.scrap.validation.annotaion.EnumsValid;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 import java.util.List;
 
-public class EnumsValidValidator implements ConstraintValidator<EnumsValid, List<String>> {
+public class EnumsValidator implements ConstraintValidator<EnumsValid, List<String>> {
 
     private Class<? extends Enum<?>> enumType;
     private boolean required;
@@ -21,9 +20,13 @@ public class EnumsValidValidator implements ConstraintValidator<EnumsValid, List
 
     @Override
     public boolean isValid(List<String> values, ConstraintValidatorContext context) {
-        boolean nullable = !required && values == null;
+        boolean nullable = !required && (values == null || values.isEmpty());
         if(nullable){
             return true;
+        }
+
+        if(values == null){
+            return false;
         }
 
         Enum<?>[] enums = enumType.getEnumConstants();
