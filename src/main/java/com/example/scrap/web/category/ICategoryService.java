@@ -20,6 +20,13 @@ public interface ICategoryService {
     public Category createCategory(MemberDTO memberDTO, CategoryRequest.CreateCategoryDTO request);
 
     /**
+     * 기본 카테고리 생성
+     * @param member
+     * @return
+     */
+    public List<Category> createDefaultCategory(Member member);
+
+    /**
      * 카테고리 전체 조회
      * @param memberDTO
      * @return 전체 카테고리

@@ -1,12 +1,15 @@
 package com.example.scrap.entity;
 
 import com.example.scrap.entity.base.BaseEntity;
+import com.example.scrap.entity.enums.LoginStatus;
 import com.example.scrap.entity.enums.SnsType;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,8 +31,8 @@ public class Member extends BaseEntity {
     @Column(length = 45, nullable = false)
     private String snsId;
 
-    @OneToOne(optional = false)
-    @JoinColumn(name = "member_log_id")
+    @OneToOne(optional = false, fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "member_log_id", nullable = false)
     private MemberLog memberLog;
 
     @OneToMany(mappedBy = "member")
@@ -37,5 +40,16 @@ public class Member extends BaseEntity {
 
     public int calcNewCategorySequence(){
         return categoryList.size() + 1;
+    }
+
+    @Builder
+    public Member(String name, SnsType snsType, String snsId) {
+        this.name = name;
+        this.snsType = snsType;
+        this.snsId = snsId;
+        this.memberLog = MemberLog.builder()
+                .loginDate(LocalDateTime.now())
+                .loginStatus(LoginStatus.ACTIVE)
+                .build();
     }
 }

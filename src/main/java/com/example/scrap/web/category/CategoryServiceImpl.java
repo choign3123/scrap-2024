@@ -2,9 +2,11 @@ package com.example.scrap.web.category;
 
 import com.example.scrap.base.code.ErrorCode;
 import com.example.scrap.base.exception.BaseException;
+import com.example.scrap.converter.CategoryConverter;
 import com.example.scrap.entity.Category;
 import com.example.scrap.entity.Member;
 import com.example.scrap.entity.Scrap;
+import com.example.scrap.web.baseDTO.Data;
 import com.example.scrap.web.category.dto.CategoryRequest;
 import com.example.scrap.web.member.IMemberService;
 import com.example.scrap.web.member.MemberDTO;
@@ -45,6 +47,25 @@ public class CategoryServiceImpl implements ICategoryService{
         categoryRepository.save(newCategory);
 
         return newCategory;
+    }
+
+    /**
+     * 기본 카테고리 생성
+     * @param member
+     * @return
+     */
+    @Transactional
+    public List<Category> createDefaultCategory(Member member){
+        List<Category> categoryList = new ArrayList<>();
+
+        for(String categoryTitle : Data.DEFAULT_CATEGORY_LIST){
+            Category defaultCategory = CategoryConverter.toEntity(member, categoryTitle, true);
+            categoryRepository.save(defaultCategory);
+
+            categoryList.add(defaultCategory);
+        }
+
+        return categoryList;
     }
 
     /**

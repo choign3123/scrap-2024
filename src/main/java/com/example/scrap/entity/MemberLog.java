@@ -2,6 +2,7 @@ package com.example.scrap.entity;
 
 import com.example.scrap.entity.enums.LoginStatus;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -25,4 +26,14 @@ public class MemberLog {
     private LoginStatus loginStatus;
 
     private LocalDateTime unregisterDate;
+
+    @Builder
+    public MemberLog(LocalDateTime loginDate, LoginStatus loginStatus) {
+        this.loginDate = loginDate;
+        this.loginStatus = loginStatus;
+    }
+
+    public void setLoginDate(LocalDateTime loginDate){
+        this.loginDate = loginDate;
+    }
 }

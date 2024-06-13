@@ -1,11 +1,22 @@
 package com.example.scrap.converter;
 
 import com.example.scrap.entity.Category;
+import com.example.scrap.entity.Member;
 import com.example.scrap.web.category.dto.CategoryResponse;
 
 import java.util.List;
 
 public class CategoryConverter {
+
+    public static Category toEntity(Member member, String title, boolean isDefault){
+
+        return Category.builder()
+                .title(title)
+                .isDefault(isDefault)
+                .sequence(member.calcNewCategorySequence())
+                .member(member)
+                .build();
+    }
 
     public static CategoryResponse.CreateCategoryDTO toCreateCategoryDTO(Category category){
         return CategoryResponse.CreateCategoryDTO.builder()
