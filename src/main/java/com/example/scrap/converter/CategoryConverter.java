@@ -2,6 +2,7 @@ package com.example.scrap.converter;
 
 import com.example.scrap.entity.Category;
 import com.example.scrap.entity.Member;
+import com.example.scrap.web.category.dto.CategoryRequest;
 import com.example.scrap.web.category.dto.CategoryResponse;
 
 import java.util.List;
@@ -9,12 +10,18 @@ import java.util.List;
 public class CategoryConverter {
 
     public static Category toEntity(Member member, String title, boolean isDefault){
-
         return Category.builder()
                 .title(title)
                 .isDefault(isDefault)
-                .sequence(member.calcNewCategorySequence())
                 .member(member)
+                .build();
+    }
+
+    public static Category toEntity(Member member, CategoryRequest.CreateCategoryDTO request){
+        return Category.builder()
+                .isDefault(false)
+                .member(member)
+                .title(request.getCategoryTitle())
                 .build();
     }
 

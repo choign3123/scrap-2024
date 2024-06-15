@@ -36,13 +36,7 @@ public class CategoryServiceImpl implements ICategoryService{
     public Category createCategory(MemberDTO memberDTO, CategoryRequest.CreateCategoryDTO request){
         Member member = memberService.findMember(memberDTO);
 
-        int newCategorySequence = member.calcNewCategorySequence();
-
-        Category newCategory = Category.builder()
-                .title(request.getCategoryTitle())
-                .sequence(newCategorySequence)
-                .member(member)
-                .build();
+        Category newCategory = CategoryConverter.toEntity(member, request);
 
         categoryRepository.save(newCategory);
 
