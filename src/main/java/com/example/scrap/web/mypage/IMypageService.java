@@ -1,6 +1,5 @@
 package com.example.scrap.web.mypage;
 
-import com.example.scrap.entity.Member;
 import com.example.scrap.web.member.MemberDTO;
 import com.example.scrap.web.mypage.dto.MypageResponse;
 
@@ -11,6 +10,6 @@ public interface IMypageService {
      * @param memberDTO
      * @return
      */
-    public MypageResponse.Mypage mypage(MemberDTO memberDTO);
+    public MypageResponse.MypageDTO mypage(MemberDTO memberDTO);
 
 }

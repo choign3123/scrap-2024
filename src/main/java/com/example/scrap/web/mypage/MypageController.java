@@ -27,7 +27,7 @@ public class MypageController {
     public ResponseEntity<ResponseDTO> mypage(@RequestHeader("member-id") Long memberId){
         MemberDTO memberDTO = new MemberDTO(memberId);
 
-        MypageResponse.Mypage response = mypageService.mypage(memberDTO);
+        MypageResponse.MypageDTO response = mypageService.mypage(memberDTO);
 
         return ResponseEntity.ok(new ResponseDTO(response));
     }

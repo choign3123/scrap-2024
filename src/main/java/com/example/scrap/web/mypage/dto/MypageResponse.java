@@ -7,7 +7,7 @@ public class MypageResponse {
 
     @Builder
     @Getter
-    public static class Mypage{
+    public static class MypageDTO {
         private int totalScrap;
     }
 }
