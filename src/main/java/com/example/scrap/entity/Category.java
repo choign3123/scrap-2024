@@ -39,9 +39,9 @@ public class Category extends BaseEntity implements Comparable<Category>{
     private List<Scrap> scrapList = new ArrayList<>();
 
     @Builder
-    public Category(String title, int sequence, Member member, Boolean isDefault) {
+    public Category(String title, Member member, Boolean isDefault) {
         this.title = title;
-        this.sequence = sequence;
+        this.sequence = member.calcNewCategorySequence();
         this.isDefault = isDefault == null ? false : isDefault;
 
         setMember(member);

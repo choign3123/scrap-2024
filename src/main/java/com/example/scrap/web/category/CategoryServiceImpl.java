@@ -2,6 +2,7 @@ package com.example.scrap.web.category;
 
 import com.example.scrap.base.code.ErrorCode;
 import com.example.scrap.base.exception.BaseException;
+import com.example.scrap.converter.CategoryConverter;
 import com.example.scrap.entity.Category;
 import com.example.scrap.entity.Member;
 import com.example.scrap.entity.Scrap;
@@ -34,13 +35,7 @@ public class CategoryServiceImpl implements ICategoryService{
     public Category createCategory(MemberDTO memberDTO, CategoryRequest.CreateCategoryDTO request){
         Member member = memberService.findMember(memberDTO);
 
-        int newCategorySequence = member.calcNewCategorySequence();
-
-        Category newCategory = Category.builder()
-                .title(request.getCategoryTitle())
-                .sequence(newCategorySequence)
-                .member(member)
-                .build();
+        Category newCategory = CategoryConverter.toEntity(member, request);
 
         categoryRepository.save(newCategory);
 
