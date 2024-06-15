@@ -2,7 +2,6 @@ package com.example.scrap.web.scrap.dto;
 
 import com.example.scrap.web.baseDTO.Meta;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -30,7 +29,7 @@ public class ScrapResponse {
      */
     @Builder
     @Getter
-    public static class GetScrapListByCategory {
+    public static class GetScrapListByCategoryDTO {
         private Meta meta;
 
         @JsonProperty("scraps")
@@ -53,7 +52,7 @@ public class ScrapResponse {
      */
     @Builder
     @Getter
-    public static class GetFavoriteScrapList {
+    public static class GetFavoriteScrapListDTO {
         private Meta meta;
 
         @JsonProperty("scraps")
@@ -76,7 +75,7 @@ public class ScrapResponse {
      */
     @Builder
     @Getter
-    public static class GetScrapDetails {
+    public static class GetScrapDetailsDTO {
         private Long scrapId;
         private String title;
         private String scrapURL;
@@ -91,7 +90,7 @@ public class ScrapResponse {
      */
     @Builder
     @Getter
-    public static class FindScrapByTitle {
+    public static class FindScrapByTitleDTO {
 
         @JsonProperty("scraps")
         private List<ScrapDTO> scrapDTOList;
@@ -115,7 +114,7 @@ public class ScrapResponse {
      */
     @Builder
     @Getter
-    public static class ShareAllScrap {
+    public static class ShareAllScrapDTO {
 
         private int total;
 
@@ -136,7 +135,7 @@ public class ScrapResponse {
      */
     @Builder
     @Getter
-    public static class ToggleScrapFavorite{
+    public static class ToggleScrapFavoriteDTO {
 
         private Long scrapId;
         private Boolean isFavorite;
@@ -147,7 +146,7 @@ public class ScrapResponse {
      */
     @Builder
     @Getter
-    public static class ToggleScrapFavoriteList{
+    public static class ToggleScrapFavoriteListDTO {
 
         private int total;
 
@@ -167,7 +166,7 @@ public class ScrapResponse {
      */
     @Builder
     @Getter
-    public static class UpdateScrapMemo{
+    public static class UpdateScrapMemoDTO {
 
         private Long scrapId;
         private String memo;
@@ -178,7 +177,7 @@ public class ScrapResponse {
      */
     @Builder
     @Getter
-    public static class MoveCategoryOfScrap {
+    public static class MoveCategoryOfScrapDTO {
         private Long scrapId;
         private Long categoryId;
     }
@@ -188,7 +187,7 @@ public class ScrapResponse {
      */
     @Builder
     @Getter
-    public static class MoveCategoryOfScraps{
+    public static class MoveCategoryOfScrapListDTO {
 
         private int total;
 
