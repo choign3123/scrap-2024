@@ -1,12 +1,12 @@
 package com.example.scrap.web.oauth;
 
-import com.example.scrap.base.response.ApiResponse;
 import com.example.scrap.base.response.ResponseDTO;
 import com.example.scrap.converter.OauthConverter;
 import com.example.scrap.web.baseDTO.Token;
 import com.example.scrap.web.oauth.dto.OauthResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -24,13 +24,13 @@ public class OauthController {
      * @return
      */
     @PostMapping("/naver/login")
-    public ApiResponse naverLoginOrSignup(@RequestHeader("Authorization") String authorization){
+    public ResponseEntity<ResponseDTO> naverLoginOrSignup(@RequestHeader("Authorization") String authorization){
 
         Token token = naverService.login(authorization);
 
         OauthResponse.TokenDTO response = OauthConverter.toTokenDTO(token);
 
-        return new ApiResponse(new ResponseDTO(response));
+        return ResponseEntity.ok(new ResponseDTO<>(response));
     }
 
     /**
