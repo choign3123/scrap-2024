@@ -2,7 +2,7 @@ package com.example.scrap.web.oauth;
 
 import com.example.scrap.base.response.ResponseDTO;
 import com.example.scrap.converter.OauthConverter;
-import com.example.scrap.web.baseDTO.Token;
+import com.example.scrap.jwt.dto.Token;
 import com.example.scrap.web.oauth.dto.OauthResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

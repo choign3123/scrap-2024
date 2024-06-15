@@ -1,6 +1,6 @@
 package com.example.scrap.web.oauth;
 
-import com.example.scrap.web.baseDTO.Token;
+import com.example.scrap.jwt.dto.Token;
 
 // [TODO] 어떻게 네이버와 구글을 구분해서 사용할 수 있을지 고민 필요
 public interface IOauthService {

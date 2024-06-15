@@ -3,7 +3,7 @@ package com.example.scrap.web.oauth;
 import com.example.scrap.converter.MemberConverter;
 import com.example.scrap.entity.Member;
 import com.example.scrap.entity.enums.SnsType;
-import com.example.scrap.web.baseDTO.Token;
+import com.example.scrap.jwt.dto.Token;
 import com.example.scrap.web.category.ICategoryService;
 import com.example.scrap.web.member.MemberRepository;
 import com.example.scrap.web.oauth.dto.NaverResponse;

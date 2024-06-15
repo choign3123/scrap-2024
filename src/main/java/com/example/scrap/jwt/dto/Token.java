@@ -1,4 +1,4 @@
-package com.example.scrap.web.baseDTO;
+package com.example.scrap.jwt.dto;
 
 import lombok.AccessLevel;
 import lombok.Builder;

@@ -1,6 +1,6 @@
 package com.example.scrap.converter;
 
-import com.example.scrap.web.baseDTO.Token;
+import com.example.scrap.jwt.dto.Token;
 import com.example.scrap.web.oauth.dto.OauthResponse;
 
 public class OauthConverter {
