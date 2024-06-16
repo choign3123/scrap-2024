@@ -36,6 +36,8 @@ public class MemberServiceImpl implements IMemberService{
      * @return
      */
     public Member findMember(SnsType snsType, String snsId){
+        
+        // [TODO] 회원탈퇴한 멤버는 아닌지 확인하는 로직 필요
         return memberRepository.findBySnsTypeAndSnsId(snsType, snsId)
                 .orElseThrow(() -> new BaseException(ErrorCode.MEMBER_NOT_FOUND));
     }
