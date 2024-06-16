@@ -8,5 +8,6 @@ import java.util.Optional;
 
 public interface MemberRepository extends JpaRepository<Member, Long> {
 
+    // [TODO] fetch join으로 성능 향상 꿰하기
     Optional<Member> findBySnsTypeAndSnsId(SnsType snsType, String snsId);
 }
