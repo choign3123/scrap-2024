@@ -18,7 +18,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class MemberQueryServiceImpl implements IMemberQueryService {
 
     private final MemberRepository memberRepository;
-    private final ICategoryCommandService categoryCommandService;
 
     /**
      * 멤버 조회
@@ -58,20 +57,5 @@ public class MemberQueryServiceImpl implements IMemberQueryService {
         else{
             throw new BaseException(ErrorCode._BAD_REQUEST);
         }
-    }
-
-    /**
-     * 네이버 회원가입
-     * @param profileInfo
-     * @return
-     */
-    @Transactional
-    public Member signup(NaverResponse.ProfileInfo.Response profileInfo){
-        Member member = MemberConverter.toEntity(profileInfo, SnsType.NAVER);
-
-        // 기본 카테고리 생성
-        categoryCommandService.createDefaultCategory(member);
-
-        return memberRepository.save(member);
     }
 }
