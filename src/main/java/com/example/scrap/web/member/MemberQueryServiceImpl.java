@@ -5,7 +5,8 @@ import com.example.scrap.base.exception.BaseException;
 import com.example.scrap.converter.MemberConverter;
 import com.example.scrap.entity.Member;
 import com.example.scrap.entity.enums.SnsType;
-import com.example.scrap.web.category.ICategoryService;
+import com.example.scrap.web.category.ICategoryCommandService;
+import com.example.scrap.web.member.dto.MemberDTO;
 import com.example.scrap.web.oauth.dto.NaverResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -14,10 +15,10 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
-public class MemberServiceImpl implements IMemberService{
+public class MemberQueryServiceImpl implements IMemberQueryService {
 
     private final MemberRepository memberRepository;
-    private final ICategoryService categoryService;
+    private final ICategoryCommandService categoryCommandService;
 
     /**
      * 멤버 조회
@@ -69,7 +70,7 @@ public class MemberServiceImpl implements IMemberService{
         Member member = MemberConverter.toEntity(profileInfo, SnsType.NAVER);
 
         // 기본 카테고리 생성
-        categoryService.createDefaultCategory(member);
+        categoryCommandService.createDefaultCategory(member);
 
         return memberRepository.save(member);
     }

@@ -4,7 +4,7 @@ import com.example.scrap.entity.Member;
 import com.example.scrap.entity.enums.SnsType;
 import com.example.scrap.jwt.TokenProvider;
 import com.example.scrap.jwt.dto.Token;
-import com.example.scrap.web.member.IMemberService;
+import com.example.scrap.web.member.IMemberCommandService;
 import com.example.scrap.web.member.MemberRepository;
 import com.example.scrap.web.oauth.dto.NaverResponse;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +24,7 @@ public class NaverService implements IOauthService{
 
     private final RestTemplate restTemplate;
     private final MemberRepository memberRepository;
-    private final IMemberService memberService;
+    private final IMemberCommandService memberCommandService;
     private final TokenProvider tokenProvider;
     private final static SnsType snsType = SnsType.NAVER;
 
@@ -43,7 +43,7 @@ public class NaverService implements IOauthService{
         // db에 없으면 해당 정보로 로그인 후, 토큰 생성해서 return
         // db에 있으면 해당 정보로 토큰 생성해서 return
         Member member = optionalMember.orElseGet(
-                () -> memberService.signup(profileInfo)
+                () -> memberCommandService.signup(profileInfo)
         );
 
         member.login();

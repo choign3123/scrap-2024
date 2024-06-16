@@ -4,7 +4,7 @@ import com.example.scrap.base.code.ErrorCode;
 import com.example.scrap.base.exception.BaseException;
 import com.example.scrap.entity.enums.SnsType;
 import com.example.scrap.jwt.dto.Token;
-import com.example.scrap.web.member.MemberDTO;
+import com.example.scrap.web.member.dto.MemberDTO;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;

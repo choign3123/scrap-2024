@@ -9,7 +9,7 @@ import com.example.scrap.validation.annotaion.PagingPage;
 import com.example.scrap.validation.annotaion.PagingSize;
 import com.example.scrap.web.baseDTO.Data;
 import com.example.scrap.web.baseDTO.Sorts;
-import com.example.scrap.web.member.MemberDTO;
+import com.example.scrap.web.member.dto.MemberDTO;
 import com.example.scrap.web.search.dto.SearchRequest;
 import com.example.scrap.web.search.dto.SearchResponse;
 import lombok.RequiredArgsConstructor;
@@ -30,7 +30,7 @@ import javax.validation.constraints.NotBlank;
 @Slf4j
 public class SearchController {
 
-    private final ISearchService searchService;
+    private final ISearchQueryService searchService;
 
     /**
      * [POST] /search

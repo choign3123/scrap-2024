@@ -3,13 +3,11 @@ package com.example.scrap.web.category;
 import com.example.scrap.entity.Category;
 import com.example.scrap.entity.Member;
 import com.example.scrap.web.category.dto.CategoryRequest;
-import com.example.scrap.web.category.dto.CategoryResponse;
-import com.example.scrap.web.member.MemberDTO;
-import org.springframework.transaction.annotation.Transactional;
+import com.example.scrap.web.member.dto.MemberDTO;
 
 import java.util.List;
 
-public interface ICategoryService {
+public interface ICategoryCommandService {
 
     /**
      * 카테고리 생성
@@ -25,13 +23,6 @@ public interface ICategoryService {
      * @return
      */
     public List<Category> createDefaultCategory(Member member);
-
-    /**
-     * 카테고리 전체 조회
-     * @param memberDTO
-     * @return 전체 카테고리
-     */
-    public List<Category> getCategoryWholeList(MemberDTO memberDTO);
 
     /**
      * 카테고리 삭제
@@ -56,6 +47,4 @@ public interface ICategoryService {
      * @return
      */
     public List<Category> updateCategorySequence(MemberDTO memberDTO, CategoryRequest.UpdateCategorySequenceDTO request);
-
-    public Category findCategory(Long categoryId);
 }

@@ -6,7 +6,7 @@ import com.example.scrap.entity.Category;
 import com.example.scrap.validation.annotaion.ExistCategory;
 import com.example.scrap.web.category.dto.CategoryRequest;
 import com.example.scrap.web.category.dto.CategoryResponse;
-import com.example.scrap.web.member.MemberDTO;
+import com.example.scrap.web.member.dto.MemberDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -23,7 +23,8 @@ import java.util.List;
 @Validated
 public class CategoryController {
 
-    private final ICategoryService categoryService;
+    private final ICategoryQueryService categoryQueryService;
+    private final ICategoryCommandService categoryCommandService;
 
     /**
      * [POST] /categories
@@ -37,7 +38,7 @@ public class CategoryController {
 
         MemberDTO memberDTO = new MemberDTO(memberId);
 
-        Category newCategory = categoryService.createCategory(memberDTO, request);
+        Category newCategory = categoryCommandService.createCategory(memberDTO, request);
 
         CategoryResponse.CreateCategoryDTO response = CategoryConverter.toCreateCategoryDTO(newCategory);
 
@@ -55,7 +56,7 @@ public class CategoryController {
 
         MemberDTO memberDTO = new MemberDTO(memberId);
 
-        List<Category> categoryList = categoryService.getCategoryWholeList(memberDTO);
+        List<Category> categoryList = categoryQueryService.getCategoryWholeList(memberDTO);
         CategoryResponse.GetCategoryListDTO response = CategoryConverter.toGetCategoryListDTO(categoryList);
 
         return ResponseEntity.ok(new ResponseDTO(response));
@@ -73,7 +74,7 @@ public class CategoryController {
 
         MemberDTO memberDTO = new MemberDTO(memberId);
 
-        List<Category> categoryList = categoryService.getCategoryWholeList(memberDTO);
+        List<Category> categoryList = categoryQueryService.getCategoryWholeList(memberDTO);
         CategoryResponse.GetCategoryListForSelectionDTO response = CategoryConverter.toGetCategoryListForSelectionDTO(categoryList);
 
         return ResponseEntity.ok(new ResponseDTO(response));
@@ -93,7 +94,7 @@ public class CategoryController {
 
         MemberDTO memberDTO = new MemberDTO(memberId);
 
-        categoryService.deleteCategory(memberDTO, categoryId, allowDeleteScrap);
+        categoryCommandService.deleteCategory(memberDTO, categoryId, allowDeleteScrap);
 
         return ResponseEntity.ok(new ResponseDTO());
     }
@@ -111,7 +112,7 @@ public class CategoryController {
 
         MemberDTO memberDTO = new MemberDTO(memberId);
 
-        Category category = categoryService.updateCategoryTitle(memberDTO, categoryId, request);
+        Category category = categoryCommandService.updateCategoryTitle(memberDTO, categoryId, request);
         CategoryResponse.UpdateCategoryTitleDTO response = CategoryConverter.toUpdateCategoryTitleDTO(category);
 
         return ResponseEntity.ok(new ResponseDTO(response));
@@ -129,7 +130,7 @@ public class CategoryController {
 
         MemberDTO memberDTO = new MemberDTO(memberId);
 
-        List<Category> categoryList = categoryService.updateCategorySequence(memberDTO, request);
+        List<Category> categoryList = categoryCommandService.updateCategorySequence(memberDTO, request);
         CategoryResponse.UpdateCategorySequenceDTO response = CategoryConverter.toUpdateCategorySequenceDTO(categoryList);
 
         return ResponseEntity.ok(new ResponseDTO(response));

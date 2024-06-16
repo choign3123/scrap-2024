@@ -8,7 +8,7 @@ import com.example.scrap.validation.annotaion.*;
 import com.example.scrap.web.baseDTO.Data;
 import com.example.scrap.web.baseDTO.PressSelectionType;
 import com.example.scrap.web.baseDTO.Sorts;
-import com.example.scrap.web.member.MemberDTO;
+import com.example.scrap.web.member.dto.MemberDTO;
 import com.example.scrap.web.scrap.dto.ScrapRequest;
 import com.example.scrap.web.scrap.dto.ScrapResponse;
 import lombok.RequiredArgsConstructor;
@@ -31,7 +31,8 @@ import java.util.List;
 @Slf4j
 public class ScrapController {
 
-    private final IScrapService scrapService;
+    private final IScrapQueryService scrapQueryService;
+    private final IScrapCommandService scrapCommandService;
 
     /**
      * [POST] /scraps/{category-id}
@@ -47,7 +48,7 @@ public class ScrapController {
 
         MemberDTO memberDTO = new MemberDTO(memberId);
 
-        Scrap newScrap = scrapService.createScrap(memberDTO, categoryId, request);
+        Scrap newScrap = scrapCommandService.createScrap(memberDTO, categoryId, request);
         ScrapResponse.CreateScrapDTO response = ScrapConverter.toCreateScrapDTO(newScrap);
 
         return ResponseEntity.ok(new ResponseDTO(response));
@@ -83,7 +84,7 @@ public class ScrapController {
         // 페이지네이션
         PageRequest pageRequest = PageRequest.of(page-1, size, directionEnum, sortsEnum.getName());
 
-        Page<Scrap> scrapPage = scrapService.getScrapListByCategory(memberDTO, categoryId, pageRequest);
+        Page<Scrap> scrapPage = scrapQueryService.getScrapListByCategory(memberDTO, categoryId, pageRequest);
         ScrapResponse.GetScrapListByCategoryDTO response = ScrapConverter.toGetScrapListByCategory(scrapPage);
 
         return ResponseEntity.ok(new ResponseDTO(response));
@@ -114,7 +115,7 @@ public class ScrapController {
         // 페이지네이션
         PageRequest pageRequest = PageRequest.of(page-1, size, directionEnum, sortsEnum.getName());
 
-        Page<Scrap> scrapPage = scrapService.getFavoriteScrapList(memberDTO, pageRequest);
+        Page<Scrap> scrapPage = scrapQueryService.getFavoriteScrapList(memberDTO, pageRequest);
         ScrapResponse.GetFavoriteScrapListDTO response = ScrapConverter.toGetFavoriteScrapList(scrapPage);
 
         return ResponseEntity.ok(new ResponseDTO(response));
@@ -132,7 +133,7 @@ public class ScrapController {
     public ResponseEntity<ResponseDTO> scrapDetails(@RequestHeader("member-id") Long memberId, @PathVariable("scrap-id") @ExistAvailableScrap Long scrapId){
         MemberDTO memberDTO = new MemberDTO(memberId);
 
-        Scrap scrap = scrapService.getScrapDetails(memberDTO, scrapId);
+        Scrap scrap = scrapQueryService.getScrapDetails(memberDTO, scrapId);
         ScrapResponse.GetScrapDetailsDTO response = ScrapConverter.toGetScrapDetails(scrap);
 
         return ResponseEntity.ok(new ResponseDTO(response));
@@ -163,7 +164,7 @@ public class ScrapController {
         // 정렬
         Sort sortWay = Sort.by(directionEnum, sortsEnum.getName());
 
-        List<Scrap> scrapList = scrapService.findScrapByTitle(memberDTO, categoryId, query, sortWay);
+        List<Scrap> scrapList = scrapQueryService.findScrapByTitle(memberDTO, categoryId, query, sortWay);
         ScrapResponse.FindScrapByTitleDTO response = ScrapConverter.toFindScrapByTitle(scrapList);
 
         return ResponseEntity.ok(new ResponseDTO(response));
@@ -188,7 +189,7 @@ public class ScrapController {
 
         checkCategoryMissing(categoryId, pressSelectionType);
 
-        List<Scrap> scrapList = scrapService.shareAllScrap(memberDTO, pressSelectionType, categoryId);
+        List<Scrap> scrapList = scrapQueryService.shareAllScrap(memberDTO, pressSelectionType, categoryId);
         ScrapResponse.ShareAllScrapDTO response = ScrapConverter.toShareAllScrap(scrapList);
 
         return ResponseEntity.ok(new ResponseDTO(response));
@@ -206,7 +207,7 @@ public class ScrapController {
 
         MemberDTO memberDTO = new MemberDTO(memberId);
 
-        Scrap scrap = scrapService.toggleScrapFavorite(memberDTO, scrapId);
+        Scrap scrap = scrapCommandService.toggleScrapFavorite(memberDTO, scrapId);
         ScrapResponse.ToggleScrapFavoriteDTO response = ScrapConverter.toToggleScrapFavorite(scrap);
 
         return ResponseEntity.ok(new ResponseDTO(response));
@@ -240,7 +241,7 @@ public class ScrapController {
             checkCategoryMissing(categoryId, pressSelectionType);
         }
 
-        List<Scrap> scrapList = scrapService.toggleScrapFavoriteList(memberDTO, isAllFavorite, pressSelectionType, categoryId, request);
+        List<Scrap> scrapList = scrapCommandService.toggleScrapFavoriteList(memberDTO, isAllFavorite, pressSelectionType, categoryId, request);
         ScrapResponse.ToggleScrapFavoriteListDTO response = ScrapConverter.toToggleScrapFavoriteList(scrapList);
 
         return ResponseEntity.ok(new ResponseDTO(response));
@@ -260,7 +261,7 @@ public class ScrapController {
 
         MemberDTO memberDTO = new MemberDTO(memberId);
 
-        Scrap scrap = scrapService.moveCategoryOfScrap(memberDTO, scrapId, request);
+        Scrap scrap = scrapCommandService.moveCategoryOfScrap(memberDTO, scrapId, request);
         ScrapResponse.MoveCategoryOfScrapDTO response = ScrapConverter.toMoveCategoryOfScrap(scrap);
 
         return ResponseEntity.ok(new ResponseDTO(response));
@@ -293,7 +294,7 @@ public class ScrapController {
             checkCategoryMissing(categoryId, pressSelectionType);
         }
 
-        List<Scrap> scrapList = scrapService.moveCategoryOfScraps(memberDTO, request, isAllMove, pressSelectionType, categoryId);
+        List<Scrap> scrapList = scrapCommandService.moveCategoryOfScraps(memberDTO, request, isAllMove, pressSelectionType, categoryId);
         ScrapResponse.MoveCategoryOfScrapListDTO response = ScrapConverter.toMoveCategoryOfScraps(scrapList);
 
         return ResponseEntity.ok(new ResponseDTO(response));
@@ -313,7 +314,7 @@ public class ScrapController {
 
         MemberDTO memberDTO = new MemberDTO(memberId);
 
-        Scrap scrap = scrapService.updateScrapMemo(memberDTO, scrapId, request);
+        Scrap scrap = scrapCommandService.updateScrapMemo(memberDTO, scrapId, request);
         ScrapResponse.UpdateScrapMemoDTO response = ScrapConverter.toUpdateScrapMemo(scrap);
 
         return ResponseEntity.ok(new ResponseDTO(response));
@@ -331,7 +332,7 @@ public class ScrapController {
 
         MemberDTO memberDTO = new MemberDTO(memberId);
 
-        scrapService.deleteScrap(memberDTO, scrapId);
+        scrapCommandService.deleteScrap(memberDTO, scrapId);
 
         return ResponseEntity.ok(new ResponseDTO<Void>());
     }
@@ -364,7 +365,7 @@ public class ScrapController {
             checkCategoryMissing(categoryId, pressSelectionType);
         }
 
-        scrapService.deleteScrapList(memberDTO, isAllDelete, pressSelectionType, categoryId, request);
+        scrapCommandService.deleteScrapList(memberDTO, isAllDelete, pressSelectionType, categoryId, request);
 
         return ResponseEntity.ok(new ResponseDTO<Void>());
     }

@@ -1,7 +1,7 @@
 package com.example.scrap.web.mypage;
 
 import com.example.scrap.base.response.ResponseDTO;
-import com.example.scrap.web.member.MemberDTO;
+import com.example.scrap.web.member.dto.MemberDTO;
 import com.example.scrap.web.mypage.dto.MypageResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class MypageController {
 
-    private final IMypageService mypageService;
+    private final IMypageQueryService mypageService;
 
     /**
      * [GET] /mypage

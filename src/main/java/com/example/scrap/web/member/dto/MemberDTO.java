@@ -1,4 +1,4 @@
-package com.example.scrap.web.member;
+package com.example.scrap.web.member.dto;
 
 import com.example.scrap.entity.enums.SnsType;
 import lombok.Getter;
