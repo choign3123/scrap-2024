@@ -10,5 +10,5 @@ public interface IOauthService {
      * @param authorization
      * @return
      */
-    public Token login(String authorization);
+    public Token loginOrSignup(String authorization);
 }

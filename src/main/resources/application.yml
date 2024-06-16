@@ -12,3 +12,9 @@ spring:
     url: ${DB_URL}
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
+
+jwt:
+  secret: ${JWT_SECRET}
+  expire_day:
+    access: ${EXPIRE_DAY_OF_ACCESS}
+    refresh: ${EXPIRE_DAY_OF_REFRESH}

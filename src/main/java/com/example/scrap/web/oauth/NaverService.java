@@ -1,10 +1,10 @@
 package com.example.scrap.web.oauth;
 
-import com.example.scrap.converter.MemberConverter;
 import com.example.scrap.entity.Member;
 import com.example.scrap.entity.enums.SnsType;
+import com.example.scrap.jwt.TokenProvider;
 import com.example.scrap.jwt.dto.Token;
-import com.example.scrap.web.category.ICategoryService;
+import com.example.scrap.web.member.IMemberService;
 import com.example.scrap.web.member.MemberRepository;
 import com.example.scrap.web.oauth.dto.NaverResponse;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +24,8 @@ public class NaverService implements IOauthService{
 
     private final RestTemplate restTemplate;
     private final MemberRepository memberRepository;
-    private final ICategoryService categoryService;
+    private final IMemberService memberService;
+    private final TokenProvider tokenProvider;
     private final static SnsType snsType = SnsType.NAVER;
 
     /**
@@ -33,41 +34,23 @@ public class NaverService implements IOauthService{
      * @return 회원가입이 되어있지 않은 회원의 경우, 자동 회원가입 후 token 반환
      */
     @Transactional
-    public Token login(String authorization){
+    public Token loginOrSignup(String authorization){
         // 네이버로부터 회원 정보 조회하기
         NaverResponse.ProfileInfo.Response profileInfo = callApi_GetProfileByAccessToken(authorization).getResponse();
 
         Optional<Member> optionalMember = memberRepository.findBySnsTypeAndSnsId(snsType, profileInfo.getId());
 
-        if(optionalMember.isEmpty()){ // db에 없으면 해당 정보로 로그인 후, 토큰 생성해서 return
-            Member member = signup(profileInfo);
+        // db에 없으면 해당 정보로 로그인 후, 토큰 생성해서 return
+        // db에 있으면 해당 정보로 토큰 생성해서 return
+        Member member = optionalMember.orElseGet(
+                () -> memberService.signup(profileInfo)
+        );
 
-            return Token.builder()
-                    .accessToken(member.getName())
-                    .build();
-        }
-        else { // db에 있으면 해당 정보로 토큰 생성해서 return
+        member.login();
 
-            return Token.builder()
-                    .accessToken(optionalMember.get().getName())
-                    .build();
-        }
+        return tokenProvider.createToken(member.getSnsType(), member.getSnsId());
     }
 
-    /**
-     * 네이버 회원가입
-     * @param profileInfo
-     * @return
-     */
-    @Transactional
-    public Member signup(NaverResponse.ProfileInfo.Response profileInfo){
-        Member member = MemberConverter.toEntity(profileInfo, snsType);
-
-        // 기본 카테고리 생성
-        categoryService.createDefaultCategory(member);
-
-        return memberRepository.save(member);
-    }
 
     // 접근 토큰을 이용하여 프로필 API 호출하기
     /**

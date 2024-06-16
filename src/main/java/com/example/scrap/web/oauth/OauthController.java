@@ -26,7 +26,7 @@ public class OauthController {
     @PostMapping("/naver/login")
     public ResponseEntity<ResponseDTO> naverLoginOrSignup(@RequestHeader("Authorization") String authorization){
 
-        Token token = naverService.login(authorization);
+        Token token = naverService.loginOrSignup(authorization);
 
         OauthResponse.TokenDTO response = OauthConverter.toTokenDTO(token);
 

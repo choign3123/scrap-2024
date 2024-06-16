@@ -15,6 +15,7 @@ public enum ErrorCode implements BaseCode{
     _METHOD_NOT_ALLOWED(HttpStatus.METHOD_NOT_ALLOWED, "COMMON003", "지원하지 않는 Http Method 입니다."),
     _FORBIDDEN(HttpStatus.FORBIDDEN, "COMMON004", "금지된 요청입니다."),
     _NOT_FOUND(HttpStatus.NOT_FOUND, "COMMON005", "해당하는 요청을 찾을 수 없습니다."),
+    _REQUIRED_RE_LOGIN(HttpStatus.NOT_ACCEPTABLE, "COMMON006", "다시 로그인후 서비스 이용 바랍니다."),
 
     // Member Error
     MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, "MEMBER001", "해당하는 사용자가 존재하지 않습니다."),

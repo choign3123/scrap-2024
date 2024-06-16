@@ -36,4 +36,8 @@ public class MemberLog {
     public void setLoginDate(LocalDateTime loginDate){
         this.loginDate = loginDate;
     }
+
+    public void login(){
+        this.loginStatus = LoginStatus.ACTIVE;
+    }
 }

@@ -52,4 +52,8 @@ public class Member extends BaseEntity {
                 .loginStatus(LoginStatus.ACTIVE)
                 .build();
     }
+
+    public void login(){
+        this.getMemberLog().login();
+    }
 }

@@ -19,4 +19,11 @@ public class MemberDTO {
         this.snsType = snsType;
         this.snsId = snsId;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        MemberDTO otherMemberDTO = (MemberDTO) obj;
+
+        return snsId.equals(otherMemberDTO.getSnsId()) && snsType == otherMemberDTO.getSnsType();
+    }
 }
