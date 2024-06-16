@@ -1,6 +1,7 @@
 package com.example.scrap.jwt;
 
 import com.example.scrap.base.code.ErrorCode;
+import com.example.scrap.base.exception.AuthorizationException;
 import com.example.scrap.base.exception.BaseException;
 import com.example.scrap.entity.enums.SnsType;
 import com.example.scrap.jwt.dto.Token;
@@ -87,12 +88,13 @@ public class TokenProvider {
      * access 토큰 재발급하기
      * @param token
      * @return
+     * @throws AuthorizationException accessToken과 refreshToken의 member가 다르면
      */
     public Token reissueAccessToken(Token token){
 
         // accessToken과 refreshToken의 snsType과 id 같은지 확인
         if(!checkMemberOfTokenSame(token)){
-            throw new BaseException(ErrorCode._REQUIRED_RE_LOGIN);
+            throw new AuthorizationException(ErrorCode._REQUIRED_RE_LOGIN);
         }
 
         MemberDTO memberDTO = parseMemberDTO(token.getAccessToken());
@@ -108,6 +110,7 @@ public class TokenProvider {
      * refresh 토큰 재발급하기
      * @param token
      * @return
+     * @throws AuthorizationException accessToken과 refreshToken의 member가 다르면
      */
     public Token reissueRefreshToken(Token token){
 
@@ -161,11 +164,11 @@ public class TokenProvider {
      * 토큰을 MemberDTO로 변환
      * @param token
      * @return
-     * @throws BaseException 유효성 검증 실패시 ErrorCode._REQUIRED_RE_LOGIN 에러 던짐
+     * @throws AuthorizationException 유효성 검증 실패시 ErrorCode._REQUIRED_RE_LOGIN 에러 던짐
      */
     public MemberDTO parseMemberDTO(String token){
         if(!validateToken(token)){
-            throw new BaseException(ErrorCode._REQUIRED_RE_LOGIN);
+            throw new AuthorizationException(ErrorCode._REQUIRED_RE_LOGIN);
         }
 
         Claims claims = Jwts.parser().setSigningKey(jwtSecretKey)
