@@ -38,6 +38,7 @@ public class MemberLog {
     }
 
     public void login(){
+        this.loginDate = LocalDateTime.now();
         this.loginStatus = LoginStatus.ACTIVE;
     }
 }
