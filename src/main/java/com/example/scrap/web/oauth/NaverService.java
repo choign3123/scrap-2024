@@ -1,5 +1,7 @@
 package com.example.scrap.web.oauth;
 
+import com.example.scrap.base.code.ErrorCode;
+import com.example.scrap.base.exception.AuthorizationException;
 import com.example.scrap.entity.Member;
 import com.example.scrap.entity.enums.SnsType;
 import com.example.scrap.jwt.TokenProvider;
@@ -12,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Optional;
@@ -48,7 +51,7 @@ public class NaverService implements IOauthService{
 
         member.login();
 
-        return tokenProvider.createToken(member.getSnsType(), member.getSnsId());
+        return tokenProvider.createToken(member);
     }
 
 
@@ -70,8 +73,14 @@ public class NaverService implements IOauthService{
         // request entity 설정
         HttpEntity<Void> entity = new HttpEntity<>(headers);
 
+
         // API 호출
-        ResponseEntity<NaverResponse.ProfileInfo> response = restTemplate.exchange(url, HttpMethod.GET, entity, NaverResponse.ProfileInfo.class);
-        return response.getBody();
+        try{
+            ResponseEntity<NaverResponse.ProfileInfo> response = restTemplate.exchange(url, HttpMethod.GET, entity, NaverResponse.ProfileInfo.class);
+            return response.getBody();
+        }
+        catch (HttpClientErrorException e){
+            throw new AuthorizationException(ErrorCode.OAUTH_NAVER_LOGIN_FAIL);
+        }
     }
 }

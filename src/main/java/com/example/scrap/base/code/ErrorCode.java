@@ -15,7 +15,14 @@ public enum ErrorCode implements BaseCode{
     _METHOD_NOT_ALLOWED(HttpStatus.METHOD_NOT_ALLOWED, "COMMON003", "지원하지 않는 Http Method 입니다."),
     _FORBIDDEN(HttpStatus.FORBIDDEN, "COMMON004", "금지된 요청입니다."),
     _NOT_FOUND(HttpStatus.NOT_FOUND, "COMMON005", "해당하는 요청을 찾을 수 없습니다."),
-    _REQUIRED_RE_LOGIN(HttpStatus.NOT_ACCEPTABLE, "COMMON006", "다시 로그인후 서비스 이용 바랍니다."),
+
+    // Authorization Error
+    TOKEN_EXPIRED(HttpStatus.NOT_ACCEPTABLE, "Authorization001", "다시 로그인후 서비스 이용 바랍니다."),
+    NOT_ACCESS_TOKEN(HttpStatus.NOT_ACCEPTABLE, "Authorization002", "다시 로그인후 서비스 이용 바랍니다."),
+    MEMBER_OF_TOKEN_NOT_MATCH(HttpStatus.NOT_ACCEPTABLE, "Authorization003", "다시 로그인후 서비스 이용 바랍니다."),
+
+    // Oauth Error
+    OAUTH_NAVER_LOGIN_FAIL(HttpStatus.NOT_ACCEPTABLE, "Oauth001", "다시 네이버 로그인후 서비스 이용 바랍니다."),
 
     // Member Error
     MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, "MEMBER001", "해당하는 사용자가 존재하지 않습니다."),
