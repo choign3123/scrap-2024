@@ -1,22 +1,14 @@
 package com.example.scrap.web.member;
 
-import com.example.scrap.base.code.ErrorCode;
-import com.example.scrap.base.exception.BaseException;
-import com.example.scrap.converter.CategoryConverter;
 import com.example.scrap.converter.MemberConverter;
-import com.example.scrap.entity.Category;
 import com.example.scrap.entity.Member;
 import com.example.scrap.entity.enums.SnsType;
-import com.example.scrap.web.baseDTO.Data;
 import com.example.scrap.web.category.CategoryRepository;
 import com.example.scrap.web.category.ICategoryCommandService;
 import com.example.scrap.web.oauth.dto.NaverResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
