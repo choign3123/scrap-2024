@@ -5,7 +5,7 @@ import com.example.scrap.base.response.ResponseDTO;
 import com.example.scrap.converter.ScrapConverter;
 import com.example.scrap.entity.Scrap;
 import com.example.scrap.validation.annotaion.*;
-import com.example.scrap.web.baseDTO.Data;
+import com.example.scrap.base.Data;
 import com.example.scrap.web.baseDTO.PressSelectionType;
 import com.example.scrap.web.baseDTO.Sorts;
 import com.example.scrap.web.member.dto.MemberDTO;

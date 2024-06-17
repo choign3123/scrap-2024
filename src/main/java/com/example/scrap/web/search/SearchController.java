@@ -7,7 +7,7 @@ import com.example.scrap.entity.Scrap;
 import com.example.scrap.validation.annotaion.EnumValid;
 import com.example.scrap.validation.annotaion.PagingPage;
 import com.example.scrap.validation.annotaion.PagingSize;
-import com.example.scrap.web.baseDTO.Data;
+import com.example.scrap.base.Data;
 import com.example.scrap.web.baseDTO.Sorts;
 import com.example.scrap.web.member.dto.MemberDTO;
 import com.example.scrap.web.search.dto.SearchRequest;
@@ -62,7 +62,7 @@ public class SearchController {
             request.setEndDateToDefault();
         }
         if(request.getStartDate().isAfter(request.getEndDate())){
-            throw new ValidationException("endDate", "종료 날짜가 시작 날짜보다 클 수 없습니다.");
+            throw new ValidationException("endDate", "종료 날짜가 시작 날짜보다 앞설 수 없습니다.");
         }
         /** 시작, 종료 날짜 검증 끝 **/
 
