@@ -3,6 +3,7 @@ package com.example.scrap.web.category;
 import com.example.scrap.base.response.ResponseDTO;
 import com.example.scrap.converter.CategoryConverter;
 import com.example.scrap.entity.Category;
+import com.example.scrap.jwt.TokenProvider;
 import com.example.scrap.validation.annotaion.ExistCategory;
 import com.example.scrap.web.category.dto.CategoryRequest;
 import com.example.scrap.web.category.dto.CategoryResponse;
@@ -25,18 +26,16 @@ public class CategoryController {
 
     private final ICategoryQueryService categoryQueryService;
     private final ICategoryCommandService categoryCommandService;
+    private final TokenProvider tokenProvider;
 
     /**
      * [POST] /categories
      * [API-7] 카테고리 생성
-     * @param memberId
-     * @param request
-     * @return
      */
     @PostMapping()
-    public ResponseEntity<ResponseDTO> categorySave(@RequestHeader("member-id") Long memberId, @RequestBody @Valid CategoryRequest.CreateCategoryDTO request){
+    public ResponseEntity<ResponseDTO> categorySave(@RequestHeader("Authorization") String token, @RequestBody @Valid CategoryRequest.CreateCategoryDTO request){
 
-        MemberDTO memberDTO = new MemberDTO(memberId);
+        MemberDTO memberDTO = tokenProvider.parseMemberDTO(token);
 
         Category newCategory = categoryCommandService.createCategory(memberDTO, request);
 
@@ -48,13 +47,11 @@ public class CategoryController {
     /**
      * [GET] /categories
      * [API-6] 카테고리 전체 조회
-     * @param memberId
-     * @return
      */
     @GetMapping()
-    public ResponseEntity<ResponseDTO> categoryWholeList(@RequestHeader("member-id") Long memberId){
+    public ResponseEntity<ResponseDTO> categoryWholeList(@RequestHeader("Authorization") String token){
 
-        MemberDTO memberDTO = new MemberDTO(memberId);
+        MemberDTO memberDTO = tokenProvider.parseMemberDTO(token);
 
         List<Category> categoryList = categoryQueryService.getCategoryWholeList(memberDTO);
         CategoryResponse.GetCategoryListDTO response = CategoryConverter.toGetCategoryListDTO(categoryList);
@@ -66,13 +63,11 @@ public class CategoryController {
     /**
      * [GET] /categories/selection
      * [API-30] 카테고리 선택용 조회
-     * @param memberId
-     * @return
      */
     @GetMapping("/selection")
-    public ResponseEntity<ResponseDTO> categoryListForSelection(@RequestHeader("member-id") Long memberId){
+    public ResponseEntity<ResponseDTO> categoryListForSelection(@RequestHeader("Authorization") String token){
 
-        MemberDTO memberDTO = new MemberDTO(memberId);
+        MemberDTO memberDTO = tokenProvider.parseMemberDTO(token);
 
         List<Category> categoryList = categoryQueryService.getCategoryWholeList(memberDTO);
         CategoryResponse.GetCategoryListForSelectionDTO response = CategoryConverter.toGetCategoryListForSelectionDTO(categoryList);
@@ -83,16 +78,13 @@ public class CategoryController {
     /**
      * [DELETE] /categories/{category-id}?allow_delete_category=
      * [API-9] 카테고리 삭제
-     * @param memberId
-     * @param categoryId
      * @param allowDeleteScrap 해당 카테고리에 속한 스크랩 삭제 여부
-     * @return
      */
     @DeleteMapping("/{category-id}")
-    public ResponseEntity<ResponseDTO> categoryRemove(@RequestHeader("member-id") Long memberId, @PathVariable("category-id") @ExistCategory Long categoryId,
+    public ResponseEntity<ResponseDTO> categoryRemove(@RequestHeader("Authorization") String token, @PathVariable("category-id") @ExistCategory Long categoryId,
                                       @RequestParam("allow_delete_scrap") Boolean allowDeleteScrap){
 
-        MemberDTO memberDTO = new MemberDTO(memberId);
+        MemberDTO memberDTO = tokenProvider.parseMemberDTO(token);
 
         categoryCommandService.deleteCategory(memberDTO, categoryId, allowDeleteScrap);
 
@@ -101,16 +93,12 @@ public class CategoryController {
 
     /** [PATCH] /categories/{category-id}/title
      * [API-10] 카테고리명 수정
-     * @param memberId
-     * @param categoryId 카테고리 식별자
-     * @param request
-     * @return
      */
     @PatchMapping("/{category-id}/title")
-    public ResponseEntity<ResponseDTO> categoryTitleModify(@RequestHeader("member-id") Long memberId, @PathVariable("category-id") @ExistCategory Long categoryId,
+    public ResponseEntity<ResponseDTO> categoryTitleModify(@RequestHeader("Authorization") String token, @PathVariable("category-id") @ExistCategory Long categoryId,
                                            @RequestBody @Valid CategoryRequest.UpdateCategoryTitleDTO request){
 
-        MemberDTO memberDTO = new MemberDTO(memberId);
+        MemberDTO memberDTO = tokenProvider.parseMemberDTO(token);
 
         Category category = categoryCommandService.updateCategoryTitle(memberDTO, categoryId, request);
         CategoryResponse.UpdateCategoryTitleDTO response = CategoryConverter.toUpdateCategoryTitleDTO(category);
@@ -121,14 +109,11 @@ public class CategoryController {
     /**
      * [PATCH] /categories/sequence
      * [API-8] 카테고리 순서 변경
-     * @param memberId
-     * @param request
-     * @return
      */
     @PatchMapping("/sequence")
-    public ResponseEntity<ResponseDTO> categorySequenceModify(@RequestHeader("member-id") Long memberId, @RequestBody @Validated CategoryRequest.UpdateCategorySequenceDTO request){
+    public ResponseEntity<ResponseDTO> categorySequenceModify(@RequestHeader("Authorization") String token, @RequestBody @Validated CategoryRequest.UpdateCategorySequenceDTO request){
 
-        MemberDTO memberDTO = new MemberDTO(memberId);
+        MemberDTO memberDTO = tokenProvider.parseMemberDTO(token);
 
         List<Category> categoryList = categoryCommandService.updateCategorySequence(memberDTO, request);
         CategoryResponse.UpdateCategorySequenceDTO response = CategoryConverter.toUpdateCategorySequenceDTO(categoryList);

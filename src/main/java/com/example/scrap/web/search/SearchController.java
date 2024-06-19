@@ -4,6 +4,7 @@ import com.example.scrap.base.exception.ValidationException;
 import com.example.scrap.base.response.ResponseDTO;
 import com.example.scrap.converter.SearchConverter;
 import com.example.scrap.entity.Scrap;
+import com.example.scrap.jwt.TokenProvider;
 import com.example.scrap.validation.annotaion.EnumValid;
 import com.example.scrap.validation.annotaion.PagingPage;
 import com.example.scrap.validation.annotaion.PagingSize;
@@ -31,28 +32,21 @@ import javax.validation.constraints.NotBlank;
 public class SearchController {
 
     private final ISearchQueryService searchService;
+    private final TokenProvider tokenProvider;
 
     /**
      * [POST] /search
      * [API-22] 스크랩 검색하기
-     * @param memberId
-     * @param request
-     * @param sort
-     * @param direction
-     * @param page
-     * @param size
-     * @param query
-     * @return
      */
     @PostMapping
-    public ResponseEntity<ResponseDTO> scrapSearch(@RequestHeader("member-id") Long memberId, @RequestBody @Validated SearchRequest.FindScrapDTO request,
+    public ResponseEntity<ResponseDTO> scrapSearch(@RequestHeader("Authorization") String token, @RequestBody @Validated SearchRequest.FindScrapDTO request,
                                                    @RequestParam(name = "sort", defaultValue = "SCRAP_DATE") @EnumValid(enumC = Sorts.class) String sort,
                                                    @RequestParam(name = "direction", defaultValue = "ASC") @EnumValid(enumC = Sort.Direction.class) String direction,
                                                    @RequestParam(name = "page", defaultValue = "1") @PagingPage int page,
                                                    @RequestParam(name = "size", defaultValue = Data.PAGING_SIZE) @PagingSize int size,
                                                    @RequestParam(name = "q") @NotBlank String query){
 
-        MemberDTO memberDTO = new MemberDTO(memberId);
+        MemberDTO memberDTO = tokenProvider.parseMemberDTO(token);
 
         /** 시작, 종료 날짜 검증 **/
         if(request.getStartDate() == null){
