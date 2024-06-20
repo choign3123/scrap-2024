@@ -31,6 +31,16 @@ public class GlobalExceptionHandler {
                 .body(response);
     }
 
+    @ExceptionHandler(AuthorizationException.class)
+    protected ResponseEntity<ResponseDTO> handleAuthorizationException(AuthorizationException e){
+        log.info(e.getMessage());
+
+        ResponseDTO<Void> response = new ResponseDTO<>(e.getErrorCode());
+
+        return ResponseEntity.status(response.getHttpStatus())
+                .body(response);
+    }
+
     @ExceptionHandler(Exception.class)
     protected ResponseEntity<ResponseDTO> handleException(Exception e){
         log.error(e.getMessage());

@@ -4,11 +4,10 @@ import com.example.scrap.entity.Member;
 import com.example.scrap.entity.Scrap;
 import com.example.scrap.specification.ScrapSpecification;
 import com.example.scrap.web.baseDTO.SearchScopeType;
-import com.example.scrap.web.member.IMemberService;
-import com.example.scrap.web.member.MemberDTO;
+import com.example.scrap.web.member.IMemberQueryService;
+import com.example.scrap.web.member.dto.MemberDTO;
 import com.example.scrap.web.scrap.ScrapRepository;
 import com.example.scrap.web.search.dto.SearchRequest;
-import com.example.scrap.web.search.dto.SearchResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -21,9 +20,9 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 @Slf4j
-public class SearchService implements ISearchService{
+public class SearchQueryService implements ISearchQueryService {
 
-    private final IMemberService memberService;
+    private final IMemberQueryService memberService;
     private final ScrapRepository scrapRepository;
 
     /**

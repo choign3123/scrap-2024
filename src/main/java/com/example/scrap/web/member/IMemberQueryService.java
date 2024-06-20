@@ -1,8 +1,9 @@
 package com.example.scrap.web.member;
 
 import com.example.scrap.entity.Member;
+import com.example.scrap.web.member.dto.MemberDTO;
 
-public interface IMemberService {
+public interface IMemberQueryService {
 
     /**
      * 멤버 조회

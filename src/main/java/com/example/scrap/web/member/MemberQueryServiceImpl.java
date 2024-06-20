@@ -2,7 +2,13 @@ package com.example.scrap.web.member;
 
 import com.example.scrap.base.code.ErrorCode;
 import com.example.scrap.base.exception.BaseException;
+import com.example.scrap.converter.MemberConverter;
 import com.example.scrap.entity.Member;
+import com.example.scrap.entity.MemberLog;
+import com.example.scrap.entity.enums.SnsType;
+import com.example.scrap.web.category.ICategoryCommandService;
+import com.example.scrap.web.member.dto.MemberDTO;
+import com.example.scrap.web.oauth.dto.NaverResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -10,26 +16,15 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
-public class MemberServiceImpl implements IMemberService{
+public class MemberQueryServiceImpl implements IMemberQueryService {
 
     private final MemberRepository memberRepository;
 
     /**
      * 멤버 조회
-     * @param memberId 멤버 식별자
-     * @return
      */
-    public Member findMember(Long memberId){
-        return memberRepository.findById(memberId)
-                .orElseThrow(() -> new BaseException(ErrorCode.MEMBER_NOT_FOUND));
-    }
-
     public Member findMember(MemberDTO memberDTO){
-        if(memberDTO.getMemberId() != null){
-            return findMember(memberDTO.getMemberId());
-        }
-        else{
-            throw new BaseException(ErrorCode._BAD_REQUEST);
-        }
+        return memberRepository.findById(memberDTO.getMemberId())
+                .orElseThrow(() -> new BaseException(ErrorCode.MEMBER_NOT_FOUND));
     }
 }
