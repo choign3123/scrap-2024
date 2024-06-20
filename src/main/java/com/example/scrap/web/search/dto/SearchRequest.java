@@ -20,7 +20,6 @@ public class SearchRequest {
     public static class FindScrapDTO {
 
         @EnumsValid(enumC = SearchScopeType.class)
-        @NotEmpty
         private List<String> searchScope;
 
         @ExistCategories

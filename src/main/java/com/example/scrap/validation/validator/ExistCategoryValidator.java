@@ -25,13 +25,14 @@ public class ExistCategoryValidator implements ConstraintValidator<ExistCategory
 
     @Override
     public boolean isValid(Long value, ConstraintValidatorContext context) {
-
-        boolean nullable = !required && value == null;
-        if(nullable){
+        boolean notRequire = !required && value == null;
+        if(notRequire){
             return true;
         }
 
         if(value == null){
+            context.disableDefaultConstraintViolation();
+            context.buildConstraintViolationWithTemplate("필수값 입니다.").addConstraintViolation();
             return false;
         }
 

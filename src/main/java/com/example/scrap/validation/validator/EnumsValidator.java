@@ -20,19 +20,18 @@ public class EnumsValidator implements ConstraintValidator<EnumsValid, List<Stri
 
     @Override
     public boolean isValid(List<String> values, ConstraintValidatorContext context) {
-        boolean nullable = !required && (values == null || values.isEmpty());
-        if(nullable){
+        boolean notRequire = !required && (values == null || values.isEmpty());
+        if(notRequire){
             return true;
         }
 
-        if(values == null){
+        if(values == null || values.isEmpty()){
+            context.disableDefaultConstraintViolation();
+            context.buildConstraintViolationWithTemplate("필수값 입니다.").addConstraintViolation();
             return false;
         }
 
         Enum<?>[] enums = enumType.getEnumConstants();
-        if(enums == null){
-            return false;
-        }
 
         // 모든 요소에 대해서 검증
         for(String value : values){
@@ -46,6 +45,8 @@ public class EnumsValidator implements ConstraintValidator<EnumsValid, List<Stri
             }
 
             if(!isValid){
+                context.disableDefaultConstraintViolation();
+                context.buildConstraintViolationWithTemplate(value + " 은(는) 잘못된 값입니다.").addConstraintViolation();
                 return false;
             }
         }

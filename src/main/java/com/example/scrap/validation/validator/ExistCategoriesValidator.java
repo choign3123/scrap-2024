@@ -21,6 +21,12 @@ public class ExistCategoriesValidator implements ConstraintValidator<ExistCatego
     @Override
     public boolean isValid(List<Long> value, ConstraintValidatorContext context) {
 
+        if(value == null || value.isEmpty()){
+            context.disableDefaultConstraintViolation();
+            context.buildConstraintViolationWithTemplate("필수값 입니다.").addConstraintViolation();
+            return false;
+        }
+
         for(Long categoryId : value){
             if(categoryId == null){
                 return false;
