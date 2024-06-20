@@ -2,12 +2,14 @@ package com.example.scrap.web.category;
 
 import com.example.scrap.base.code.ErrorCode;
 import com.example.scrap.base.exception.BaseException;
+import com.example.scrap.converter.CategoryConverter;
 import com.example.scrap.entity.Category;
 import com.example.scrap.entity.Member;
 import com.example.scrap.entity.Scrap;
+import com.example.scrap.base.Data;
 import com.example.scrap.web.category.dto.CategoryRequest;
-import com.example.scrap.web.member.IMemberService;
-import com.example.scrap.web.member.MemberDTO;
+import com.example.scrap.web.member.IMemberQueryService;
+import com.example.scrap.web.member.dto.MemberDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -17,12 +19,13 @@ import java.util.*;
 
 @Service
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
+@Transactional
 @Slf4j
-public class CategoryServiceImpl implements ICategoryService{
+public class CategoryCommandServiceImpl implements ICategoryCommandService {
 
     private final CategoryRepository categoryRepository;
-    private final IMemberService memberService;
+    private final ICategoryQueryService categoryQueryService;
+    private final IMemberQueryService memberService;
 
     /**
      * 카테고리 생성
@@ -30,17 +33,10 @@ public class CategoryServiceImpl implements ICategoryService{
      * @param request
      * @return 생성된 카테고리
      */
-    @Transactional
     public Category createCategory(MemberDTO memberDTO, CategoryRequest.CreateCategoryDTO request){
         Member member = memberService.findMember(memberDTO);
 
-        int newCategorySequence = member.calcNewCategorySequence();
-
-        Category newCategory = Category.builder()
-                .title(request.getCategoryTitle())
-                .sequence(newCategorySequence)
-                .member(member)
-                .build();
+        Category newCategory = CategoryConverter.toEntity(member, request);
 
         categoryRepository.save(newCategory);
 
@@ -48,14 +44,21 @@ public class CategoryServiceImpl implements ICategoryService{
     }
 
     /**
-     * 카테고리 전체 조회
-     * @param memberDTO
-     * @return 전체 카테고리
+     * 기본 카테고리 생성
+     * @param member
+     * @return
      */
-    public List<Category> getCategoryWholeList(MemberDTO memberDTO){
-        Member member = memberService.findMember(memberDTO);
+    public List<Category> createDefaultCategory(Member member){
+        List<Category> categoryList = new ArrayList<>();
 
-        return categoryRepository.findAllByMemberOrderBySequence(member);
+        for(String categoryTitle : Data.DEFAULT_CATEGORY_LIST){
+            Category defaultCategory = CategoryConverter.toEntity(member, categoryTitle, true);
+            categoryRepository.save(defaultCategory);
+
+            categoryList.add(defaultCategory);
+        }
+
+        return categoryList;
     }
 
     /**
@@ -63,7 +66,6 @@ public class CategoryServiceImpl implements ICategoryService{
      * @param memberDTO
      * @param categoryId 카테고리 식별자
      */
-    @Transactional
     public void deleteCategory(MemberDTO memberDTO, Long categoryId, Boolean allowDeleteScrap){
         Member member = memberService.findMember(memberDTO);
         Category category = categoryRepository.findById(categoryId).get();
@@ -77,7 +79,7 @@ public class CategoryServiceImpl implements ICategoryService{
 
         // [TODO] 리스트를 복제해서 for 문을 돌리는것 외에 다른 방법은 없는지 고민해봐야 될 것 같음. 이렇게 복제된 리스트를 사용하지 않으면, 요소 삭제로 인해 for 문을 다 돌지 못하고 끝나버림.
         // 모든 스크랩은 기본 카테고리로 이동
-        Category defaultCategory = findDefaultCategory(member);
+        Category defaultCategory = categoryQueryService.findDefaultCategory(member);
         List<Scrap> scrapListCopy = new ArrayList<>(category.getScrapList());
         for(Scrap scrap : scrapListCopy){
             scrap.moveCategory(defaultCategory);
@@ -101,7 +103,6 @@ public class CategoryServiceImpl implements ICategoryService{
      * @param request
      * @return 수정된 카테고리
      */
-    @Transactional
     public Category updateCategoryTitle(MemberDTO memberDTO, Long categoryId, CategoryRequest.UpdateCategoryTitleDTO request){
         Member member = memberService.findMember(memberDTO);
         Category category = categoryRepository.findById(categoryId).get();
@@ -126,7 +127,6 @@ public class CategoryServiceImpl implements ICategoryService{
      * @param request
      * @return
      */
-    @Transactional
     public List<Category> updateCategorySequence(MemberDTO memberDTO, CategoryRequest.UpdateCategorySequenceDTO request){
         Member member = memberService.findMember(memberDTO);
 
@@ -150,12 +150,4 @@ public class CategoryServiceImpl implements ICategoryService{
         return member.getCategoryList();
     }
 
-    private Category findDefaultCategory(Member member){
-        return categoryRepository.findByMemberAndIsDefault(member, true)
-                .orElseThrow(() -> new BaseException(ErrorCode.CATEGORY_NOT_FOUND));
-    }
-
-    public Category findCategory(Long categoryId){
-        return categoryRepository.findById(categoryId).get();
-    }
 }

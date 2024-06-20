@@ -1,11 +1,31 @@
 package com.example.scrap.converter;
 
+import com.example.scrap.base.code.ErrorCode;
+import com.example.scrap.base.exception.BaseException;
 import com.example.scrap.entity.Category;
+import com.example.scrap.entity.Member;
+import com.example.scrap.web.category.dto.CategoryRequest;
 import com.example.scrap.web.category.dto.CategoryResponse;
 
 import java.util.List;
 
 public class CategoryConverter {
+
+    public static Category toEntity(Member member, String title, boolean isDefault){
+        return Category.builder()
+                .title(title)
+                .isDefault(isDefault)
+                .member(member)
+                .build();
+    }
+
+    public static Category toEntity(Member member, CategoryRequest.CreateCategoryDTO request){
+        return Category.builder()
+                .isDefault(false)
+                .member(member)
+                .title(request.getCategoryTitle())
+                .build();
+    }
 
     public static CategoryResponse.CreateCategoryDTO toCreateCategoryDTO(Category category){
         return CategoryResponse.CreateCategoryDTO.builder()
@@ -25,6 +45,7 @@ public class CategoryConverter {
                                         .categoryTitle(category.getTitle())
                                         .scrapCnt(category.getScrapList().size())
                                         .sequence(category.getSequence())
+                                        .isDefault(category.getIsDefault())
                                         .build()
                         ).toList()
                 )
@@ -49,6 +70,13 @@ public class CategoryConverter {
                                         .categoryTitle(category.getTitle())
                                         .build()
                         ).toList()
+                )
+                .defaultCategoryId(
+                        categoryList.stream()
+                                .filter(category -> {return category.getIsDefault();})
+                                .findFirst()
+                                .orElseThrow(() -> new BaseException(ErrorCode._INTERNAL_SERVER_ERROR))
+                                .getId()
                 )
                 .total(categoryList.size())
                 .build();

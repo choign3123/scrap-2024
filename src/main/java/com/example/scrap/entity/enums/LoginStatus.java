@@ -1,5 +1,5 @@
 package com.example.scrap.entity.enums;
 
-public enum MemberStatus {
+public enum LoginStatus {
     ACTIVE, LOGOUT, UNREGISTER
 }

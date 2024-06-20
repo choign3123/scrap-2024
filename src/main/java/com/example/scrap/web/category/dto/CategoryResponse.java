@@ -40,6 +40,31 @@ public class CategoryResponse {
             private String categoryTitle;
             private int scrapCnt;
             private int sequence;
+            private boolean isDefault;
+        }
+    }
+
+    /**
+     * 카테고리 선택용 조회 DTO
+     */
+    @Builder
+    @Getter
+    @JsonPropertyOrder({"categories", "defaultCategory", "total"})
+    public static class GetCategoryListForSelectionDTO {
+
+        @JsonProperty("categories")
+        private List<CategoryDTO> categoryDTOList;
+
+        @JsonProperty("defaultCategory")
+        private Long defaultCategoryId;
+
+        private int total;
+
+        @Builder
+        @Getter
+        public static class CategoryDTO{
+            private Long categoryId;
+            private String categoryTitle;
         }
     }
 
@@ -51,27 +76,6 @@ public class CategoryResponse {
     public static class UpdateCategoryTitleDTO{
 
         private String newCategoryTitle;
-    }
-
-    /**
-     * 카테고리 선택용 조회 DTO
-     */
-    @Builder
-    @Getter
-    @JsonPropertyOrder({"categories", "total"})
-    public static class GetCategoryListForSelectionDTO {
-
-        @JsonProperty("categories")
-        private List<CategoryDTO> categoryDTOList;
-
-        private int total;
-
-        @Builder
-        @Getter
-        public static class CategoryDTO{
-            private Long categoryId;
-            private String categoryTitle;
-        }
     }
 
     /**

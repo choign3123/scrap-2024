@@ -36,12 +36,12 @@ public class ScrapConverter {
                 .build();
     }
 
-    public static ScrapResponse.GetScrapListByCategory toGetScrapListByCategory(Page<Scrap> scrapPage){
+    public static ScrapResponse.GetScrapListByCategoryDTO toGetScrapListByCategory(Page<Scrap> scrapPage){
         Meta meta = new Meta(scrapPage);
 
-        List<ScrapResponse.GetScrapListByCategory.ScrapDTO> scrapDTOList = scrapPage.stream()
+        List<ScrapResponse.GetScrapListByCategoryDTO.ScrapDTO> scrapDTOList = scrapPage.stream()
                 .map(scrap -> {
-                    return ScrapResponse.GetScrapListByCategory.ScrapDTO.builder()
+                    return ScrapResponse.GetScrapListByCategoryDTO.ScrapDTO.builder()
                             .scrapId(scrap.getId())
                             .title(scrap.getTitle())
                             .scrapURL(scrap.getScrapURL())
@@ -52,14 +52,14 @@ public class ScrapConverter {
                 })
                 .toList();
 
-        return ScrapResponse.GetScrapListByCategory.builder()
+        return ScrapResponse.GetScrapListByCategoryDTO.builder()
                 .meta(meta)
                 .scrapDTOList(scrapDTOList)
                 .build();
     }
 
-    public static ScrapResponse.GetScrapDetails toGetScrapDetails(Scrap scrap){
-        return ScrapResponse.GetScrapDetails.builder()
+    public static ScrapResponse.GetScrapDetailsDTO toGetScrapDetails(Scrap scrap){
+        return ScrapResponse.GetScrapDetailsDTO.builder()
                 .scrapId(scrap.getId())
                 .title(scrap.getTitle())
                 .scrapURL(scrap.getScrapURL())
@@ -70,12 +70,12 @@ public class ScrapConverter {
                 .build();
     }
 
-    public static ScrapResponse.GetFavoriteScrapList toGetFavoriteScrapList(Page<Scrap> scrapPage){
+    public static ScrapResponse.GetFavoriteScrapListDTO toGetFavoriteScrapList(Page<Scrap> scrapPage){
         Meta meta = new Meta(scrapPage);
 
-        List<ScrapResponse.GetFavoriteScrapList.ScrapDTO> scrapDTOList = scrapPage.stream()
+        List<ScrapResponse.GetFavoriteScrapListDTO.ScrapDTO> scrapDTOList = scrapPage.stream()
                 .map( scrap -> {
-                    return ScrapResponse.GetFavoriteScrapList.ScrapDTO.builder()
+                    return ScrapResponse.GetFavoriteScrapListDTO.ScrapDTO.builder()
                             .categoryTitle(scrap.getCategory().getTitle()) // [TODO] LazyInitializationException이 실제로 발생하는지 확인해볼 필요 있음.
                             .scrapId(scrap.getId())
                             .scrapTitle(scrap.getTitle())
@@ -86,16 +86,16 @@ public class ScrapConverter {
                 })
                 .toList();
 
-        return ScrapResponse.GetFavoriteScrapList.builder()
+        return ScrapResponse.GetFavoriteScrapListDTO.builder()
                 .meta(meta)
                 .scrapDTOList(scrapDTOList)
                 .build();
     }
 
-    public static ScrapResponse.FindScrapByTitle toFindScrapByTitle(List<Scrap> scrapList){
-        List<ScrapResponse.FindScrapByTitle.ScrapDTO> scrapDTOList = scrapList.stream()
+    public static ScrapResponse.FindScrapByTitleDTO toFindScrapByTitle(List<Scrap> scrapList){
+        List<ScrapResponse.FindScrapByTitleDTO.ScrapDTO> scrapDTOList = scrapList.stream()
                 .map( scrap -> {
-                    return ScrapResponse.FindScrapByTitle.ScrapDTO.builder()
+                    return ScrapResponse.FindScrapByTitleDTO.ScrapDTO.builder()
                             .scrapId(scrap.getId())
                             .title(scrap.getTitle())
                             .scrapURL(scrap.getScrapURL())
@@ -106,75 +106,75 @@ public class ScrapConverter {
                 })
                 .toList();
 
-        return ScrapResponse.FindScrapByTitle.builder()
+        return ScrapResponse.FindScrapByTitleDTO.builder()
                 .scrapDTOList(scrapDTOList)
                 .total(scrapList.size())
                 .build();
     }
 
-    public static ScrapResponse.ToggleScrapFavorite toToggleScrapFavorite(Scrap scrap){
+    public static ScrapResponse.ToggleScrapFavoriteDTO toToggleScrapFavorite(Scrap scrap){
 
-        return ScrapResponse.ToggleScrapFavorite.builder()
+        return ScrapResponse.ToggleScrapFavoriteDTO.builder()
                 .scrapId(scrap.getId())
                 .isFavorite(scrap.getIsFavorite())
                 .build();
     }
 
-    public static ScrapResponse.ToggleScrapFavoriteList toToggleScrapFavoriteList(List<Scrap> scrapList){
+    public static ScrapResponse.ToggleScrapFavoriteListDTO toToggleScrapFavoriteList(List<Scrap> scrapList){
 
-        List<ScrapResponse.ToggleScrapFavoriteList.ScrapDTO> scrapDTOList = scrapList.stream()
+        List<ScrapResponse.ToggleScrapFavoriteListDTO.ScrapDTO> scrapDTOList = scrapList.stream()
                 .map(scrap -> {
-                    return ScrapResponse.ToggleScrapFavoriteList.ScrapDTO.builder()
+                    return ScrapResponse.ToggleScrapFavoriteListDTO.ScrapDTO.builder()
                             .scrapId(scrap.getId())
                             .isFavorite(scrap.getIsFavorite())
                             .build();
                 })
                 .toList();
 
-        return ScrapResponse.ToggleScrapFavoriteList.builder()
+        return ScrapResponse.ToggleScrapFavoriteListDTO.builder()
                 .scrapDTOList(scrapDTOList)
                 .total(scrapList.size())
                 .build();
     }
 
-    public static ScrapResponse.UpdateScrapMemo toUpdateScrapMemo(Scrap scrap){
+    public static ScrapResponse.UpdateScrapMemoDTO toUpdateScrapMemo(Scrap scrap){
 
-        return ScrapResponse.UpdateScrapMemo.builder()
+        return ScrapResponse.UpdateScrapMemoDTO.builder()
                 .scrapId(scrap.getId())
                 .memo(scrap.getMemo())
                 .build();
     }
 
-    public static ScrapResponse.MoveCategoryOfScrap toMoveCategoryOfScrap(Scrap scrap){
+    public static ScrapResponse.MoveCategoryOfScrapDTO toMoveCategoryOfScrap(Scrap scrap){
 
-        return ScrapResponse.MoveCategoryOfScrap.builder()
+        return ScrapResponse.MoveCategoryOfScrapDTO.builder()
                 .scrapId(scrap.getId())
                 .categoryId(scrap.getCategory().getId())
                 .build();
     }
 
-    public static ScrapResponse.MoveCategoryOfScraps toMoveCategoryOfScraps(List<Scrap> scrapList){
+    public static ScrapResponse.MoveCategoryOfScrapListDTO toMoveCategoryOfScraps(List<Scrap> scrapList){
 
-        List<ScrapResponse.MoveCategoryOfScraps.ScrapDTO> scrapDTOList = scrapList.stream()
+        List<ScrapResponse.MoveCategoryOfScrapListDTO.ScrapDTO> scrapDTOList = scrapList.stream()
                 .map(scrap -> {
-                    return ScrapResponse.MoveCategoryOfScraps.ScrapDTO.builder()
+                    return ScrapResponse.MoveCategoryOfScrapListDTO.ScrapDTO.builder()
                             .scrapId(scrap.getId())
                             .categoryId(scrap.getCategory().getId())
                             .build();
                 })
                 .toList();
 
-        return ScrapResponse.MoveCategoryOfScraps.builder()
+        return ScrapResponse.MoveCategoryOfScrapListDTO.builder()
                 .total(scrapList.size())
                 .scrapDTOList(scrapDTOList)
                 .build();
     }
 
-    public static ScrapResponse.ShareAllScrap toShareAllScrap(List<Scrap> scrapList){
+    public static ScrapResponse.ShareAllScrapDTO toShareAllScrap(List<Scrap> scrapList){
 
-        List<ScrapResponse.ShareAllScrap.ScrapDTO> scrapDTOList = scrapList.stream()
+        List<ScrapResponse.ShareAllScrapDTO.ScrapDTO> scrapDTOList = scrapList.stream()
                 .map(scrap -> {
-                    return ScrapResponse.ShareAllScrap.ScrapDTO.builder()
+                    return ScrapResponse.ShareAllScrapDTO.ScrapDTO.builder()
                             .scrapId(scrap.getId())
                             .title(scrap.getTitle())
                             .scrapURL(scrap.getScrapURL())
@@ -182,7 +182,7 @@ public class ScrapConverter {
                 })
                 .toList();
 
-        return ScrapResponse.ShareAllScrap.builder()
+        return ScrapResponse.ShareAllScrapDTO.builder()
                 .scrapDTOList(scrapDTOList)
                 .total(scrapList.size())
                 .build();
