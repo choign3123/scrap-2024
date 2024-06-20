@@ -44,8 +44,8 @@ public class AppConfig implements WebMvcConfigurer {
         // 로그아웃 상태에서 사용 가능한 API
         registry.addInterceptor(loginAndLogoutStatusInterceptor)
                 .order(3) // OpenEntityManagerInViewInterceptor 를 먼저 동작시키게 하기 위해서 우선순위 낮춤.
-                .addPathPatterns("/oauth/login/**")
-                .addPathPatterns("/me");
+                .addPathPatterns("/me")
+                .excludePathPatterns("/oauth/login/**");
 
         // [TODO] 로그인, 토큰 유효성 조회 API는 빼기
     }
