@@ -2,6 +2,7 @@ package com.example.scrap.interceptor;
 
 import com.example.scrap.base.code.ErrorCode;
 import com.example.scrap.base.exception.AuthorizationException;
+import com.example.scrap.base.exception.ValidationException;
 import com.example.scrap.entity.Member;
 import com.example.scrap.jwt.TokenProvider;
 import com.example.scrap.web.member.IMemberQueryService;
@@ -26,6 +27,10 @@ public class AuthorizationInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 
         String accessToken = request.getHeader("Authorization");
+        if(accessToken == null){
+            throw new ValidationException("Authorization", "인증 토큰이 없습니다.");
+        }
+
         MemberDTO memberDTO = tokenProvider.parseMemberDTO(accessToken);
         Member member = memberQueryService.findMember(memberDTO);
 
