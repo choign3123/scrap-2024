@@ -40,6 +40,7 @@ public class CategoryResponse {
             private String categoryTitle;
             private int scrapCnt;
             private int sequence;
+            private boolean isDefault;
         }
     }
 

@@ -43,6 +43,7 @@ public class CategoryConverter {
                                         .categoryTitle(category.getTitle())
                                         .scrapCnt(category.getScrapList().size())
                                         .sequence(category.getSequence())
+                                        .isDefault(category.getIsDefault())
                                         .build()
                         ).toList()
                 )
