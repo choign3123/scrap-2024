@@ -20,6 +20,8 @@ public class ExistAvailableScrapValidator implements ConstraintValidator<ExistAv
     public boolean isValid(Long value, ConstraintValidatorContext context) {
 
         if(value == null){
+            context.disableDefaultConstraintViolation();
+            context.buildConstraintViolationWithTemplate("필수값 입니다.").addConstraintViolation();
             return false;
         }
 

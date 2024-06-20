@@ -20,11 +20,9 @@ public class SearchRequest {
     public static class FindScrapDTO {
 
         @EnumsValid(enumC = SearchScopeType.class)
-        @NotEmpty
-        @JsonProperty(value = "searchScope")
         private List<String> searchScope;
 
-        @ExistCategories
+        @ExistCategories(required = false)
         @JsonProperty(value = "categoryScope")
         private List<Long> categoryIdList;
 

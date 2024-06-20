@@ -1,13 +1,12 @@
 package com.example.scrap.validation.validator;
 
-import com.example.scrap.validation.annotaion.EnumValid;
 import com.example.scrap.validation.annotaion.EnumsValid;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 import java.util.List;
 
-public class EnumsValidValidator implements ConstraintValidator<EnumsValid, List<String>> {
+public class EnumsValidator implements ConstraintValidator<EnumsValid, List<String>> {
 
     private Class<? extends Enum<?>> enumType;
     private boolean required;
@@ -21,15 +20,18 @@ public class EnumsValidValidator implements ConstraintValidator<EnumsValid, List
 
     @Override
     public boolean isValid(List<String> values, ConstraintValidatorContext context) {
-        boolean nullable = !required && values == null;
-        if(nullable){
+        boolean notRequire = !required && (values == null || values.isEmpty());
+        if(notRequire){
             return true;
         }
 
-        Enum<?>[] enums = enumType.getEnumConstants();
-        if(enums == null){
+        if(values == null || values.isEmpty()){
+            context.disableDefaultConstraintViolation();
+            context.buildConstraintViolationWithTemplate("필수값 입니다.").addConstraintViolation();
             return false;
         }
+
+        Enum<?>[] enums = enumType.getEnumConstants();
 
         // 모든 요소에 대해서 검증
         for(String value : values){
@@ -43,6 +45,8 @@ public class EnumsValidValidator implements ConstraintValidator<EnumsValid, List
             }
 
             if(!isValid){
+                context.disableDefaultConstraintViolation();
+                context.buildConstraintViolationWithTemplate(value + " 은(는) 잘못된 값입니다.").addConstraintViolation();
                 return false;
             }
         }

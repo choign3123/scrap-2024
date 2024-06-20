@@ -60,8 +60,6 @@ public class SearchController {
         }
         /** 시작, 종료 날짜 검증 끝 **/
 
-        log.info("query: {}", query);
-
         // string -> enum 변경
         Sorts sortsEnum = Sorts.valueOf(sort.toUpperCase());
         Sort.Direction directionEnum = Sort.Direction.valueOf(direction.toUpperCase());

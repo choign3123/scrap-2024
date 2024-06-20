@@ -1,6 +1,6 @@
 package com.example.scrap.validation.annotaion;
 
-import com.example.scrap.validation.validator.EnumsValidValidator;
+import com.example.scrap.validation.validator.EnumsValidator;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;
@@ -14,7 +14,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 @Target({FIELD, PARAMETER})
 @Retention(RUNTIME)
-@Constraint(validatedBy = EnumsValidValidator.class)
+@Constraint(validatedBy = EnumsValidator.class)
 @Documented
 public @interface EnumsValid {
 
