@@ -17,9 +17,21 @@ import java.util.Optional;
 public class ExistCategoriesValidator implements ConstraintValidator<ExistCategories, List<Long>> {
 
     private final CategoryRepository categoryRepository;
+    private boolean required;
+
+    @Override
+    public void initialize(ExistCategories constraintAnnotation) {
+        ConstraintValidator.super.initialize(constraintAnnotation);
+        required = constraintAnnotation.required();
+    }
 
     @Override
     public boolean isValid(List<Long> value, ConstraintValidatorContext context) {
+
+        boolean notRequire = !required && (value == null || value.isEmpty());
+        if(notRequire){
+            return true;
+        }
 
         if(value == null || value.isEmpty()){
             context.disableDefaultConstraintViolation();

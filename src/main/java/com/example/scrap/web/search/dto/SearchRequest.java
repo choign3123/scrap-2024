@@ -22,7 +22,7 @@ public class SearchRequest {
         @EnumsValid(enumC = SearchScopeType.class)
         private List<String> searchScope;
 
-        @ExistCategories
+        @ExistCategories(required = false)
         @JsonProperty(value = "categoryScope")
         private List<Long> categoryIdList;
 

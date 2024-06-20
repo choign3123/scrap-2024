@@ -25,4 +25,6 @@ public @interface ExistCategories {
 
     Class<? extends Payload>[] payload() default { };
 
+    boolean required() default true;
+
 }
