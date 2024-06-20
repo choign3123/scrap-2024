@@ -19,13 +19,19 @@ public enum ErrorCode implements BaseCode{
     // Authorization Error
     TOKEN_EXPIRED(HttpStatus.NOT_ACCEPTABLE, "Authorization001", "다시 로그인후 서비스 이용 바랍니다."),
     NOT_ACCESS_TOKEN(HttpStatus.NOT_ACCEPTABLE, "Authorization002", "다시 로그인후 서비스 이용 바랍니다."),
-    MEMBER_OF_TOKEN_NOT_MATCH(HttpStatus.NOT_ACCEPTABLE, "Authorization003", "다시 로그인후 서비스 이용 바랍니다."),
+    ACCESS_MEMBER_AND_REFRESH_MEMBER_NOT_MATCH(HttpStatus.NOT_ACCEPTABLE, "Authorization003", "다시 로그인후 서비스 이용 바랍니다."),
+    MEMBER_NOT_MATCH_TO_MEMBER_DTO(HttpStatus.NOT_ACCEPTABLE, "Authorization004", "다시 로그인후 서비스 이용 바랍니다."),
+    LOGOUT_STATUS(HttpStatus.NOT_ACCEPTABLE, "Authorization005", "다시 로그인후 서비스 이용 바랍니다."),
+    UNREGISTER_STATUS(HttpStatus.NOT_ACCEPTABLE, "Authorization006", "해당하는 사용자가 존재하지 않습니다."),
 
     // Oauth Error
     OAUTH_NAVER_LOGIN_FAIL(HttpStatus.NOT_ACCEPTABLE, "Oauth001", "다시 네이버 로그인후 서비스 이용 바랍니다."),
 
     // Member Error
     MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, "MEMBER001", "해당하는 사용자가 존재하지 않습니다."),
+
+    // MemberLog 에러
+    MEMBER_LOG_STATUS_NOT_MATCH(HttpStatus.NOT_ACCEPTABLE, "MemberLog001", "다시 로그인후 서비스 이용 바랍니다."),
 
     // Category Error
     CATEGORY_NOT_FOUND(HttpStatus.NOT_FOUND, "CATEGORY001", "해당하는 카테고리가 존재하지 않습니다."),

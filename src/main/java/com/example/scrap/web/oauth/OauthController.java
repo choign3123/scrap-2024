@@ -23,7 +23,7 @@ public class OauthController {
      * @param authorization
      * @return
      */
-    @PostMapping("/naver/login")
+    @PostMapping("/login/naver")
     public ResponseEntity<ResponseDTO> naverLoginOrSignup(@RequestHeader("Authorization") String authorization){
 
         Token token = naverService.loginOrSignup(authorization);

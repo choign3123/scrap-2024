@@ -2,12 +2,10 @@ package com.example.scrap.web.scrap;
 
 import com.example.scrap.base.code.ErrorCode;
 import com.example.scrap.base.exception.BaseException;
-import com.example.scrap.base.exception.ValidationException;
 import com.example.scrap.converter.ScrapConverter;
 import com.example.scrap.entity.Category;
 import com.example.scrap.entity.Member;
 import com.example.scrap.entity.Scrap;
-import com.example.scrap.specification.ScrapSpecification;
 import com.example.scrap.web.baseDTO.PressSelectionType;
 import com.example.scrap.web.category.ICategoryQueryService;
 import com.example.scrap.web.member.IMemberQueryService;
@@ -15,14 +13,9 @@ import com.example.scrap.web.member.dto.MemberDTO;
 import com.example.scrap.web.scrap.dto.ScrapRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 
 
