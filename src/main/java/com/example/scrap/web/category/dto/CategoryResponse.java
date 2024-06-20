@@ -45,25 +45,18 @@ public class CategoryResponse {
     }
 
     /**
-     * 카테고리명 수정 DTO
-     */
-    @Builder
-    @Getter
-    public static class UpdateCategoryTitleDTO{
-
-        private String newCategoryTitle;
-    }
-
-    /**
      * 카테고리 선택용 조회 DTO
      */
     @Builder
     @Getter
-    @JsonPropertyOrder({"categories", "total"})
+    @JsonPropertyOrder({"categories", "defaultCategory", "total"})
     public static class GetCategoryListForSelectionDTO {
 
         @JsonProperty("categories")
         private List<CategoryDTO> categoryDTOList;
+
+        @JsonProperty("defaultCategory")
+        private Long defaultCategoryId;
 
         private int total;
 
@@ -73,6 +66,16 @@ public class CategoryResponse {
             private Long categoryId;
             private String categoryTitle;
         }
+    }
+
+    /**
+     * 카테고리명 수정 DTO
+     */
+    @Builder
+    @Getter
+    public static class UpdateCategoryTitleDTO{
+
+        private String newCategoryTitle;
     }
 
     /**
