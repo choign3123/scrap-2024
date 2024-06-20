@@ -32,20 +32,23 @@ public class AppConfig implements WebMvcConfigurer {
                 .order(2) // OpenEntityManagerInViewInterceptor 를 먼저 동작시키게 하기 위해서 우선순위 낮춤.
                 .addPathPatterns("/**")
                 .excludePathPatterns("/oauth/login/**")
-                .excludePathPatterns("/me");
+                .excludePathPatterns("/me")
+                .excludePathPatterns("/oauth/naver/callback");
 
         // 로그인 상태에서만 사용가능한 API
         registry.addInterceptor(loginStatusInterceptor)
                 .order(3) // OpenEntityManagerInViewInterceptor 를 먼저 동작시키게 하기 위해서 우선순위 낮춤.
                 .addPathPatterns("/**")
                 .excludePathPatterns("/oauth/login/**")
-                .excludePathPatterns("/me");
+                .excludePathPatterns("/me")
+                .excludePathPatterns("/oauth/naver/callback");
 
         // 로그아웃 상태에서 사용 가능한 API
         registry.addInterceptor(loginAndLogoutStatusInterceptor)
                 .order(3) // OpenEntityManagerInViewInterceptor 를 먼저 동작시키게 하기 위해서 우선순위 낮춤.
                 .addPathPatterns("/me")
-                .excludePathPatterns("/oauth/login/**");
+                .excludePathPatterns("/oauth/login/**")
+                .excludePathPatterns("/oauth/naver/callback");
 
         // [TODO] 로그인, 토큰 유효성 조회 API는 빼기
     }
