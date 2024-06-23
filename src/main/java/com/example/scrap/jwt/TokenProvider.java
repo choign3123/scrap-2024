@@ -31,6 +31,9 @@ public class TokenProvider {
     @Value("${jwt.expire_day.refresh}")
     private int expireDayOfRefreshToken;
 
+    @Value("${jwt.reissue_time}")
+    private int timeToRequiredReissue;
+
     /* 토큰 발급 **/
     /**
      * 토큰 발급하기
@@ -185,6 +188,48 @@ public class TokenProvider {
             return false;
         }
     }
+
+    /**
+     * 토큰 타입이 Refressh인지 겁사
+     */
+    public boolean isTokenTypeIsRefresh(String token){
+        try {
+            token = token.replace(Data.AUTH_PREFIX, "");
+
+            return TokenType.REFRESH.name().equals(
+                    Jwts.parser().setSigningKey(jwtSecretKey)
+                            .parseClaimsJws(token)
+                            .getBody()
+                            .get("type", String.class)
+            );
+
+        } catch (Exception e) {
+            log.info("토큰 parse 실패: {}", e.getMessage());
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    /**
+     * 토큰 재발급이 필요한지 유무
+     * @return if token need to reissue, return true. else return false.
+     */
+    public boolean isRequiredTokenReissue(String token){
+        try {
+            token = token.replace(Data.AUTH_PREFIX, "");
+
+            return Jwts.parser().setSigningKey(jwtSecretKey)
+                    .parseClaimsJws(token)
+                    .getBody()
+                    .getExpiration()
+                    .before(new Date(System.currentTimeMillis() - pareHourToMs(timeToRequiredReissue)));
+
+        } catch (Exception ex) {
+            log.info("토큰 parse 실패: {}", ex.getMessage());
+            ex.printStackTrace();
+            return true;
+        }
+    }
     /* 토큰 유효성 검사 끝 **/
 
     /**
@@ -214,5 +259,12 @@ public class TokenProvider {
      */
     private long parseDayToMs(int day){
         return day * 60L * 60L * 24L * 1000L; // 초, 분, 시간, 밀리단위
+    }
+
+    /**
+     * hour를 밀리초로 변환
+     */
+    private long pareHourToMs(int hour) {
+        return hour * 60L * 60L * 1000L; // 초, 분, 밀리단위
     }
 }

@@ -19,6 +19,7 @@ public enum ErrorCode implements BaseCode{
     // Authorization Error
     TOKEN_EXPIRED(HttpStatus.NOT_ACCEPTABLE, "Authorization001", "다시 로그인후 서비스 이용 바랍니다."),
     NOT_ACCESS_TOKEN(HttpStatus.NOT_ACCEPTABLE, "Authorization002", "다시 로그인후 서비스 이용 바랍니다."),
+    NOT_REFRESH_TOKEN(HttpStatus.NOT_ACCEPTABLE, "Authorization002", "다시 로그인후 서비스 이용 바랍니다."),
     ACCESS_MEMBER_AND_REFRESH_MEMBER_NOT_MATCH(HttpStatus.NOT_ACCEPTABLE, "Authorization003", "다시 로그인후 서비스 이용 바랍니다."),
     MEMBER_NOT_MATCH_TO_MEMBER_DTO(HttpStatus.NOT_ACCEPTABLE, "Authorization004", "다시 로그인후 서비스 이용 바랍니다."),
     LOGOUT_STATUS(HttpStatus.NOT_ACCEPTABLE, "Authorization005", "다시 로그인후 서비스 이용 바랍니다."),
