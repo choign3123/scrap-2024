@@ -10,6 +10,7 @@ import com.example.scrap.jwt.dto.Token;
 import com.example.scrap.jwt.dto.TokenType;
 import com.example.scrap.web.member.dto.MemberDTO;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.extern.slf4j.Slf4j;
@@ -86,16 +87,18 @@ public class TokenProvider {
 
     /**
      * access 토큰 재발급하기
+     * @param by 어느 토큰을 기준으로 accessToken을 재발급 할지
      * @throws AuthorizationException accessToken과 refreshToken의 member가 다르면
      */
-    public Token reissueAccessToken(Token token){
+    public Token reissueAccessToken(Token token, TokenType by){
 
-        // accessToken과 refreshToken의 snsType과 id 같은지 확인
-        if(isMemberOfTokenSame(token)){
-            throw new AuthorizationException(ErrorCode.ACCESS_MEMBER_AND_REFRESH_MEMBER_NOT_MATCH);
+        MemberDTO memberDTO;
+        switch (by){
+            case ACCESS -> memberDTO = parseMemberDTO(token.getAccessToken());
+            case REFRESH -> memberDTO = parseMemberDTO(token.getRefreshToken());
+            default -> throw new IllegalArgumentException("by의 값이 잘못되었습니다.");
         }
 
-        MemberDTO memberDTO = parseMemberDTO(token.getAccessToken());
         String reissuedAccessToken = createToken(memberDTO, expireDayOfAccessToken, TokenType.ACCESS);
 
         return Token.builder()
@@ -106,14 +109,9 @@ public class TokenProvider {
 
     /**
      * refresh 토큰 재발급하기
-     * @throws AuthorizationException accessToken과 refreshToken의 member가 다르면
+     * 오직 accessToken으로만 refresh 토큰 재발급 가능
      */
     public Token reissueRefreshToken(Token token){
-
-        // accessToken과 refreshToken의 snsType과 id 같은지 확인
-        if(isMemberOfTokenSame(token)){
-            throw new BaseException(ErrorCode.ACCESS_MEMBER_AND_REFRESH_MEMBER_NOT_MATCH);
-        }
 
         MemberDTO memberDTO = parseMemberDTO(token.getRefreshToken());
         String reissuedRefreshToken = createToken(memberDTO, expireDayOfRefreshToken, TokenType.REFRESH);
@@ -143,28 +141,20 @@ public class TokenProvider {
 
     /**
      * 토큰 유효성 검사.
-     * @return if token expire or fail to parse, return true. else return false.
+     * @return if token is valid, return true. else return false.
      */
-    public boolean isTokenExpired(String token){
+    public boolean isTokenValid(String token){
         try {
             token = token.replace(Data.AUTH_PREFIX, "");
-//            Date expireDate = Jwts.parser().setSigningKey(jwtSecretKey)
-//                    .parseClaimsJws(token)
-//                    .getBody()
-//                    .getExpiration();
-//
-//            log.info("토큰 만료일: {}, 현재 시간: {}", expireDate, new Date());
 
-            return Jwts.parser().setSigningKey(jwtSecretKey)
-                    .parseClaimsJws(token)
-                    .getBody()
-                    .getExpiration()
-                    .before(new Date());
+            Jwts.parser().setSigningKey(jwtSecretKey)
+                    .parseClaimsJws(token);
 
-        } catch (Exception ex) {
-            log.info("토큰 parse 실패: {}", ex.getMessage());
-            ex.printStackTrace();
             return true;
+
+        } catch (Exception e){
+            log.info("토큰 parse 실패: {}", e.getMessage());
+            return false;
         }
     }
 
@@ -222,7 +212,7 @@ public class TokenProvider {
                     .parseClaimsJws(token)
                     .getBody()
                     .getExpiration()
-                    .before(new Date(System.currentTimeMillis() - pareHourToMs(timeToRequiredReissue)));
+                    .after(new Date(System.currentTimeMillis() - pareHourToMs(timeToRequiredReissue)));
 
         } catch (Exception ex) {
             log.info("토큰 parse 실패: {}", ex.getMessage());
@@ -239,8 +229,8 @@ public class TokenProvider {
     public MemberDTO parseMemberDTO(String token){
         token = token.replace(Data.AUTH_PREFIX, "");
 
-        if(isTokenExpired(token)){
-            throw new AuthorizationException(ErrorCode.TOKEN_EXPIRED);
+        if(!isTokenValid(token)){
+            throw new AuthorizationException(ErrorCode.TOKEN_NOT_VALID);
         }
 
         Claims claims = Jwts.parser().setSigningKey(jwtSecretKey)

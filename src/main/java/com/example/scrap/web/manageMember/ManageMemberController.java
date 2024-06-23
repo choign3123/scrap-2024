@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 public class ManageMemberController {
 
-    private IMangeMemberService mangeMemberService;
+    private final IMangeMemberService mangeMemberService;
 
     /**
      * [POST] /me
