@@ -31,17 +31,18 @@ public class AuthorizationInterceptor implements HandlerInterceptor {
             throw new ValidationException("Authorization", "인증 토큰이 없습니다.");
         }
 
-        MemberDTO memberDTO = tokenProvider.parseMemberDTO(accessToken);
-        Member member = memberQueryService.findMember(memberDTO);
-
-        if(tokenProvider.isTokenExpired(accessToken)){ // 토큰 만료
-            throw new AuthorizationException(ErrorCode.TOKEN_EXPIRED);
+        if(!tokenProvider.isTokenValid(accessToken)){ // 토큰 유효성 검사
+            throw new AuthorizationException(ErrorCode.TOKEN_NOT_VALID);
         }
         if(!tokenProvider.isTokenTypeIsAccess(accessToken)){ // access 토큰이 아님
             throw new AuthorizationException(ErrorCode.NOT_ACCESS_TOKEN);
         }
-        if(!memberDTO.isMatchMember(member)){  // member의 id와 snsId, snsType이 token의 값과 일치하는지 확인
-            throw new AuthorizationException(ErrorCode.MEMBER_NOT_MATCH_TO_MEMBER_DTO);
+
+        // member의 id와 snsId, snsType이 token의 값과 일치하는지 확인
+        MemberDTO memberDTO = tokenProvider.parseMemberDTO(accessToken);
+        Member member = memberQueryService.findMember(memberDTO);
+        if(!memberDTO.isMatchMember(member)){
+            throw new AuthorizationException(ErrorCode.TOKEN_VALUE_NOT_MATCH_TO_MEMBER);
         }
 
         log.info("auth 인터셉터-member: {}", member.getName());
