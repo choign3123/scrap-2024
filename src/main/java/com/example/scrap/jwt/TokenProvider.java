@@ -134,7 +134,7 @@ public class TokenProvider {
         }
 
         MemberDTO accessOfMemberDTO = parseMemberDTO(token.getAccessToken());
-        MemberDTO refreshOfMemberDTO = parseMemberDTO(token.getAccessToken());
+        MemberDTO refreshOfMemberDTO = parseMemberDTO(token.getRefreshToken());
 
         return accessOfMemberDTO.equals(refreshOfMemberDTO);
     }
