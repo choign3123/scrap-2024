@@ -2,6 +2,7 @@ package com.example.scrap.web.member.dto;
 
 import com.example.scrap.entity.Member;
 import com.example.scrap.entity.enums.SnsType;
+import lombok.Builder;
 import lombok.Getter;
 
 @Getter
@@ -11,6 +12,7 @@ public class MemberDTO {
     private final SnsType snsType;
     private final String snsId;
 
+    @Builder
     public MemberDTO(Long memberId, SnsType snsType, String snsId) {
         this.memberId = memberId;
         this.snsType = snsType;
