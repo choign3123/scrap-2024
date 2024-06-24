@@ -208,11 +208,16 @@ public class TokenProvider {
         try {
             token = token.replace(Data.AUTH_PREFIX, "");
 
-            return Jwts.parser().setSigningKey(jwtSecretKey)
+            Date expireDate = Jwts.parser().setSigningKey(jwtSecretKey)
                     .parseClaimsJws(token)
                     .getBody()
-                    .getExpiration()
-                    .after(new Date(System.currentTimeMillis() - pareHourToMs(timeToRequiredReissue)));
+                    .getExpiration();
+
+            long standardOfReissueTime = pareHourToMs(timeToRequiredReissue);
+
+            boolean isNeedToReissueToken = (expireDate.getTime() - System.currentTimeMillis() < standardOfReissueTime); // 만료시간 - 현재시간 < 재발금 필요 시간
+
+            return isNeedToReissueToken;
 
         } catch (Exception ex) {
             log.info("토큰 parse 실패: {}", ex.getMessage());
