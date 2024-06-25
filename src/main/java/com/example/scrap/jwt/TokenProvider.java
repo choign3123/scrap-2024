@@ -3,14 +3,12 @@ package com.example.scrap.jwt;
 import com.example.scrap.base.Data;
 import com.example.scrap.base.code.ErrorCode;
 import com.example.scrap.base.exception.AuthorizationException;
-import com.example.scrap.base.exception.BaseException;
 import com.example.scrap.entity.Member;
 import com.example.scrap.entity.enums.SnsType;
 import com.example.scrap.jwt.dto.Token;
 import com.example.scrap.jwt.dto.TokenType;
 import com.example.scrap.web.member.dto.MemberDTO;
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.extern.slf4j.Slf4j;
@@ -32,8 +30,11 @@ public class TokenProvider {
     @Value("${jwt.expire_day.refresh}")
     private int expireDayOfRefreshToken;
 
-    @Value("${jwt.reissue_time}")
-    private int timeToRequiredReissue;
+    @Value("${jwt.reissue_time.access}")
+    private int hourOfRequiredReissueAccessToken;
+
+    @Value("${jwt.reissue_time.refresh}")
+    private int hourOfRequiredReissueRefreshToken;
 
     /* 토큰 발급 **/
     /**
@@ -62,13 +63,13 @@ public class TokenProvider {
     private String createToken(Member member, int expireDay, TokenType tokenType){
         MemberDTO memberDTO = new MemberDTO(member);
 
-        return this.createToken(memberDTO, expireDay, tokenType);
+        return this.createToken(memberDTO, parseDayToMs(expireDay), tokenType);
     }
 
     /**
      * 토큰 생성하기
      */
-    private String createToken(MemberDTO memberDTO, int expireDay, TokenType tokenType){
+    private String createToken(MemberDTO memberDTO, long expireMs, TokenType tokenType){
         Claims claims = Jwts.claims();
         claims.put("snsType", memberDTO.getSnsType());
         claims.put("snsId", memberDTO.getSnsId());
@@ -80,7 +81,7 @@ public class TokenProvider {
         return Jwts.builder()
                 .setClaims(claims)
                 .setIssuedAt(new Date(currentTimeMills))
-                .setExpiration(new Date(currentTimeMills + parseDayToMs(expireDay)))
+                .setExpiration(new Date(currentTimeMills + expireMs))
                 .signWith(SignatureAlgorithm.HS256, jwtSecretKey)
                 .compact();
     }
@@ -99,7 +100,7 @@ public class TokenProvider {
             default -> throw new IllegalArgumentException("by의 값이 잘못되었습니다.");
         }
 
-        String reissuedAccessToken = createToken(memberDTO, expireDayOfAccessToken, TokenType.ACCESS);
+        String reissuedAccessToken = createToken(memberDTO, parseDayToMs(expireDayOfAccessToken), TokenType.ACCESS);
 
         return Token.builder()
                 .accessToken(reissuedAccessToken)
@@ -114,7 +115,7 @@ public class TokenProvider {
     public Token reissueRefreshToken(Token token){
 
         MemberDTO memberDTO = parseMemberDTO(token.getRefreshToken());
-        String reissuedRefreshToken = createToken(memberDTO, expireDayOfRefreshToken, TokenType.REFRESH);
+        String reissuedRefreshToken = createToken(memberDTO, parseDayToMs(expireDayOfRefreshToken), TokenType.REFRESH);
 
         return Token.builder()
                 .accessToken(token.getAccessToken())
@@ -213,7 +214,7 @@ public class TokenProvider {
                     .getBody()
                     .getExpiration();
 
-            long standardOfReissueTime = pareHourToMs(timeToRequiredReissue);
+            long standardOfReissueTime = pareHourToMs(hourOfRequiredReissueAccessToken);
 
             boolean isNeedToReissueToken = (expireDate.getTime() - System.currentTimeMillis() < standardOfReissueTime); // 만료시간 - 현재시간 < 재발금 필요 시간
 
