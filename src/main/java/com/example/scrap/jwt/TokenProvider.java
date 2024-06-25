@@ -34,7 +34,7 @@ public class TokenProvider {
     private int hourOfRequiredReissueAccessToken;
 
     @Value("${jwt.reissue_time.refresh}")
-    private int hourOfRequiredReissueRefreshToken;
+    private int dayOfRequiredReissueRefreshToken;
 
     /* 토큰 발급 **/
     /**
@@ -204,17 +204,24 @@ public class TokenProvider {
     /**
      * 토큰 재발급이 필요한지 유무
      * @return if token need to reissue, return true. else return false.
+     * @throws AuthorizationException TokenType값이 잘못 되었을 때
      */
     public boolean isRequiredTokenReissue(String token){
         try {
             token = token.replace(Data.AUTH_PREFIX, "");
 
-            Date expireDate = Jwts.parser().setSigningKey(jwtSecretKey)
+            Claims claims = Jwts.parser().setSigningKey(jwtSecretKey)
                     .parseClaimsJws(token)
-                    .getBody()
-                    .getExpiration();
+                    .getBody();
 
-            long standardOfReissueTime = pareHourToMs(hourOfRequiredReissueAccessToken);
+            Date expireDate = claims.getExpiration();
+
+            long standardOfReissueTime;
+            switch (TokenType.valueOf(claims.get("type", String.class))){
+                case ACCESS -> standardOfReissueTime = pareHourToMs(hourOfRequiredReissueAccessToken);
+                case REFRESH -> standardOfReissueTime = parseDayToMs(dayOfRequiredReissueRefreshToken);
+                default -> throw new AuthorizationException(ErrorCode.TOKEN_TYPE_ILLEGAL);
+            }
 
             boolean isNeedToReissueToken = (expireDate.getTime() - System.currentTimeMillis() < standardOfReissueTime); // 만료시간 - 현재시간 < 재발금 필요 시간
 
