@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -42,6 +43,8 @@ public class Scrap extends BaseEntity {
     @Column(nullable = false)
     @ColumnDefault("'ACTIVE'")
     private ScrapStatus status;
+
+    private LocalDateTime trashed_date;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "member_id")
