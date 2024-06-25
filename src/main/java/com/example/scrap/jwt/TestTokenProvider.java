@@ -29,6 +29,12 @@ public class TestTokenProvider {
     @Value("${jwt.secret}")
     private String jwtSecretKey;
 
+    @Value("${jwt.reissue_time.access}")
+    private int hourOfRequiredReissueAccessToken;
+
+    @Value("${jwt.reissue_time.refresh}")
+    private int dayOfRequiredReissueRefreshToken;
+
     private final TokenProvider tokenProvider;
 
     /* 토큰 발급 **/
@@ -42,11 +48,13 @@ public class TestTokenProvider {
 
         Map<String, String> map = new HashMap<>();
 
+        long reissueHourOfAccess = pareHourToMs(hourOfRequiredReissueAccessToken) - pareMinuteToMs(30);
         map.put("유효한 accessToken", createToken(memberDTO, parseDayToMs(10), TokenType.ACCESS));
-        map.put("유효한 accessToken (갱신 필요함)", createToken(memberDTO, pareMinuteToMs(30), TokenType.ACCESS));
+        map.put("유효한 accessToken (갱신 필요함)", createToken(memberDTO, reissueHourOfAccess, TokenType.ACCESS));
 
+        long reissueDayOfRefresh = parseDayToMs(dayOfRequiredReissueRefreshToken) - pareMinuteToMs(30);
         map.put("유효한 refreshToken", createToken(memberDTO, parseDayToMs(10), TokenType.REFRESH));
-        map.put("유효한 refreshToken (갱신 필요함)", createToken(memberDTO, pareMinuteToMs(30), TokenType.REFRESH));
+        map.put("유효한 refreshToken (갱신 필요함)", createToken(memberDTO, reissueDayOfRefresh, TokenType.REFRESH));
 
         map.put("유효하지 않은 accessToken", createToken(memberDTO, 0, TokenType.ACCESS));
         map.put("유효하지 않은 refreshToken", createToken(memberDTO, 0, TokenType.REFRESH));
