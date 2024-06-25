@@ -135,6 +135,7 @@ public class Scrap extends BaseEntity {
      */
     public void toTrash(){
         this.status = ScrapStatus.TRASH;
+        trashed_date = LocalDateTime.now();
     }
 
     /**
