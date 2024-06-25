@@ -90,6 +90,7 @@ public class TokenProvider {
      * access 토큰 재발급하기
      * @param by 어느 토큰을 기준으로 accessToken을 재발급 할지
      * @throws AuthorizationException accessToken과 refreshToken의 member가 다르면
+     * @throws IllegalArgumentException by 값이 잘못되었을 때
      */
     public Token reissueAccessToken(Token token, TokenType by){
 
@@ -237,7 +238,7 @@ public class TokenProvider {
 
     /**
      * 토큰을 MemberDTO로 변환
-     * @throws AuthorizationException 토큰 만료시
+     * @throws AuthorizationException 토큰 만료시, 잘못된 TokenType일시
      */
     public MemberDTO parseMemberDTO(String token){
         token = token.replace(Data.AUTH_PREFIX, "");
@@ -250,7 +251,13 @@ public class TokenProvider {
                 .parseClaimsJws(token)
                 .getBody();
 
-        SnsType snsType = SnsType.valueOf(claims.get("snsType", String.class));
+        SnsType snsType;
+        try {
+            snsType = SnsType.valueOf(claims.get("snsType", String.class));
+        } catch (IllegalArgumentException e){
+            throw new AuthorizationException(ErrorCode.TOKEN_TYPE_ILLEGAL);
+        }
+
         String snsId = claims.get("snsId", String.class);
         Long memberId = Long.parseLong(claims.getAudience());
 
