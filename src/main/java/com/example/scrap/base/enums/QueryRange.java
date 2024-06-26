@@ -1,5 +1,5 @@
 package com.example.scrap.base.enums;
 
-public enum PressSelectionType {
+public enum QueryRange {
     CATEGORY, FAVORITE
 }

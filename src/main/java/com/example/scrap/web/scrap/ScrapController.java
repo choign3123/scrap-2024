@@ -7,7 +7,7 @@ import com.example.scrap.entity.Scrap;
 import com.example.scrap.jwt.TokenProvider;
 import com.example.scrap.validation.annotaion.*;
 import com.example.scrap.base.Data;
-import com.example.scrap.base.enums.PressSelectionType;
+import com.example.scrap.base.enums.QueryRange;
 import com.example.scrap.base.enums.Sorts;
 import com.example.scrap.web.member.dto.MemberDTO;
 import com.example.scrap.web.scrap.dto.ScrapRequest;
@@ -152,16 +152,16 @@ public class ScrapController {
      */
     @GetMapping("/share")
     public ResponseEntity<ResponseDTO> allScrapShare(@RequestHeader("Authorization") String token,
-                                     @RequestParam(name = "type", required = false) @EnumValid(enumC = PressSelectionType.class) String pressSelectionStr,
+                                     @RequestParam(name = "type", required = false) @EnumValid(enumC = QueryRange.class) String queryRangeStr,
                                      @RequestParam(name = "category", required = false) @ExistCategory(required = false) Long categoryId){
 
         MemberDTO memberDTO = tokenProvider.parseMemberDTO(token);
 
-        PressSelectionType pressSelectionType = PressSelectionType.valueOf(pressSelectionStr.toUpperCase());
+        QueryRange queryRange = QueryRange.valueOf(queryRangeStr.toUpperCase());
 
-        checkCategoryMissing(categoryId, pressSelectionType);
+        checkCategoryMissing(categoryId, queryRange);
 
-        List<Scrap> scrapList = scrapQueryService.shareAllScrap(memberDTO, pressSelectionType, categoryId);
+        List<Scrap> scrapList = scrapQueryService.shareAllScrap(memberDTO, queryRange, categoryId);
         ScrapResponse.ShareAllScrapDTO response = ScrapConverter.toShareAllScrap(scrapList);
 
         return ResponseEntity.ok(new ResponseDTO(response));
@@ -189,22 +189,22 @@ public class ScrapController {
     @PatchMapping("/favorite")
     public ResponseEntity<ResponseDTO> scrapFavoriteListToggle(@RequestHeader("Authorization") String token,
                                                @RequestParam(name = "all", defaultValue = "false", required = false) boolean isAllFavorite,
-                                               @RequestParam(name = "type", required = false) @EnumValid(enumC = PressSelectionType.class, required = false) String pressSelectionStr,
+                                               @RequestParam(name = "type", required = false) @EnumValid(enumC = QueryRange.class, required = false) String queryRangeStr,
                                                @RequestParam(name = "category", required = false) @ExistCategory(required = false) Long categoryId,
                                                @RequestBody @Validated ScrapRequest.ToggleScrapFavoriteListDTO request){
 
         MemberDTO memberDTO = tokenProvider.parseMemberDTO(token);
 
-        PressSelectionType pressSelectionType = null;
+        QueryRange queryRange = null;
         if(isAllFavorite){
             // 프레스 선택 타입 누락 확인
-            pressSelectionType = checkPressSelectionTypeMissing(pressSelectionStr);
+            queryRange = checkQueryRangeMissing(queryRangeStr);
 
             // 카테고리 누락 확인
-            checkCategoryMissing(categoryId, pressSelectionType);
+            checkCategoryMissing(categoryId, queryRange);
         }
 
-        List<Scrap> scrapList = scrapCommandService.toggleScrapFavoriteList(memberDTO, isAllFavorite, pressSelectionType, categoryId, request);
+        List<Scrap> scrapList = scrapCommandService.toggleScrapFavoriteList(memberDTO, isAllFavorite, queryRange, categoryId, request);
         ScrapResponse.ToggleScrapFavoriteListDTO response = ScrapConverter.toToggleScrapFavoriteList(scrapList);
 
         return ResponseEntity.ok(new ResponseDTO(response));
@@ -233,21 +233,21 @@ public class ScrapController {
     @PatchMapping("/move")
     public ResponseEntity<ResponseDTO> categoryOfScrapsMove(@RequestHeader("Authorization") String token, @RequestBody @Validated ScrapRequest.MoveCategoryOfScrapsDTO request,
                                             @RequestParam(name = "all", defaultValue = "false", required = false) boolean isAllMove,
-                                            @RequestParam(name = "type", required = false) @EnumValid(enumC = PressSelectionType.class, required = false) String pressSelectionStr,
+                                            @RequestParam(name = "type", required = false) @EnumValid(enumC = QueryRange.class, required = false) String queryRangeStr,
                                             @RequestParam(name = "category", required = false) @ExistCategory(required = false) Long categoryId){
 
         MemberDTO memberDTO = tokenProvider.parseMemberDTO(token);
 
-        PressSelectionType pressSelectionType = null;
+        QueryRange queryRange = null;
         if(isAllMove){
             // 프레스 선택 타입 누락 확인
-            pressSelectionType = checkPressSelectionTypeMissing(pressSelectionStr);
+            queryRange = checkQueryRangeMissing(queryRangeStr);
 
             // 카테고리 누락 확인
-            checkCategoryMissing(categoryId, pressSelectionType);
+            checkCategoryMissing(categoryId, queryRange);
         }
 
-        List<Scrap> scrapList = scrapCommandService.moveCategoryOfScraps(memberDTO, request, isAllMove, pressSelectionType, categoryId);
+        List<Scrap> scrapList = scrapCommandService.moveCategoryOfScraps(memberDTO, request, isAllMove, queryRange, categoryId);
         ScrapResponse.MoveCategoryOfScrapListDTO response = ScrapConverter.toMoveCategoryOfScraps(scrapList);
 
         return ResponseEntity.ok(new ResponseDTO(response));
@@ -290,22 +290,22 @@ public class ScrapController {
     @PatchMapping("/trash")
     public ResponseEntity<ResponseDTO> scrapListRemove(@RequestHeader("Authorization") String token, @RequestBody @Validated ScrapRequest.DeleteScrapListDTO request,
                                        @RequestParam(name = "all", defaultValue = "false", required = false) boolean isAllDelete,
-                                       @RequestParam(name = "type", required = false) @EnumValid(enumC = PressSelectionType.class, required = false) String pressSelectionStr,
+                                       @RequestParam(name = "type", required = false) @EnumValid(enumC = QueryRange.class, required = false) String queryRangeStr,
                                        @RequestParam(name = "category", required = false) @ExistCategory(required = false) Long categoryId){
 
         MemberDTO memberDTO = tokenProvider.parseMemberDTO(token);
 
         // string -> enum
-        PressSelectionType pressSelectionType = null;
+        QueryRange queryRange = null;
         if(isAllDelete){
             // 프레스 선택 타입 누락
-            pressSelectionType = checkPressSelectionTypeMissing(pressSelectionStr);
+            queryRange = checkQueryRangeMissing(queryRangeStr);
 
             // 카테고리 누락
-            checkCategoryMissing(categoryId, pressSelectionType);
+            checkCategoryMissing(categoryId, queryRange);
         }
 
-        scrapCommandService.deleteScrapList(memberDTO, isAllDelete, pressSelectionType, categoryId, request);
+        scrapCommandService.deleteScrapList(memberDTO, isAllDelete, queryRange, categoryId, request);
 
         return ResponseEntity.ok(new ResponseDTO<Void>());
     }
@@ -313,13 +313,13 @@ public class ScrapController {
     /**
      * 프레스 선택 타입 누락 확인
      */
-    private PressSelectionType checkPressSelectionTypeMissing(String pressSelectionStr){
-        boolean pressSelectionTypeMissing = (pressSelectionStr == null);
-        if(pressSelectionTypeMissing){
+    private QueryRange checkQueryRangeMissing(String queryRangeStr){
+        boolean queryRangeMissing = (queryRangeStr == null);
+        if(queryRangeMissing){
             throw new ValidationException("type", "전체 선택일 시, 필수 입력입니다.");
         }
 
-        return PressSelectionType.valueOf(pressSelectionStr.toUpperCase());
+        return QueryRange.valueOf(queryRangeStr.toUpperCase());
     }
 
     /**
@@ -327,8 +327,8 @@ public class ScrapController {
      * @return if category missing throw ValidationException, else return true
      * @throws ValidationException
      */
-    private boolean checkCategoryMissing(Long categoryId, PressSelectionType pressSelectionType){
-        boolean categoryIdMissing = (pressSelectionType == PressSelectionType.CATEGORY) && (categoryId == null);
+    private boolean checkCategoryMissing(Long categoryId, QueryRange queryRange){
+        boolean categoryIdMissing = (queryRange == QueryRange.CATEGORY) && (categoryId == null);
         if(categoryIdMissing){
             throw new ValidationException("category", "CATEGORY 타입일 시, 필수 입력입니다.");
         }

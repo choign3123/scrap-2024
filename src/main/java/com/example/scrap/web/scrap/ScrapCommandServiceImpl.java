@@ -6,7 +6,7 @@ import com.example.scrap.converter.ScrapConverter;
 import com.example.scrap.entity.Category;
 import com.example.scrap.entity.Member;
 import com.example.scrap.entity.Scrap;
-import com.example.scrap.base.enums.PressSelectionType;
+import com.example.scrap.base.enums.QueryRange;
 import com.example.scrap.web.category.ICategoryQueryService;
 import com.example.scrap.web.member.IMemberQueryService;
 import com.example.scrap.web.member.dto.MemberDTO;
@@ -72,21 +72,21 @@ public class ScrapCommandServiceImpl implements IScrapCommandService {
      * 스크랩 즐겨찾기(목록)
      * @param memberDTO
      * @param isAllFavorite
-     * @param pressSelectionType
+     * @param queryRange
      * @param categoryId
      * @param request
      */
     @Transactional
     public List<Scrap> toggleScrapFavoriteList(MemberDTO memberDTO,
-                                        boolean isAllFavorite, PressSelectionType pressSelectionType, Long categoryId,
-                                        ScrapRequest.ToggleScrapFavoriteListDTO request){
+                                               boolean isAllFavorite, QueryRange queryRange, Long categoryId,
+                                               ScrapRequest.ToggleScrapFavoriteListDTO request){
 
         Member member = memberService.findMember(memberDTO);
         List<Scrap> favoriteScrapList;
 
         // 전체 즐겨찾기
         if(isAllFavorite){
-            favoriteScrapList = scrapQueryService.findAllByPressSelection(member, pressSelectionType, categoryId);
+            favoriteScrapList = scrapQueryService.findAllByPressSelection(member, queryRange, categoryId);
         }
         // 요청된 스크랩만 즐겨찾기
         else{
@@ -144,13 +144,13 @@ public class ScrapCommandServiceImpl implements IScrapCommandService {
      * @param memberDTO
      * @param request
      * @param isAllMove
-     * @param pressSelectionType
+     * @param queryRange
      * @param categoryId
      * @return
      */
     @Transactional
     public List<Scrap> moveCategoryOfScraps(MemberDTO memberDTO, ScrapRequest.MoveCategoryOfScrapsDTO request,
-                                            boolean isAllMove, PressSelectionType pressSelectionType, Long categoryId){
+                                            boolean isAllMove, QueryRange queryRange, Long categoryId){
 
         Member member = memberService.findMember(memberDTO);
         Category moveCategory = categoryService.findCategory(request.getMoveCategoryId());
@@ -163,7 +163,7 @@ public class ScrapCommandServiceImpl implements IScrapCommandService {
 
         // 전체 이동하기
         if(isAllMove){
-            moveScrapList = scrapQueryService.findAllByPressSelection(member, pressSelectionType, categoryId);
+            moveScrapList = scrapQueryService.findAllByPressSelection(member, queryRange, categoryId);
         }
         // 요청된 스크랩만 이동하기
         else{
@@ -215,18 +215,18 @@ public class ScrapCommandServiceImpl implements IScrapCommandService {
      * 스크랩 삭제(목록)
      * @param memberDTO
      * @param isAllDelete
-     * @param pressSelectionType
+     * @param queryRange
      * @param categoryId
      * @param request
      */
     @Transactional
-    public void deleteScrapList(MemberDTO memberDTO, boolean isAllDelete, PressSelectionType pressSelectionType, Long categoryId, ScrapRequest.DeleteScrapListDTO request){
+    public void deleteScrapList(MemberDTO memberDTO, boolean isAllDelete, QueryRange queryRange, Long categoryId, ScrapRequest.DeleteScrapListDTO request){
         Member member = memberService.findMember(memberDTO);
         List<Scrap> deleteScrapList;
 
         // 모든 스크랩 삭제
         if(isAllDelete){
-            deleteScrapList = scrapQueryService.findAllByPressSelection(member, pressSelectionType, categoryId);
+            deleteScrapList = scrapQueryService.findAllByPressSelection(member, queryRange, categoryId);
         }
         // 요청된 스크랩만 삭제
         else{
