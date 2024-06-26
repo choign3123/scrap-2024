@@ -3,7 +3,7 @@ package com.example.scrap.web.search;
 import com.example.scrap.entity.Member;
 import com.example.scrap.entity.Scrap;
 import com.example.scrap.specification.ScrapSpecification;
-import com.example.scrap.web.baseDTO.SearchScopeType;
+import com.example.scrap.base.enums.SearchScopeType;
 import com.example.scrap.web.member.IMemberQueryService;
 import com.example.scrap.web.member.dto.MemberDTO;
 import com.example.scrap.web.scrap.ScrapRepository;

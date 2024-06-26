@@ -1,12 +1,9 @@
 package com.example.scrap.web.scrap;
 
 import com.example.scrap.entity.Scrap;
-import com.example.scrap.web.baseDTO.PressSelectionType;
+import com.example.scrap.base.enums.PressSelectionType;
 import com.example.scrap.web.member.dto.MemberDTO;
 import com.example.scrap.web.scrap.dto.ScrapRequest;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 
 import java.util.List;
 

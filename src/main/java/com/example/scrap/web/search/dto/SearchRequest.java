@@ -3,11 +3,10 @@ package com.example.scrap.web.search.dto;
 import com.example.scrap.validation.annotaion.EnumsValid;
 import com.example.scrap.validation.annotaion.ExistCategories;
 import com.example.scrap.base.Data;
-import com.example.scrap.web.baseDTO.SearchScopeType;
+import com.example.scrap.base.enums.SearchScopeType;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 
-import javax.validation.constraints.NotEmpty;
 import java.time.LocalDate;
 import java.util.List;
 

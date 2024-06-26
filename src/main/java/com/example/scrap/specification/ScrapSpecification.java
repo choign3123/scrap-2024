@@ -4,12 +4,10 @@ import com.example.scrap.entity.Category;
 import com.example.scrap.entity.Member;
 import com.example.scrap.entity.Scrap;
 import com.example.scrap.entity.enums.ScrapStatus;
-import com.example.scrap.web.baseDTO.SearchScopeType;
+import com.example.scrap.base.enums.SearchScopeType;
 import org.springframework.data.jpa.domain.Specification;
 
-import javax.persistence.criteria.Predicate;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 
