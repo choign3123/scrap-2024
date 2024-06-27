@@ -24,7 +24,7 @@ public class EnumValidator implements ConstraintValidator<EnumValid, String> {
             return true;
         }
 
-        if(value == null){
+        if(value == null || value.isBlank()){
             context.disableDefaultConstraintViolation();
             context.buildConstraintViolationWithTemplate("필수값 입니다.").addConstraintViolation();
             return false;
