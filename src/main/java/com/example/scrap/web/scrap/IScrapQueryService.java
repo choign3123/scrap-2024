@@ -47,7 +47,7 @@ public interface IScrapQueryService {
      * @param sort
      * @return
      */
-    public List<Scrap> findScrapByTitle(MemberDTO memberDTO, Long categoryId, String query, Sort sort);
+    public List<Scrap> findScrapByTitle(MemberDTO memberDTO, QueryRange queryRange, Long categoryId, String query, Sort sort);
 
     /**
      * 스크랩 전체 공유하기
@@ -73,7 +73,7 @@ public interface IScrapQueryService {
      * @return
      * @throws BaseException CATEGORY_MEMBER_NOT_MATCH_IN_SCRAP
      */
-    List<Scrap> findAllByPressSelection(Member member, QueryRange queryRange, Long categoryId);
+    List<Scrap> findAllByQueryType(Member member, QueryRange queryRange, Long categoryId);
 
     /**
      * 요청된 스크랩 조회

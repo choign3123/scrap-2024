@@ -127,10 +127,11 @@ public class ScrapController {
      */
     @GetMapping("/search/title")
     public ResponseEntity<ResponseDTO> scrapSearchByTitle(@RequestHeader("Authorization") String token,
-                                          @RequestParam("category") @ExistCategory Long categoryId,
-                                          @RequestParam("q") @NotBlank String query,
                                           @RequestParam(name = "sort", defaultValue = "SCRAP_DATE") @EnumValid(enumC = Sorts.class) String sorts,
-                                          @RequestParam(name = "direction", defaultValue = "ASC") @EnumValid(enumC = Direction.class) String direction){
+                                          @RequestParam(name = "direction", defaultValue = "ASC") @EnumValid(enumC = Direction.class) String direction,
+                                          @RequestParam(name = "range", required = false) @EnumValid(enumC = QueryRange.class) String queryRangeStr,
+                                          @RequestParam(name = "category", required = false) @ExistCategory(required = false) Long categoryId,
+                                          @RequestParam("q") @NotBlank String query){
 
         MemberDTO memberDTO = tokenProvider.parseMemberDTO(token);
 
@@ -140,7 +141,11 @@ public class ScrapController {
         // 정렬
         Sort sortWay = Sort.by(directionEnum, sortsEnum.getName());
 
-        List<Scrap> scrapList = scrapQueryService.findScrapByTitle(memberDTO, categoryId, query, sortWay);
+        QueryRange queryRange = checkQueryRangeMissing(queryRangeStr);
+
+        checkCategoryMissing(categoryId, queryRange);
+
+        List<Scrap> scrapList = scrapQueryService.findScrapByTitle(memberDTO, queryRange, categoryId, query, sortWay);
         ScrapResponse.FindScrapByTitleDTO response = ScrapConverter.toFindScrapByTitle(scrapList);
 
         return ResponseEntity.ok(new ResponseDTO(response));
@@ -157,7 +162,7 @@ public class ScrapController {
 
         MemberDTO memberDTO = tokenProvider.parseMemberDTO(token);
 
-        QueryRange queryRange = QueryRange.valueOf(queryRangeStr.toUpperCase());
+        QueryRange queryRange = checkQueryRangeMissing(queryRangeStr);
 
         checkCategoryMissing(categoryId, queryRange);
 

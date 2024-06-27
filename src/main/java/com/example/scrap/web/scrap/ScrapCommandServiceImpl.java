@@ -86,7 +86,7 @@ public class ScrapCommandServiceImpl implements IScrapCommandService {
 
         // 전체 즐겨찾기
         if(isAllFavorite){
-            favoriteScrapList = scrapQueryService.findAllByPressSelection(member, queryRange, categoryId);
+            favoriteScrapList = scrapQueryService.findAllByQueryType(member, queryRange, categoryId);
         }
         // 요청된 스크랩만 즐겨찾기
         else{
@@ -163,7 +163,7 @@ public class ScrapCommandServiceImpl implements IScrapCommandService {
 
         // 전체 이동하기
         if(isAllMove){
-            moveScrapList = scrapQueryService.findAllByPressSelection(member, queryRange, categoryId);
+            moveScrapList = scrapQueryService.findAllByQueryType(member, queryRange, categoryId);
         }
         // 요청된 스크랩만 이동하기
         else{
@@ -226,7 +226,7 @@ public class ScrapCommandServiceImpl implements IScrapCommandService {
 
         // 모든 스크랩 삭제
         if(isAllDelete){
-            deleteScrapList = scrapQueryService.findAllByPressSelection(member, queryRange, categoryId);
+            deleteScrapList = scrapQueryService.findAllByQueryType(member, queryRange, categoryId);
         }
         // 요청된 스크랩만 삭제
         else{
