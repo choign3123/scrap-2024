@@ -157,7 +157,7 @@ public class ScrapController {
      */
     @GetMapping("/share")
     public ResponseEntity<ResponseDTO> allScrapShare(@RequestHeader("Authorization") String token,
-                                     @RequestParam(name = "type") @EnumValid(enumC = QueryRange.class) String queryRangeStr,
+                                     @RequestParam(name = "range") @EnumValid(enumC = QueryRange.class) String queryRangeStr,
                                      @RequestParam(name = "category", required = false) @ExistCategory(required = false) Long categoryId){
 
         MemberDTO memberDTO = tokenProvider.parseMemberDTO(token);
@@ -194,7 +194,7 @@ public class ScrapController {
     @PatchMapping("/favorite")
     public ResponseEntity<ResponseDTO> scrapFavoriteListToggle(@RequestHeader("Authorization") String token,
                                                @RequestParam(name = "all", defaultValue = "false", required = false) boolean isAllFavorite,
-                                               @RequestParam(name = "type", required = false) @EnumValid(enumC = QueryRange.class, required = false) String queryRangeStr,
+                                               @RequestParam(name = "range", required = false) @EnumValid(enumC = QueryRange.class, required = false) String queryRangeStr,
                                                @RequestParam(name = "category", required = false) @ExistCategory(required = false) Long categoryId,
                                                @RequestBody @Validated ScrapRequest.ToggleScrapFavoriteListDTO request){
 
@@ -238,7 +238,7 @@ public class ScrapController {
     @PatchMapping("/move")
     public ResponseEntity<ResponseDTO> categoryOfScrapsMove(@RequestHeader("Authorization") String token, @RequestBody @Validated ScrapRequest.MoveCategoryOfScrapsDTO request,
                                             @RequestParam(name = "all", defaultValue = "false", required = false) boolean isAllMove,
-                                            @RequestParam(name = "type", required = false) @EnumValid(enumC = QueryRange.class, required = false) String queryRangeStr,
+                                            @RequestParam(name = "range", required = false) @EnumValid(enumC = QueryRange.class, required = false) String queryRangeStr,
                                             @RequestParam(name = "category", required = false) @ExistCategory(required = false) Long categoryId){
 
         MemberDTO memberDTO = tokenProvider.parseMemberDTO(token);
@@ -295,7 +295,7 @@ public class ScrapController {
     @PatchMapping("/trash")
     public ResponseEntity<ResponseDTO> scrapListRemove(@RequestHeader("Authorization") String token, @RequestBody @Validated ScrapRequest.DeleteScrapListDTO request,
                                        @RequestParam(name = "all", defaultValue = "false", required = false) boolean isAllDelete,
-                                       @RequestParam(name = "type", required = false) @EnumValid(enumC = QueryRange.class, required = false) String queryRangeStr,
+                                       @RequestParam(name = "range", required = false) @EnumValid(enumC = QueryRange.class, required = false) String queryRangeStr,
                                        @RequestParam(name = "category", required = false) @ExistCategory(required = false) Long categoryId){
 
         MemberDTO memberDTO = tokenProvider.parseMemberDTO(token);
@@ -321,7 +321,7 @@ public class ScrapController {
     private QueryRange checkQueryRangeMissing(String queryRangeStr){
         boolean queryRangeMissing = (queryRangeStr == null);
         if(queryRangeMissing){
-            throw new ValidationException("type", "전체 선택일 시, 필수 입력입니다.");
+            throw new ValidationException("range", "전체 선택일 시, 필수 입력입니다.");
         }
 
         return QueryRange.valueOf(queryRangeStr.toUpperCase());
