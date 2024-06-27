@@ -123,13 +123,13 @@ public class ScrapController {
 
     /**
      * [GET] /scraps/search/title
-     * [API-20] 스크랩 제목으로 검색-카테고리별
+     * [API-20] 스크랩 제목으로 검색
      */
     @GetMapping("/search/title")
     public ResponseEntity<ResponseDTO> scrapSearchByTitle(@RequestHeader("Authorization") String token,
                                           @RequestParam(name = "sort", defaultValue = "SCRAP_DATE") @EnumValid(enumC = Sorts.class) String sorts,
                                           @RequestParam(name = "direction", defaultValue = "ASC") @EnumValid(enumC = Direction.class) String direction,
-                                          @RequestParam(name = "range", required = false) @EnumValid(enumC = QueryRange.class) String queryRangeStr,
+                                          @RequestParam(name = "range") @EnumValid(enumC = QueryRange.class) String queryRangeStr,
                                           @RequestParam(name = "category", required = false) @ExistCategory(required = false) Long categoryId,
                                           @RequestParam("q") @NotBlank String query){
 
@@ -157,7 +157,7 @@ public class ScrapController {
      */
     @GetMapping("/share")
     public ResponseEntity<ResponseDTO> allScrapShare(@RequestHeader("Authorization") String token,
-                                     @RequestParam(name = "type", required = false) @EnumValid(enumC = QueryRange.class) String queryRangeStr,
+                                     @RequestParam(name = "type") @EnumValid(enumC = QueryRange.class) String queryRangeStr,
                                      @RequestParam(name = "category", required = false) @ExistCategory(required = false) Long categoryId){
 
         MemberDTO memberDTO = tokenProvider.parseMemberDTO(token);
