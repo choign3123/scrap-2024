@@ -37,8 +37,18 @@ public class MemberLog {
         this.loginDate = loginDate;
     }
 
+    /**
+     * 로그인
+     */
     public void login(){
         this.loginDate = LocalDateTime.now();
         this.loginStatus = LoginStatus.ACTIVE;
+    }
+
+    /**
+     * 로그아웃
+     */
+    public void logout(){
+        this.loginStatus = LoginStatus.LOGOUT;
     }
 }
