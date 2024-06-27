@@ -4,9 +4,8 @@ import com.example.scrap.base.exception.BaseException;
 import com.example.scrap.base.exception.ValidationException;
 import com.example.scrap.entity.Member;
 import com.example.scrap.entity.Scrap;
-import com.example.scrap.web.baseDTO.PressSelectionType;
+import com.example.scrap.base.enums.QueryRange;
 import com.example.scrap.web.member.dto.MemberDTO;
-import com.example.scrap.web.scrap.dto.ScrapRequest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -48,16 +47,16 @@ public interface IScrapQueryService {
      * @param sort
      * @return
      */
-    public List<Scrap> findScrapByTitle(MemberDTO memberDTO, Long categoryId, String query, Sort sort);
+    public List<Scrap> findScrapByTitle(MemberDTO memberDTO, QueryRange queryRange, Long categoryId, String query, Sort sort);
 
     /**
      * 스크랩 전체 공유하기
      * @param memberDTO
-     * @param pressSelectionType
+     * @param queryRange
      * @param categoryId
      * @return
      */
-    public List<Scrap> shareAllScrap(MemberDTO memberDTO, PressSelectionType pressSelectionType, Long categoryId);
+    public List<Scrap> shareAllScrap(MemberDTO memberDTO, QueryRange queryRange, Long categoryId);
 
     /**
      * 스크랩 찾기
@@ -69,12 +68,12 @@ public interface IScrapQueryService {
     /**
      * 프레스 타입에 따른 스크랩 조회
      * @param member
-     * @param pressSelectionType
+     * @param queryRange
      * @param categoryId
      * @return
      * @throws BaseException CATEGORY_MEMBER_NOT_MATCH_IN_SCRAP
      */
-    List<Scrap> findAllByPressSelection(Member member, PressSelectionType pressSelectionType, Long categoryId);
+    List<Scrap> findAllByQueryType(Member member, QueryRange queryRange, Long categoryId);
 
     /**
      * 요청된 스크랩 조회

@@ -1,4 +1,4 @@
-package com.example.scrap.web.baseDTO;
+package com.example.scrap.base.enums;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

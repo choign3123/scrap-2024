@@ -9,7 +9,7 @@ import com.example.scrap.validation.annotaion.EnumValid;
 import com.example.scrap.validation.annotaion.PagingPage;
 import com.example.scrap.validation.annotaion.PagingSize;
 import com.example.scrap.base.Data;
-import com.example.scrap.web.baseDTO.Sorts;
+import com.example.scrap.base.enums.Sorts;
 import com.example.scrap.web.member.dto.MemberDTO;
 import com.example.scrap.web.search.dto.SearchRequest;
 import com.example.scrap.web.search.dto.SearchResponse;

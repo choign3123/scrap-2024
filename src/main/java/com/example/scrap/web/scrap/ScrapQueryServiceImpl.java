@@ -7,7 +7,7 @@ import com.example.scrap.entity.Category;
 import com.example.scrap.entity.Member;
 import com.example.scrap.entity.Scrap;
 import com.example.scrap.specification.ScrapSpecification;
-import com.example.scrap.web.baseDTO.PressSelectionType;
+import com.example.scrap.base.enums.QueryRange;
 import com.example.scrap.web.category.ICategoryQueryService;
 import com.example.scrap.web.member.IMemberQueryService;
 import com.example.scrap.web.member.dto.MemberDTO;
@@ -89,42 +89,32 @@ public class ScrapQueryServiceImpl implements IScrapQueryService {
     }
 
     /**
-     * 스크랩 제목으로 검색 - 카테고리별
-     * @param memberDTO
-     * @param categoryId
-     * @param query
-     * @param sort
-     * @return
+     * 스크랩 제목으로 검색
+     * @param query 제목
      */
-    public List<Scrap> findScrapByTitle(MemberDTO memberDTO, Long categoryId, String query, Sort sort){
+    public List<Scrap> findScrapByTitle(MemberDTO memberDTO, QueryRange queryRange, Long categoryId, String query, Sort sort){
         Member member = memberService.findMember(memberDTO);
-        Category category = categoryService.findCategory(categoryId);
 
-        if(category.checkIllegalMember(member)){
-            throw new BaseException(ErrorCode.CATEGORY_MEMBER_NOT_MATCH);
-        }
+        Specification<Scrap> spec = createSpecByQueryType(member, queryRange, categoryId);
 
-        Specification<Scrap> spec = Specification.where(ScrapSpecification.isAvailable())
-                .and(ScrapSpecification.equalMember(member))
-                .and(ScrapSpecification.equalCategory(category))
-                .and(ScrapSpecification.containingTitle(query));
+        // 제목으로 검색
+        spec = spec.and(ScrapSpecification.containingTitle(query));
 
-//        return scrapRepository.findAllByMemberAndCategoryAndTitleContainingAndStatus(member, category, query, ScrapStatus.ACTIVE, sort);
         return scrapRepository.findAll(spec, sort);
     }
 
     /**
      * 스크랩 전체 공유하기
      * @param memberDTO
-     * @param pressSelectionType
+     * @param queryRange
      * @param categoryId
      * @return
      */
-    public List<Scrap> shareAllScrap(MemberDTO memberDTO, PressSelectionType pressSelectionType, Long categoryId){
+    public List<Scrap> shareAllScrap(MemberDTO memberDTO, QueryRange queryRange, Long categoryId){
 
         Member member = memberService.findMember(memberDTO);
 
-        return findAllByPressSelection(member, pressSelectionType, categoryId);
+        return findAllByQueryType(member, queryRange, categoryId);
     }
 
     /**
@@ -137,19 +127,24 @@ public class ScrapQueryServiceImpl implements IScrapQueryService {
     }
 
     /**
-     * 프레스 타입에 따른 스크랩 조회
-     * @param member
-     * @param pressSelectionType
-     * @param categoryId
-     * @return
+     * 조회 타입에 따른 스크랩 조회
      * @throws BaseException CATEGORY_MEMBER_NOT_MATCH_IN_SCRAP
      */
-    public List<Scrap> findAllByPressSelection(Member member, PressSelectionType pressSelectionType, Long categoryId){
+    public List<Scrap> findAllByQueryType(Member member, QueryRange queryRange, Long categoryId){
+        Specification<Scrap> spec = createSpecByQueryType(member, queryRange, categoryId);
+
+        return scrapRepository.findAll(spec);
+    }
+
+    /**
+     * 조회 타입에 따른 스크랩 Specification 생성
+     */
+    public Specification<Scrap> createSpecByQueryType(Member member, QueryRange queryRange, Long categoryId){
         Specification<Scrap> spec = Specification.where(ScrapSpecification.isAvailable())
                 .and(ScrapSpecification.equalMember(member));
 
         // 어떤 프레스 타입인지
-        switch (pressSelectionType){
+        switch (queryRange){
             case CATEGORY -> {
                 Category category = categoryService.findCategory(categoryId);
                 if(category.isIllegalMember(member)){
@@ -162,14 +157,11 @@ public class ScrapQueryServiceImpl implements IScrapQueryService {
             }
         }
 
-        return scrapRepository.findAll(spec);
+        return spec;
     }
 
     /**
      * 요청된 스크랩 조회
-     * @param scrapIdList
-     * @param member
-     * @return
      * @throws ValidationException if scrapIdList empty
      */
     public List<Scrap> findAllByRequest(List<Long> scrapIdList, Member member){
