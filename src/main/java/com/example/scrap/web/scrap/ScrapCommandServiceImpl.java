@@ -202,7 +202,7 @@ public class ScrapCommandServiceImpl implements IScrapCommandService {
      * @param scrapId
      */
     @Transactional
-    public void deleteScrap(MemberDTO memberDTO, Long scrapId){
+    public void thrwoScrapInTrash(MemberDTO memberDTO, Long scrapId){
         Member member = memberService.findMember(memberDTO);
         Scrap scrap = scrapQueryService.findScrap(scrapId);
 
@@ -220,7 +220,7 @@ public class ScrapCommandServiceImpl implements IScrapCommandService {
      * @param request
      */
     @Transactional
-    public void deleteScrapList(MemberDTO memberDTO, boolean isAllDelete, QueryRange queryRange, Long categoryId, ScrapRequest.DeleteScrapListDTO request){
+    public void throwScrapListInTrash(MemberDTO memberDTO, boolean isAllDelete, QueryRange queryRange, Long categoryId, ScrapRequest.DeleteScrapListDTO request){
         Member member = memberService.findMember(memberDTO);
         List<Scrap> deleteScrapList;
 
