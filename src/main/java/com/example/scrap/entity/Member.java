@@ -53,11 +53,24 @@ public class Member extends BaseEntity {
                 .build();
     }
 
+    /**
+     * 로그인
+     */
     public void login(){
         this.getMemberLog().login();
     }
 
+    /**
+     * 로그아웃
+     */
     public void logout() {
         this.getMemberLog().logout();
+    }
+
+    /**
+     * 회원 탈퇴
+     */
+    public void signOut(){
+        this.getMemberLog().signOut();
     }
 }

@@ -6,9 +6,11 @@ import com.example.scrap.entity.Member;
 import com.example.scrap.jwt.TokenProvider;
 import com.example.scrap.jwt.dto.Token;
 import com.example.scrap.jwt.dto.TokenType;
+import com.example.scrap.web.category.ICategoryCommandService;
 import com.example.scrap.web.manageMember.dto.ManageMemberRequest;
 import com.example.scrap.web.member.IMemberQueryService;
 import com.example.scrap.web.member.dto.MemberDTO;
+import com.example.scrap.web.scrap.IScrapCommandService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -22,6 +24,8 @@ public class ManageMemberServiceImpl implements IMangeMemberService{
 
     private final TokenProvider tokenProvider;
     private final IMemberQueryService memberQueryService;
+    private final ICategoryCommandService categoryCommandService;
+    private final IScrapCommandService scrapCommandService;
 
     /**
      * 토큰 유효성 검사
@@ -98,5 +102,21 @@ public class ManageMemberServiceImpl implements IMangeMemberService{
         Member member = memberQueryService.findMember(memberDTO);
 
         member.logout();
+    }
+
+    /**
+     * 회원 탈퇴
+     */
+    @Transactional
+    public void signOut(MemberDTO memberDTO){
+        Member member = memberQueryService.findMember(memberDTO);
+
+        member.signOut();
+
+        // 스크랩 전체 삭제
+        scrapCommandService.deleteAllScrap(memberDTO);
+
+        // 카테고리 전체 삭제
+        categoryCommandService.deleteAllCategory(memberDTO);
     }
 }

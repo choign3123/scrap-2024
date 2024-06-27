@@ -7,6 +7,7 @@ import com.example.scrap.entity.Category;
 import com.example.scrap.entity.Member;
 import com.example.scrap.entity.Scrap;
 import com.example.scrap.base.Data;
+import com.example.scrap.entity.enums.LoginStatus;
 import com.example.scrap.web.category.dto.CategoryRequest;
 import com.example.scrap.web.member.IMemberQueryService;
 import com.example.scrap.web.member.dto.MemberDTO;
@@ -94,8 +95,21 @@ public class CategoryCommandServiceImpl implements ICategoryCommandService {
 
         categoryRepository.delete(category);
     }
-    
-    
+
+    /**
+     * 모든 카테고리 삭제하기
+     * @throws IllegalArgumentException 회원탈퇴한 사용자에 대해서만 해당 메소드 사용 가능
+     */
+    public void deleteAllCategory(MemberDTO memberDTO){
+        Member member = memberService.findMember(memberDTO);
+
+        if(member.getMemberLog().getLoginStatus() != LoginStatus.UNREGISTER){
+            throw new IllegalArgumentException("회원탈퇴한 사용자에 대해서만 모든 카테고리 삭제 가능");
+        }
+
+        categoryRepository.deleteAllByMember(member);
+    }
+
     /** 
      * 카테고리명 수정
      * @param memberDTO

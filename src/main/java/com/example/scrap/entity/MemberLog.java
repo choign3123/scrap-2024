@@ -51,4 +51,12 @@ public class MemberLog {
     public void logout(){
         this.loginStatus = LoginStatus.LOGOUT;
     }
+
+    /**
+     * 회원탈퇴
+     */
+    public void signOut(){
+        this.unregisterDate = LocalDateTime.now();
+        this.loginStatus = LoginStatus.UNREGISTER;
+    }
 }

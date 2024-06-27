@@ -48,4 +48,17 @@ public class ManageMemberController {
 
         return ResponseEntity.ok(new ResponseDTO<Void>());
     }
+
+    /**
+     * [PATCH] /signout
+     * [API-5] 회원탈퇴
+     */
+    @PatchMapping("/signout")
+    public ResponseEntity<ResponseDTO> signOut(@RequestHeader("Authorization") String token){
+        MemberDTO memberDTO = tokenProvider.parseMemberDTO(token);
+
+        mangeMemberService.signOut(memberDTO);
+
+        return ResponseEntity.ok(new ResponseDTO<Void>());
+    }
 }

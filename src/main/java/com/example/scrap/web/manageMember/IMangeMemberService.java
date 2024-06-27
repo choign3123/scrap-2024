@@ -20,4 +20,9 @@ public interface IMangeMemberService {
      * 로그아웃
      */
     public void logout(MemberDTO memberDTO);
+
+    /**
+     * 회원 탈퇴
+     */
+    public void signOut(MemberDTO memberDTO);
 }
