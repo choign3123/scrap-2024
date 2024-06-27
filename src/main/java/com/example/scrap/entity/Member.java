@@ -56,4 +56,8 @@ public class Member extends BaseEntity {
     public void login(){
         this.getMemberLog().login();
     }
+
+    public void logout() {
+        this.getMemberLog().logout();
+    }
 }

@@ -89,4 +89,14 @@ public class ManageMemberServiceImpl implements IMangeMemberService{
 
         return token;
     }
+
+    /**
+     * 로그아웃
+     */
+    @Transactional
+    public void logout(MemberDTO memberDTO){
+        Member member = memberQueryService.findMember(memberDTO);
+
+        member.logout();
+    }
 }

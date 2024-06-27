@@ -3,16 +3,16 @@ package com.example.scrap.web.manageMember;
 
 import com.example.scrap.base.response.ResponseDTO;
 import com.example.scrap.converter.ManageMemberConverter;
+import com.example.scrap.jwt.TokenProvider;
 import com.example.scrap.jwt.dto.Token;
 import com.example.scrap.web.manageMember.dto.ManageMemberRequest;
 import com.example.scrap.web.manageMember.dto.ManageMemberResponse;
+import com.example.scrap.web.member.dto.MemberDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class ManageMemberController {
 
     private final IMangeMemberService mangeMemberService;
+    private final TokenProvider tokenProvider;
 
     /**
      * [POST] /me
@@ -33,5 +34,18 @@ public class ManageMemberController {
         ManageMemberResponse.ValidateTokenDTO response = ManageMemberConverter.toValidateTokenDTO(token);
 
         return ResponseEntity.ok(new ResponseDTO(response));
+    }
+
+    /**
+     * [PATCH] /logout
+     * [API-26] 로그아웃
+     */
+    @PatchMapping("/logout")
+    public ResponseEntity<ResponseDTO> logout(@RequestHeader("Authorization") String token){
+        MemberDTO memberDTO = tokenProvider.parseMemberDTO(token);
+
+        mangeMemberService.logout(memberDTO);
+
+        return ResponseEntity.ok(new ResponseDTO<Void>());
     }
 }
