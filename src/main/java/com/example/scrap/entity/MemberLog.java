@@ -1,5 +1,6 @@
 package com.example.scrap.entity;
 
+import com.example.scrap.entity.base.BaseEntity;
 import com.example.scrap.entity.enums.LoginStatus;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -12,7 +13,7 @@ import java.time.LocalDateTime;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-public class MemberLog {
+public class MemberLog extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
