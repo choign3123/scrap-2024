@@ -11,7 +11,6 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 public class MemberLog extends BaseEntity {
 
@@ -26,10 +25,13 @@ public class MemberLog extends BaseEntity {
     @Column(nullable = false)
     private LoginStatus loginStatus;
 
-    @Builder
-    public MemberLog(LocalDateTime loginDate, LoginStatus loginStatus) {
-        this.loginDate = loginDate;
-        this.loginStatus = loginStatus;
+    /**
+     * 기본 생성자
+     * loginDate, loginStatus 자동 설정 해줌.
+     */
+    public MemberLog() {
+        this.loginDate = LocalDateTime.now();
+        this.loginStatus = LoginStatus.ACTIVE;
     }
 
     /**

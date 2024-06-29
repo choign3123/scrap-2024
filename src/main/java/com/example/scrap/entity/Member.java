@@ -43,14 +43,11 @@ public class Member extends BaseEntity {
     }
 
     @Builder
-    public Member(String name, SnsType snsType, String snsId) {
+    public Member(String name, SnsType snsType, String snsId, MemberLog memberLog) {
         this.name = name;
         this.snsType = snsType;
         this.snsId = snsId;
-        this.memberLog = MemberLog.builder()
-                .loginDate(LocalDateTime.now())
-                .loginStatus(LoginStatus.ACTIVE)
-                .build();
+        this.memberLog = memberLog;
     }
 
     /**

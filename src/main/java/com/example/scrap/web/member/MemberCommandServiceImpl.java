@@ -2,6 +2,7 @@ package com.example.scrap.web.member;
 
 import com.example.scrap.converter.MemberConverter;
 import com.example.scrap.entity.Member;
+import com.example.scrap.entity.MemberLog;
 import com.example.scrap.entity.enums.SnsType;
 import com.example.scrap.web.category.CategoryRepository;
 import com.example.scrap.web.category.ICategoryCommandService;
@@ -24,7 +25,8 @@ public class MemberCommandServiceImpl implements IMemberCommandService {
      * @return
      */
     public Member signup(NaverResponse.ProfileInfo.Response profileInfo){
-        Member member = MemberConverter.toEntity(profileInfo, SnsType.NAVER);
+        MemberLog memberLog = new MemberLog();
+        Member member = MemberConverter.toEntity(profileInfo, SnsType.NAVER, memberLog);
 
         // 기본 카테고리 생성
         categoryCommandService.createDefaultCategory(member);
