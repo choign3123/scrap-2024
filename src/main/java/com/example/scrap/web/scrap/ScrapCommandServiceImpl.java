@@ -7,6 +7,7 @@ import com.example.scrap.entity.Category;
 import com.example.scrap.entity.Member;
 import com.example.scrap.entity.Scrap;
 import com.example.scrap.base.enums.QueryRange;
+import com.example.scrap.entity.enums.LoginStatus;
 import com.example.scrap.web.category.ICategoryQueryService;
 import com.example.scrap.web.member.IMemberQueryService;
 import com.example.scrap.web.member.dto.MemberDTO;
@@ -56,7 +57,6 @@ public class ScrapCommandServiceImpl implements IScrapCommandService {
      * @param scrapId
      * @return
      */
-    @Transactional
     public Scrap toggleScrapFavorite(MemberDTO memberDTO, Long scrapId){
         Member member = memberService.findMember(memberDTO);
         Scrap scrap = scrapQueryService.findScrap(scrapId);
@@ -76,7 +76,6 @@ public class ScrapCommandServiceImpl implements IScrapCommandService {
      * @param categoryId
      * @param request
      */
-    @Transactional
     public List<Scrap> toggleScrapFavoriteList(MemberDTO memberDTO,
                                                boolean isAllFavorite, QueryRange queryRange, Long categoryId,
                                                ScrapRequest.ToggleScrapFavoriteListDTO request){
@@ -121,7 +120,6 @@ public class ScrapCommandServiceImpl implements IScrapCommandService {
      * @param request
      * @return
      */
-    @Transactional
     public Scrap moveCategoryOfScrap(MemberDTO memberDTO, Long scrapId, ScrapRequest.MoveCategoryOfScrapDTO request){
         Member member = memberService.findMember(memberDTO);
         Scrap scrap = scrapQueryService.findScrap(scrapId);
@@ -148,7 +146,6 @@ public class ScrapCommandServiceImpl implements IScrapCommandService {
      * @param categoryId
      * @return
      */
-    @Transactional
     public List<Scrap> moveCategoryOfScraps(MemberDTO memberDTO, ScrapRequest.MoveCategoryOfScrapsDTO request,
                                             boolean isAllMove, QueryRange queryRange, Long categoryId){
 
@@ -184,7 +181,6 @@ public class ScrapCommandServiceImpl implements IScrapCommandService {
      * @param request
      * @return
      */
-    @Transactional
     public Scrap updateScrapMemo(MemberDTO memberDTO, Long scrapId, ScrapRequest.UpdateScrapMemoDTO request){
         Member member = memberService.findMember(memberDTO);
         Scrap scrap = scrapQueryService.findScrap(scrapId);
@@ -201,8 +197,7 @@ public class ScrapCommandServiceImpl implements IScrapCommandService {
      * @param memberDTO
      * @param scrapId
      */
-    @Transactional
-    public void deleteScrap(MemberDTO memberDTO, Long scrapId){
+    public void thrwoScrapInTrash(MemberDTO memberDTO, Long scrapId){
         Member member = memberService.findMember(memberDTO);
         Scrap scrap = scrapQueryService.findScrap(scrapId);
 
@@ -219,8 +214,7 @@ public class ScrapCommandServiceImpl implements IScrapCommandService {
      * @param categoryId
      * @param request
      */
-    @Transactional
-    public void deleteScrapList(MemberDTO memberDTO, boolean isAllDelete, QueryRange queryRange, Long categoryId, ScrapRequest.DeleteScrapListDTO request){
+    public void throwScrapListInTrash(MemberDTO memberDTO, boolean isAllDelete, QueryRange queryRange, Long categoryId, ScrapRequest.DeleteScrapListDTO request){
         Member member = memberService.findMember(memberDTO);
         List<Scrap> deleteScrapList;
 
@@ -236,5 +230,14 @@ public class ScrapCommandServiceImpl implements IScrapCommandService {
         for(Scrap scrap : deleteScrapList){
             scrap.toTrash();
         }
+    }
+
+    /**
+     * 스크랩 전체 삭제
+     */
+    public void deleteAllScrap(MemberDTO memberDTO){
+        Member member = memberService.findMember(memberDTO);
+
+        scrapRepository.deleteAllByMember(member);
     }
 }

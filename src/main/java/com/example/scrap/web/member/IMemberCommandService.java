@@ -11,4 +11,9 @@ public interface IMemberCommandService {
      * @return
      */
     public Member signup(NaverResponse.ProfileInfo.Response profileInfo);
+
+    /**
+     * 회원 탈퇴
+     */
+    public void signOut(Member member);
 }

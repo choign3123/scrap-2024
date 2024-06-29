@@ -74,7 +74,7 @@ public interface IScrapCommandService {
      * @param memberDTO
      * @param scrapId
      */
-    public void deleteScrap(MemberDTO memberDTO, Long scrapId);
+    public void thrwoScrapInTrash(MemberDTO memberDTO, Long scrapId);
 
     /**
      * 스크랩 삭제(목록)
@@ -84,5 +84,11 @@ public interface IScrapCommandService {
      * @param categoryId
      * @param request
      */
-    public void deleteScrapList(MemberDTO memberDTO, boolean isAllDelete, QueryRange queryRange, Long categoryId, ScrapRequest.DeleteScrapListDTO request);
+    public void throwScrapListInTrash(MemberDTO memberDTO, boolean isAllDelete, QueryRange queryRange, Long categoryId, ScrapRequest.DeleteScrapListDTO request);
+
+    /**
+     * 스크랩 전체 삭제
+     * @throws IllegalArgumentException 회원탈퇴한 사용자만이 해당 함수 사용 가능
+     */
+    public void deleteAllScrap(MemberDTO memberDTO);
 }

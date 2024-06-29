@@ -10,12 +10,13 @@ import java.time.LocalDateTime;
 
 public class MemberConverter {
 
-    public static Member toEntity(NaverResponse.ProfileInfo.Response profileInfo, SnsType snsType){
+    public static Member toEntity(NaverResponse.ProfileInfo.Response profileInfo, SnsType snsType, MemberLog memberLog){
 
         return Member.builder()
                 .name(profileInfo.getName())
                 .snsType(snsType)
                 .snsId(profileInfo.getId())
+                .memberLog(memberLog)
                 .build();
     }
 }

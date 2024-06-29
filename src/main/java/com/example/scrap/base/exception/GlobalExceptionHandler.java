@@ -7,6 +7,7 @@ import com.example.scrap.converter.ErrorConverter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingRequestHeaderException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
@@ -21,9 +22,12 @@ import java.util.Set;
 @Slf4j
 public class GlobalExceptionHandler {
 
+    // [TODO] HttpRequestMethodNotSupportedException
+
     @ExceptionHandler(BaseException.class)
     protected ResponseEntity<ResponseDTO> handleBaseException(BaseException e){
         log.info(e.getMessage());
+        e.printStackTrace();
 
         ResponseDTO<Void> response = new ResponseDTO<>(e.getErrorCode());
 

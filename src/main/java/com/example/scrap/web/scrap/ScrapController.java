@@ -283,7 +283,7 @@ public class ScrapController {
 
         MemberDTO memberDTO = tokenProvider.parseMemberDTO(token);
 
-        scrapCommandService.deleteScrap(memberDTO, scrapId);
+        scrapCommandService.thrwoScrapInTrash(memberDTO, scrapId);
 
         return ResponseEntity.ok(new ResponseDTO<Void>());
     }
@@ -310,7 +310,7 @@ public class ScrapController {
             checkCategoryMissing(categoryId, queryRange);
         }
 
-        scrapCommandService.deleteScrapList(memberDTO, isAllDelete, queryRange, categoryId, request);
+        scrapCommandService.throwScrapListInTrash(memberDTO, isAllDelete, queryRange, categoryId, request);
 
         return ResponseEntity.ok(new ResponseDTO<Void>());
     }

@@ -1,5 +1,6 @@
 package com.example.scrap.entity;
 
+import com.example.scrap.entity.base.BaseEntity;
 import com.example.scrap.entity.enums.LoginStatus;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -10,9 +11,8 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-public class MemberLog {
+public class MemberLog extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,16 +25,13 @@ public class MemberLog {
     @Column(nullable = false)
     private LoginStatus loginStatus;
 
-    private LocalDateTime unregisterDate;
-
-    @Builder
-    public MemberLog(LocalDateTime loginDate, LoginStatus loginStatus) {
-        this.loginDate = loginDate;
-        this.loginStatus = loginStatus;
-    }
-
-    public void setLoginDate(LocalDateTime loginDate){
-        this.loginDate = loginDate;
+    /**
+     * 기본 생성자
+     * loginDate, loginStatus 자동 설정 해줌.
+     */
+    public MemberLog() {
+        this.loginDate = LocalDateTime.now();
+        this.loginStatus = LoginStatus.ACTIVE;
     }
 
     /**

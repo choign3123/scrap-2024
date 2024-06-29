@@ -7,6 +7,7 @@ import com.example.scrap.entity.Category;
 import com.example.scrap.entity.Member;
 import com.example.scrap.entity.Scrap;
 import com.example.scrap.base.Data;
+import com.example.scrap.entity.enums.LoginStatus;
 import com.example.scrap.web.category.dto.CategoryRequest;
 import com.example.scrap.web.member.IMemberQueryService;
 import com.example.scrap.web.member.dto.MemberDTO;
@@ -94,8 +95,16 @@ public class CategoryCommandServiceImpl implements ICategoryCommandService {
 
         categoryRepository.delete(category);
     }
-    
-    
+
+    /**
+     * 모든 카테고리 삭제하기
+     */
+    public void deleteAllCategory(MemberDTO memberDTO){
+        Member member = memberService.findMember(memberDTO);
+
+        categoryRepository.deleteAllByMember(member);
+    }
+
     /** 
      * 카테고리명 수정
      * @param memberDTO

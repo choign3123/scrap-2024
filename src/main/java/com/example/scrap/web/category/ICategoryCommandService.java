@@ -32,6 +32,12 @@ public interface ICategoryCommandService {
     public void deleteCategory(MemberDTO memberDTO, Long categoryId, Boolean allowDeleteScrap);
 
     /**
+     * 모든 카테고리 삭제하기
+     * @throws IllegalArgumentException 회원탈퇴한 사용자에 대해서만 해당 메소드 사용 가능
+     */
+    public void deleteAllCategory(MemberDTO memberDTO);
+
+    /**
      * 카테고리명 수정
      * @param memberDTO
      * @param categoryId 카테고리 식별자
