@@ -98,14 +98,9 @@ public class CategoryCommandServiceImpl implements ICategoryCommandService {
 
     /**
      * 모든 카테고리 삭제하기
-     * @throws IllegalArgumentException 회원탈퇴한 사용자에 대해서만 해당 메소드 사용 가능
      */
     public void deleteAllCategory(MemberDTO memberDTO){
         Member member = memberService.findMember(memberDTO);
-
-        if(member.getMemberLog().getLoginStatus() != LoginStatus.UNREGISTER){
-            throw new IllegalArgumentException("회원탈퇴한 사용자에 대해서만 모든 카테고리 삭제 가능");
-        }
 
         categoryRepository.deleteAllByMember(member);
     }

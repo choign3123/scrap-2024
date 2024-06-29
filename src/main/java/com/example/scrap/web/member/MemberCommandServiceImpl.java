@@ -17,7 +17,6 @@ public class MemberCommandServiceImpl implements IMemberCommandService {
 
     private final MemberRepository memberRepository;
     private final ICategoryCommandService categoryCommandService;
-    private final CategoryRepository categoryRepository;
 
     /**
      * 네이버 회원가입
@@ -31,5 +30,12 @@ public class MemberCommandServiceImpl implements IMemberCommandService {
         categoryCommandService.createDefaultCategory(member);
 
         return memberRepository.save(member);
+    }
+
+    /**
+     * 회원 탈퇴
+     */
+    public void signOut(Member member){
+        memberRepository.delete(member);
     }
 }

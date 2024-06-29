@@ -8,6 +8,7 @@ import com.example.scrap.jwt.dto.Token;
 import com.example.scrap.jwt.dto.TokenType;
 import com.example.scrap.web.category.ICategoryCommandService;
 import com.example.scrap.web.manageMember.dto.ManageMemberRequest;
+import com.example.scrap.web.member.IMemberCommandService;
 import com.example.scrap.web.member.IMemberQueryService;
 import com.example.scrap.web.member.dto.MemberDTO;
 import com.example.scrap.web.scrap.IScrapCommandService;
@@ -24,6 +25,7 @@ public class ManageMemberServiceImpl implements IMangeMemberService{
 
     private final TokenProvider tokenProvider;
     private final IMemberQueryService memberQueryService;
+    private final IMemberCommandService memberCommandService;
     private final ICategoryCommandService categoryCommandService;
     private final IScrapCommandService scrapCommandService;
 
@@ -111,12 +113,13 @@ public class ManageMemberServiceImpl implements IMangeMemberService{
     public void signOut(MemberDTO memberDTO){
         Member member = memberQueryService.findMember(memberDTO);
 
-        member.signOut();
-
         // 스크랩 전체 삭제
         scrapCommandService.deleteAllScrap(memberDTO);
 
         // 카테고리 전체 삭제
         categoryCommandService.deleteAllCategory(memberDTO);
+
+        // 회원 삭제
+        memberCommandService.signOut(member);
     }
 }

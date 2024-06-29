@@ -31,7 +31,7 @@ public class Member extends BaseEntity {
     @Column(length = 45, nullable = false)
     private String snsId;
 
-    @OneToOne(optional = false, fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @OneToOne(optional = false, fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     @JoinColumn(name = "member_log_id", nullable = false)
     private MemberLog memberLog;
 
@@ -65,12 +65,5 @@ public class Member extends BaseEntity {
      */
     public void logout() {
         this.getMemberLog().logout();
-    }
-
-    /**
-     * 회원 탈퇴
-     */
-    public void signOut(){
-        this.getMemberLog().signOut();
     }
 }

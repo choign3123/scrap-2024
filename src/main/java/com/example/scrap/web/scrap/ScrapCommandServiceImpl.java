@@ -234,14 +234,9 @@ public class ScrapCommandServiceImpl implements IScrapCommandService {
 
     /**
      * 스크랩 전체 삭제
-     * @throws IllegalArgumentException 회원탈퇴한 사용자만이 해당 함수 사용 가능
      */
     public void deleteAllScrap(MemberDTO memberDTO){
         Member member = memberService.findMember(memberDTO);
-
-        if(member.getMemberLog().getLoginStatus() != LoginStatus.UNREGISTER){
-            throw new IllegalArgumentException("회원탈퇴한 사용자만이 스크랩 전체 삭제 가능");
-        }
 
         scrapRepository.deleteAllByMember(member);
     }

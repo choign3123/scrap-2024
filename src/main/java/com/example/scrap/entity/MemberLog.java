@@ -25,16 +25,10 @@ public class MemberLog {
     @Column(nullable = false)
     private LoginStatus loginStatus;
 
-    private LocalDateTime unregisterDate;
-
     @Builder
     public MemberLog(LocalDateTime loginDate, LoginStatus loginStatus) {
         this.loginDate = loginDate;
         this.loginStatus = loginStatus;
-    }
-
-    public void setLoginDate(LocalDateTime loginDate){
-        this.loginDate = loginDate;
     }
 
     /**
@@ -50,13 +44,5 @@ public class MemberLog {
      */
     public void logout(){
         this.loginStatus = LoginStatus.LOGOUT;
-    }
-
-    /**
-     * 회원탈퇴
-     */
-    public void signOut(){
-        this.unregisterDate = LocalDateTime.now();
-        this.loginStatus = LoginStatus.UNREGISTER;
     }
 }
