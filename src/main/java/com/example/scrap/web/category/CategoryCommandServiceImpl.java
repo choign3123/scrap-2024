@@ -143,6 +143,7 @@ public class CategoryCommandServiceImpl implements ICategoryCommandService {
             throw new BaseException(ErrorCode.REQUEST_CATEGORY_COUNT_NOT_ALL);
         }
 
+        // 정렬된 카테고리 id에 sequence 순서대로 부여
         Map<Long, Integer> changeSequenceMap = new HashMap<>();
         int newSequence = 1;
         for(Long categoryId : request.getCategoryList()){
