@@ -7,7 +7,6 @@ import com.example.scrap.entity.Category;
 import com.example.scrap.entity.Member;
 import com.example.scrap.entity.Scrap;
 import com.example.scrap.base.Data;
-import com.example.scrap.entity.enums.LoginStatus;
 import com.example.scrap.web.category.dto.CategoryRequest;
 import com.example.scrap.web.member.IMemberQueryService;
 import com.example.scrap.web.member.dto.MemberDTO;
@@ -49,17 +48,11 @@ public class CategoryCommandServiceImpl implements ICategoryCommandService {
      * @param member
      * @return
      */
-    public List<Category> createDefaultCategory(Member member){
-        List<Category> categoryList = new ArrayList<>();
+    public Category createDefaultCategory(Member member){
 
-        for(String categoryTitle : Data.DEFAULT_CATEGORY_LIST){
-            Category defaultCategory = CategoryConverter.toEntity(member, categoryTitle, true);
-            categoryRepository.save(defaultCategory);
+        Category defaultCategory = CategoryConverter.toEntity(member, Data.DEFAULT_CATEGORY_TITLE, true);
 
-            categoryList.add(defaultCategory);
-        }
-
-        return categoryList;
+        return categoryRepository.save(defaultCategory);
     }
 
     /**
