@@ -14,7 +14,10 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
 
     public List<Category> findAllByMemberOrderBySequence(Member member);
 
-    public Optional<Category> findByMemberAndIsDefault(Member member, Boolean isDefault);
+    /**
+     * 기본 카테고리 찾기
+     */
+    public Optional<Category> findByMemberAndIsDefaultTrue(Member member);
 
     @Modifying
     @Query("DELETE FROM Category c WHERE c.member =:member")

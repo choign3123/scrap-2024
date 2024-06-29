@@ -22,7 +22,7 @@ public interface ICategoryCommandService {
      * @param member
      * @return
      */
-    public List<Category> createDefaultCategory(Member member);
+    public Category createDefaultCategory(Member member);
 
     /**
      * 카테고리 삭제
