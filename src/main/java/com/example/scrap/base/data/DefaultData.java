@@ -1,9 +1,8 @@
-package com.example.scrap.base;
+package com.example.scrap.base.data;
 
 import java.time.LocalDate;
-import java.util.List;
 
-public class Data {
+public class DefaultData {
 
     public static final String PAGING_SIZE = "10";
 

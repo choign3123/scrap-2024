@@ -2,7 +2,7 @@ package com.example.scrap.web.search.dto;
 
 import com.example.scrap.validation.annotaion.EnumsValid;
 import com.example.scrap.validation.annotaion.ExistCategories;
-import com.example.scrap.base.Data;
+import com.example.scrap.base.data.DefaultData;
 import com.example.scrap.base.enums.SearchScopeType;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
@@ -30,7 +30,7 @@ public class SearchRequest {
         private LocalDate endDate;
 
         public void setStartDateToDefault(){
-            startDate = Data.START_DATE;
+            startDate = DefaultData.START_DATE;
         }
 
         public void setEndDateToDefault(){

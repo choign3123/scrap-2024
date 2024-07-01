@@ -6,7 +6,7 @@ import com.example.scrap.converter.ScrapConverter;
 import com.example.scrap.entity.Scrap;
 import com.example.scrap.jwt.TokenProvider;
 import com.example.scrap.validation.annotaion.*;
-import com.example.scrap.base.Data;
+import com.example.scrap.base.data.DefaultData;
 import com.example.scrap.base.enums.QueryRange;
 import com.example.scrap.base.enums.Sorts;
 import com.example.scrap.web.member.dto.MemberDTO;
@@ -62,7 +62,7 @@ public class ScrapController {
                                            @RequestParam(name = "sort", defaultValue = "SCRAP_DATE") @EnumValid(enumC = Sorts.class) String sort,
                                            @RequestParam(name = "direction", defaultValue = "ASC") @EnumValid(enumC = Direction.class) String direction,
                                            @RequestParam(name = "page", defaultValue = "1") @PagingPage int page,
-                                           @RequestParam(name = "size", defaultValue = Data.PAGING_SIZE) @PagingSize int size){
+                                           @RequestParam(name = "size", defaultValue = DefaultData.PAGING_SIZE) @PagingSize int size){
 
         MemberDTO memberDTO = tokenProvider.parseMemberDTO(token);
 
@@ -90,7 +90,7 @@ public class ScrapController {
                                          @RequestParam(name = "sort", defaultValue = "SCRAP_DATE") @EnumValid(enumC = Sorts.class) String sort,
                                          @RequestParam(name = "direction", defaultValue = "ASC") @EnumValid(enumC = Direction.class) String direction,
                                          @RequestParam(name = "page", defaultValue = "1") @PagingPage int page,
-                                         @RequestParam(name = "size", defaultValue = Data.PAGING_SIZE) @PagingSize int size){
+                                         @RequestParam(name = "size", defaultValue = DefaultData.PAGING_SIZE) @PagingSize int size){
 
         MemberDTO memberDTO = tokenProvider.parseMemberDTO(token);
 

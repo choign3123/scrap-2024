@@ -8,7 +8,7 @@ import com.example.scrap.jwt.TokenProvider;
 import com.example.scrap.validation.annotaion.EnumValid;
 import com.example.scrap.validation.annotaion.PagingPage;
 import com.example.scrap.validation.annotaion.PagingSize;
-import com.example.scrap.base.Data;
+import com.example.scrap.base.data.DefaultData;
 import com.example.scrap.base.enums.Sorts;
 import com.example.scrap.web.member.dto.MemberDTO;
 import com.example.scrap.web.search.dto.SearchRequest;
@@ -43,7 +43,7 @@ public class SearchController {
                                                    @RequestParam(name = "sort", defaultValue = "SCRAP_DATE") @EnumValid(enumC = Sorts.class) String sort,
                                                    @RequestParam(name = "direction", defaultValue = "ASC") @EnumValid(enumC = Sort.Direction.class) String direction,
                                                    @RequestParam(name = "page", defaultValue = "1") @PagingPage int page,
-                                                   @RequestParam(name = "size", defaultValue = Data.PAGING_SIZE) @PagingSize int size,
+                                                   @RequestParam(name = "size", defaultValue = DefaultData.PAGING_SIZE) @PagingSize int size,
                                                    @RequestParam(name = "q") @NotBlank String query){
 
         MemberDTO memberDTO = tokenProvider.parseMemberDTO(token);

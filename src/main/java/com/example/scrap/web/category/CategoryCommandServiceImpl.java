@@ -6,7 +6,7 @@ import com.example.scrap.converter.CategoryConverter;
 import com.example.scrap.entity.Category;
 import com.example.scrap.entity.Member;
 import com.example.scrap.entity.Scrap;
-import com.example.scrap.base.Data;
+import com.example.scrap.base.data.DefaultData;
 import com.example.scrap.web.category.dto.CategoryRequest;
 import com.example.scrap.web.member.IMemberQueryService;
 import com.example.scrap.web.member.dto.MemberDTO;
@@ -50,7 +50,7 @@ public class CategoryCommandServiceImpl implements ICategoryCommandService {
      */
     public Category createDefaultCategory(Member member){
 
-        Category defaultCategory = CategoryConverter.toEntity(member, Data.DEFAULT_CATEGORY_TITLE, true);
+        Category defaultCategory = CategoryConverter.toEntity(member, DefaultData.DEFAULT_CATEGORY_TITLE, true);
 
         return categoryRepository.save(defaultCategory);
     }
