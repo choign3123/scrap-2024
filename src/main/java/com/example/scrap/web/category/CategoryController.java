@@ -1,5 +1,6 @@
 package com.example.scrap.web.category;
 
+import com.example.scrap.base.exception.ValidationException;
 import com.example.scrap.base.response.ResponseDTO;
 import com.example.scrap.converter.CategoryConverter;
 import com.example.scrap.entity.Category;
@@ -114,6 +115,12 @@ public class CategoryController {
     public ResponseEntity<ResponseDTO> categorySequenceModify(@RequestHeader("Authorization") String token, @RequestBody @Validated CategoryRequest.UpdateCategorySequenceDTO request){
 
         MemberDTO memberDTO = tokenProvider.parseMemberDTO(token);
+
+        // 중복된 카테고리 있는지 확인
+        boolean includeDuplicateCategory = (request.getCategoryList().size() != request.getCategoryList().stream().distinct().count());
+        if(includeDuplicateCategory){
+            throw new ValidationException("categories", "중복된 카테고리를 포함하고 있습니다.");
+        }
 
         List<Category> categoryList = categoryCommandService.updateCategorySequence(memberDTO, request);
         CategoryResponse.UpdateCategorySequenceDTO response = CategoryConverter.toUpdateCategorySequenceDTO(categoryList);
