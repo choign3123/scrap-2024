@@ -42,6 +42,7 @@ public enum ErrorCode implements BaseCode{
     REQUEST_CATEGORY_COUNT_NOT_ALL(HttpStatus.BAD_REQUEST, "CATEGORY004", "모든 카테고리에 대해 요청해주세요."),
     CATEGORY_MEMBER_NOT_MATCH_IN_SCRAP(HttpStatus.BAD_REQUEST, "CATEGORY005", "해당 스크랩에 접근할 수 없습니다."),
     DEFAULT_CATEGORY_NOT_FOUND(HttpStatus.INTERNAL_SERVER_ERROR, "CATEGORY006", "기본 카테고리가 존재하지 않습니다."),
+    EXCEED_CATEGORY_CREATE_LIMIT(HttpStatus.BAD_REQUEST, "CATEGORY007", "카테고리 최대 생성 개수를 초과했습니다."),
 
     // Scrap Error
     SCRAP_NOT_FOUND(HttpStatus.NOT_FOUND, "SCRAP001", "해당하는 스크랩이 존재하지 않습니다."),

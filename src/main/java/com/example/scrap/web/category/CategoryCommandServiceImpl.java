@@ -37,6 +37,12 @@ public class CategoryCommandServiceImpl implements ICategoryCommandService {
     public Category createCategory(MemberDTO memberDTO, CategoryRequest.CreateCategoryDTO request){
         Member member = memberService.findMember(memberDTO);
 
+        // 카테고리 생성 개수 제한 확인
+        boolean isExceedCategoryLimit = member.getCategoryList().size() >= PolicyData.CATEGORY_CREATE_LIMIT;
+        if(isExceedCategoryLimit){
+            throw new BaseException(ErrorCode.EXCEED_CATEGORY_CREATE_LIMIT);
+        }
+
         Category newCategory = CategoryConverter.toEntity(member, request);
 
         categoryRepository.save(newCategory);
