@@ -1,12 +1,13 @@
 package com.example.scrap.web.category;
 
 import com.example.scrap.base.code.ErrorCode;
+import com.example.scrap.base.data.PolicyData;
 import com.example.scrap.base.exception.BaseException;
 import com.example.scrap.converter.CategoryConverter;
 import com.example.scrap.entity.Category;
 import com.example.scrap.entity.Member;
 import com.example.scrap.entity.Scrap;
-import com.example.scrap.base.Data;
+import com.example.scrap.base.data.DefaultData;
 import com.example.scrap.web.category.dto.CategoryRequest;
 import com.example.scrap.web.member.IMemberQueryService;
 import com.example.scrap.web.member.dto.MemberDTO;
@@ -36,6 +37,12 @@ public class CategoryCommandServiceImpl implements ICategoryCommandService {
     public Category createCategory(MemberDTO memberDTO, CategoryRequest.CreateCategoryDTO request){
         Member member = memberService.findMember(memberDTO);
 
+        // 카테고리 생성 개수 제한 확인
+        boolean isExceedCategoryLimit = member.getCategoryList().size() >= PolicyData.CATEGORY_CREATE_LIMIT;
+        if(isExceedCategoryLimit){
+            throw new BaseException(ErrorCode.EXCEED_CATEGORY_CREATE_LIMIT);
+        }
+
         Category newCategory = CategoryConverter.toEntity(member, request);
 
         categoryRepository.save(newCategory);
@@ -50,7 +57,7 @@ public class CategoryCommandServiceImpl implements ICategoryCommandService {
      */
     public Category createDefaultCategory(Member member){
 
-        Category defaultCategory = CategoryConverter.toEntity(member, Data.DEFAULT_CATEGORY_TITLE, true);
+        Category defaultCategory = CategoryConverter.toEntity(member, PolicyData.DEFAULT_CATEGORY_TITLE, true);
 
         return categoryRepository.save(defaultCategory);
     }

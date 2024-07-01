@@ -1,11 +1,7 @@
 package com.example.scrap.jwt;
 
-import com.example.scrap.base.Data;
-import com.example.scrap.base.code.ErrorCode;
-import com.example.scrap.base.exception.AuthorizationException;
-import com.example.scrap.entity.Member;
+import com.example.scrap.base.data.DefaultData;
 import com.example.scrap.entity.enums.SnsType;
-import com.example.scrap.jwt.dto.Token;
 import com.example.scrap.jwt.dto.TokenType;
 import com.example.scrap.web.member.dto.MemberDTO;
 import io.jsonwebtoken.Claims;
@@ -95,7 +91,7 @@ public class TestTokenProvider {
     }
 
     public Date getTokenExpireDate(String token){
-        token = token.replace(Data.AUTH_PREFIX, "");
+        token = token.replace(DefaultData.AUTH_PREFIX, "");
 
         return Jwts.parser().setSigningKey(jwtSecretKey)
                 .parseClaimsJws(token)

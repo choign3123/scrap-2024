@@ -1,6 +1,7 @@
 package com.example.scrap.web.scrap;
 
 import com.example.scrap.base.code.ErrorCode;
+import com.example.scrap.base.data.PolicyData;
 import com.example.scrap.base.exception.BaseException;
 import com.example.scrap.converter.ScrapConverter;
 import com.example.scrap.entity.Category;
@@ -8,12 +9,14 @@ import com.example.scrap.entity.Member;
 import com.example.scrap.entity.Scrap;
 import com.example.scrap.base.enums.QueryRange;
 import com.example.scrap.entity.enums.LoginStatus;
+import com.example.scrap.specification.ScrapSpecification;
 import com.example.scrap.web.category.ICategoryQueryService;
 import com.example.scrap.web.member.IMemberQueryService;
 import com.example.scrap.web.member.dto.MemberDTO;
 import com.example.scrap.web.scrap.dto.ScrapRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -43,6 +46,14 @@ public class ScrapCommandServiceImpl implements IScrapCommandService {
         Category category = categoryService.findCategory(categoryId);
 
         category.checkIllegalMember(member);
+
+        // 스크랩 생성 개수 제한 확인
+        Specification<Scrap> spec = Specification.where(ScrapSpecification.isAvailable())
+                .and(ScrapSpecification.equalMember(member));
+        boolean isExceedScrapLimit = scrapRepository.count(spec) >= PolicyData.SCRAP_CREATE_LIMIT;
+        if(isExceedScrapLimit){
+            throw new BaseException(ErrorCode.EXCEED_SCRAP_CREATE_LIMIT);
+        }
 
         Scrap newScrap = ScrapConverter.toEntity(request, member, category);
 

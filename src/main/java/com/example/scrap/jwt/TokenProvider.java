@@ -1,6 +1,6 @@
 package com.example.scrap.jwt;
 
-import com.example.scrap.base.Data;
+import com.example.scrap.base.data.DefaultData;
 import com.example.scrap.base.code.ErrorCode;
 import com.example.scrap.base.exception.AuthorizationException;
 import com.example.scrap.entity.Member;
@@ -147,7 +147,7 @@ public class TokenProvider {
      */
     public boolean isTokenValid(String token){
         try {
-            token = token.replace(Data.AUTH_PREFIX, "");
+            token = token.replace(DefaultData.AUTH_PREFIX, "");
 
             Jwts.parser().setSigningKey(jwtSecretKey)
                     .parseClaimsJws(token);
@@ -165,7 +165,7 @@ public class TokenProvider {
      */
     public boolean isTokenTypeIsAccess(String token){
         try {
-            token = token.replace(Data.AUTH_PREFIX, "");
+            token = token.replace(DefaultData.AUTH_PREFIX, "");
 
             return TokenType.ACCESS.name().equals(
                     Jwts.parser().setSigningKey(jwtSecretKey)
@@ -186,7 +186,7 @@ public class TokenProvider {
      */
     public boolean isTokenTypeIsRefresh(String token){
         try {
-            token = token.replace(Data.AUTH_PREFIX, "");
+            token = token.replace(DefaultData.AUTH_PREFIX, "");
 
             return TokenType.REFRESH.name().equals(
                     Jwts.parser().setSigningKey(jwtSecretKey)
@@ -209,7 +209,7 @@ public class TokenProvider {
      */
     public boolean isRequiredTokenReissue(String token){
         try {
-            token = token.replace(Data.AUTH_PREFIX, "");
+            token = token.replace(DefaultData.AUTH_PREFIX, "");
 
             Claims claims = Jwts.parser().setSigningKey(jwtSecretKey)
                     .parseClaimsJws(token)
@@ -241,7 +241,7 @@ public class TokenProvider {
      * @throws AuthorizationException 토큰 만료시, 잘못된 TokenType일시
      */
     public MemberDTO parseMemberDTO(String token){
-        token = token.replace(Data.AUTH_PREFIX, "");
+        token = token.replace(DefaultData.AUTH_PREFIX, "");
 
         if(!isTokenValid(token)){
             throw new AuthorizationException(ErrorCode.TOKEN_NOT_VALID);
