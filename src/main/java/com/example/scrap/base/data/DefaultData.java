@@ -8,7 +8,5 @@ public class DefaultData {
 
     public static final LocalDate START_DATE = LocalDate.of(2024, 5, 1);
 
-    public static final String DEFAULT_CATEGORY_TITLE = "분류되지 않음";
-
     public static final CharSequence AUTH_PREFIX = "Bearer ";
 }

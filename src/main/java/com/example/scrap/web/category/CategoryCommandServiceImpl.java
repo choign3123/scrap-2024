@@ -1,6 +1,7 @@
 package com.example.scrap.web.category;
 
 import com.example.scrap.base.code.ErrorCode;
+import com.example.scrap.base.data.PolicyData;
 import com.example.scrap.base.exception.BaseException;
 import com.example.scrap.converter.CategoryConverter;
 import com.example.scrap.entity.Category;
@@ -50,7 +51,7 @@ public class CategoryCommandServiceImpl implements ICategoryCommandService {
      */
     public Category createDefaultCategory(Member member){
 
-        Category defaultCategory = CategoryConverter.toEntity(member, DefaultData.DEFAULT_CATEGORY_TITLE, true);
+        Category defaultCategory = CategoryConverter.toEntity(member, PolicyData.DEFAULT_CATEGORY_TITLE, true);
 
         return categoryRepository.save(defaultCategory);
     }
