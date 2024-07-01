@@ -50,8 +50,8 @@ public class ScrapCommandServiceImpl implements IScrapCommandService {
         // 스크랩 생성 개수 제한 확인
         Specification<Scrap> spec = Specification.where(ScrapSpecification.isAvailable())
                 .and(ScrapSpecification.equalMember(member));
-        long totalScrap = scrapRepository.count(spec);
-        if(totalScrap > PolicyData.SCRAP_CREATE_LIMIT){
+        boolean isExceedScrapLimit = scrapRepository.count(spec) >= PolicyData.SCRAP_CREATE_LIMIT;
+        if(isExceedScrapLimit){
             throw new BaseException(ErrorCode.EXCEED_SCRAP_CREATE_LIMIT);
         }
 
