@@ -30,9 +30,8 @@ public class CategoryCommandServiceImpl implements ICategoryCommandService {
 
     /**
      * 카테고리 생성
-     * @param memberDTO
-     * @param request
-     * @return 생성된 카테고리
+     * @throws BaseException 카테고리 생성 제한 개수 초과
+     * @throws NoSuchElementException 카테고리의 max sequence를 찾을 수 없을 시
      */
     public Category createCategory(MemberDTO memberDTO, CategoryRequest.CreateCategoryDTO request){
         Member member = memberService.findMember(memberDTO);
@@ -43,7 +42,10 @@ public class CategoryCommandServiceImpl implements ICategoryCommandService {
             throw new BaseException(ErrorCode.EXCEED_CATEGORY_CREATE_LIMIT);
         }
 
-        Category newCategory = CategoryConverter.toEntity(member, request);
+        int newCategorySequence = categoryRepository.findMaxSequenceByMember(member)
+                .orElseThrow(() -> new NoSuchElementException("카테고리의 max sequence를 찾을 수 없음")) + 1;
+
+        Category newCategory = CategoryConverter.toEntity(member, request, newCategorySequence);
 
         categoryRepository.save(newCategory);
 
@@ -57,7 +59,7 @@ public class CategoryCommandServiceImpl implements ICategoryCommandService {
      */
     public Category createDefaultCategory(Member member){
 
-        Category defaultCategory = CategoryConverter.toEntity(member, PolicyData.DEFAULT_CATEGORY_TITLE, true);
+        Category defaultCategory = CategoryConverter.toEntity(member, PolicyData.DEFAULT_CATEGORY_TITLE, true, 1);
 
         return categoryRepository.save(defaultCategory);
     }
