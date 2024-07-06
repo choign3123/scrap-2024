@@ -59,7 +59,7 @@ public class CategoryCommandServiceImpl implements ICategoryCommandService {
      */
     public Category createDefaultCategory(Member member){
 
-        Category defaultCategory = CategoryConverter.toEntity(member, PolicyData.DEFAULT_CATEGORY_TITLE, true);
+        Category defaultCategory = CategoryConverter.toEntity(member, PolicyData.DEFAULT_CATEGORY_TITLE, true, 1);
 
         return categoryRepository.save(defaultCategory);
     }

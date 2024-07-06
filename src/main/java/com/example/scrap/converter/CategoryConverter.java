@@ -11,11 +11,12 @@ import java.util.List;
 
 public class CategoryConverter {
 
-    public static Category toEntity(Member member, String title, boolean isDefault){
+    public static Category toEntity(Member member, String title, boolean isDefault, int sequence){
         return Category.builder()
                 .title(title)
                 .isDefault(isDefault)
                 .member(member)
+                .sequence(sequence)
                 .build();
     }
 
