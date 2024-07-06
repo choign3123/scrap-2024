@@ -22,4 +22,10 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
     @Modifying
     @Query("DELETE FROM Category c WHERE c.member =:member")
     public void deleteAllByMember(@Param("member") Member member);
+
+    /**
+     * 가장 높은 sequence를 가진 카테고리 찾기
+     */
+    @Query("SELECT MAX(c.sequence) FROM Category c WHERE c.member =:member")
+    public Optional<Integer> findMaxSequenceByMember(@Param("member") Member member);
 }

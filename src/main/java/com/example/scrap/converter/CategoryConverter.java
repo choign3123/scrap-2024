@@ -19,10 +19,11 @@ public class CategoryConverter {
                 .build();
     }
 
-    public static Category toEntity(Member member, CategoryRequest.CreateCategoryDTO request){
+    public static Category toEntity(Member member, CategoryRequest.CreateCategoryDTO request, int sequence){
         return Category.builder()
                 .isDefault(false)
                 .member(member)
+                .sequence(sequence)
                 .title(request.getCategoryTitle())
                 .build();
     }

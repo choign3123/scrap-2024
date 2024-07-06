@@ -38,10 +38,6 @@ public class Member extends BaseEntity {
     @OneToMany(mappedBy = "member")
     private List<Category> categoryList = new ArrayList<>();
 
-    public int calcNewCategorySequence(){
-        return categoryList.size() + 1;
-    }
-
     @Builder
     public Member(String name, SnsType snsType, String snsId, MemberLog memberLog) {
         this.name = name;
