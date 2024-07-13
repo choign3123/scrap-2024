@@ -61,7 +61,7 @@ public class ScrapController {
                                            @RequestParam("category") @ExistCategory Long categoryId,
                                            @RequestParam(name = "sort", defaultValue = "SCRAP_DATE") @EnumValid(enumC = Sorts.class) String sort,
                                            @RequestParam(name = "direction", defaultValue = "ASC") @EnumValid(enumC = Direction.class) String direction,
-                                           @RequestParam(name = "page", defaultValue = "1") @PagingPage int page,
+                                           @RequestParam(name = "page", defaultValue = "0") @PagingPage int page,
                                            @RequestParam(name = "size", defaultValue = DefaultData.PAGING_SIZE) @PagingSize int size){
 
         MemberDTO memberDTO = tokenProvider.parseMemberDTO(token);
@@ -73,7 +73,7 @@ public class ScrapController {
         Direction directionEnum = Direction.valueOf(direction.toUpperCase());
 
         // 페이지네이션
-        PageRequest pageRequest = PageRequest.of(page-1, size, directionEnum, sortsEnum.getName());
+        PageRequest pageRequest = PageRequest.of(page, size, directionEnum, sortsEnum.getName());
 
         Page<Scrap> scrapPage = scrapQueryService.getScrapListByCategory(memberDTO, categoryId, pageRequest);
         ScrapResponse.GetScrapListByCategoryDTO response = ScrapConverter.toGetScrapListByCategory(scrapPage);
@@ -89,7 +89,7 @@ public class ScrapController {
     public ResponseEntity<ResponseDTO> favoriteScrapList(@RequestHeader("Authorization") String token,
                                          @RequestParam(name = "sort", defaultValue = "SCRAP_DATE") @EnumValid(enumC = Sorts.class) String sort,
                                          @RequestParam(name = "direction", defaultValue = "ASC") @EnumValid(enumC = Direction.class) String direction,
-                                         @RequestParam(name = "page", defaultValue = "1") @PagingPage int page,
+                                         @RequestParam(name = "page", defaultValue = "0") @PagingPage int page,
                                          @RequestParam(name = "size", defaultValue = DefaultData.PAGING_SIZE) @PagingSize int size){
 
         MemberDTO memberDTO = tokenProvider.parseMemberDTO(token);
@@ -98,7 +98,7 @@ public class ScrapController {
         Sorts sortsEnum = Sorts.valueOf(sort.toUpperCase());
         Direction directionEnum = Direction.valueOf(direction.toUpperCase());
         // 페이지네이션
-        PageRequest pageRequest = PageRequest.of(page-1, size, directionEnum, sortsEnum.getName());
+        PageRequest pageRequest = PageRequest.of(page, size, directionEnum, sortsEnum.getName());
 
         Page<Scrap> scrapPage = scrapQueryService.getFavoriteScrapList(memberDTO, pageRequest);
         ScrapResponse.GetFavoriteScrapListDTO response = ScrapConverter.toGetFavoriteScrapList(scrapPage);

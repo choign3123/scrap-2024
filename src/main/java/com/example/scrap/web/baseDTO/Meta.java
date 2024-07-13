@@ -13,7 +13,7 @@ public class Meta {
 
     public Meta(Page page){
         this.totalCount = Long.valueOf(page.getTotalElements()).intValue();
-        this.currentPage = page.getPageable().getPageNumber() + 1;
+        this.currentPage = page.getPageable().getPageNumber();
         this.isEnd = page.isLast();
     }
 }

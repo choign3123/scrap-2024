@@ -18,7 +18,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Documented
 public @interface PagingPage {
 
-    String message() default "page는 1부터 시작합니다.";
+    String message() default "page는 0부터 시작합니다.";
 
     Class<?>[] groups() default { };
 
