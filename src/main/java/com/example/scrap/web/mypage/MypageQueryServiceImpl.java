@@ -1,12 +1,15 @@
 package com.example.scrap.web.mypage;
 
-import com.example.scrap.converter.MypageConverter;
 import com.example.scrap.entity.Member;
+import com.example.scrap.entity.Scrap;
+import com.example.scrap.specification.ScrapSpecification;
+import com.example.scrap.web.category.CategoryRepository;
 import com.example.scrap.web.member.IMemberQueryService;
-import com.example.scrap.web.member.MemberRepository;
 import com.example.scrap.web.member.dto.MemberDTO;
 import com.example.scrap.web.mypage.dto.MypageResponse.*;
+import com.example.scrap.web.scrap.ScrapRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,7 +19,8 @@ import org.springframework.transaction.annotation.Transactional;
 public class MypageQueryServiceImpl implements IMypageQueryService {
 
     private final IMemberQueryService memberService;
-    private final MemberRepository memberRepository;
+    private final CategoryRepository categoryRepository;
+    private final ScrapRepository scrapRepository;
 
     /**
      * 마이페이지 조회
@@ -26,7 +30,18 @@ public class MypageQueryServiceImpl implements IMypageQueryService {
     public MypageDTO mypage(MemberDTO memberDTO){
         Member member = memberService.findMember(memberDTO);
 
-        MypageDTO.Statistics statistics = memberRepository.getMypageStatistics(member);
-        return MypageConverter.toMypage(member, statistics);
+        // 총 카테고리 개수
+        long totalCategory = categoryRepository.countByMember(member);
+
+        // 총 스크랩 개수
+        Specification<Scrap> spec = Specification.where(ScrapSpecification.isAvailable())
+                .and(ScrapSpecification.equalMember(member));
+        long totalScrap = scrapRepository.count(spec);
+
+        return MypageDTO.builder()
+                .name(member.getName())
+                .totalCategory(totalCategory)
+                .totalScrap(totalScrap)
+                .build();
     }
 }
