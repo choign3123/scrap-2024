@@ -9,6 +9,6 @@ public class PagingPageValidator implements ConstraintValidator<PagingPage, Inte
 
     @Override
     public boolean isValid(Integer value, ConstraintValidatorContext context) {
-        return value > 0;
+        return value >= 0;
     }
 }
