@@ -30,9 +30,15 @@ public class MypageResponse {
         }
 
         @Builder
-        public MypageDTO(MemberInfo memberInfo, Statistics statistics) {
-            this.memberInfo = memberInfo;
-            this.statistics = statistics;
+        public MypageDTO(String name, long totalCategory, long totalScrap) {
+            this.memberInfo = MemberInfo.builder()
+                    .name(name)
+                    .build();
+
+            this.statistics = Statistics.builder()
+                    .totalCategory(totalCategory)
+                    .totalScrap(totalScrap)
+                    .build();
         }
     }
 }
