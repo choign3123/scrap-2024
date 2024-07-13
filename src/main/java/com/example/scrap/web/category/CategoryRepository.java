@@ -28,4 +28,6 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
      */
     @Query("SELECT MAX(c.sequence) FROM Category c WHERE c.member =:member")
     public Optional<Integer> findMaxSequenceByMember(@Param("member") Member member);
+
+    public long countByMember(Member member);
 }
