@@ -238,7 +238,7 @@ public class TokenProvider {
 
         Date issuedAt = getTokenIssuedDate(token);
 
-        return memberLog.getLoginDate().isBefore(
+        return memberLog.getLoginDate().isAfter(
                 issuedAt.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime()
         );
     }
