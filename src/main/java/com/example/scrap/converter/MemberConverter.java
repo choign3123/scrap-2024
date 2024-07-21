@@ -21,14 +21,6 @@ public class MemberConverter {
                 .build();
     }
 
-    public static ValidateTokenDTO toValidateTokenDTO(Token token){
-
-        return ValidateTokenDTO.builder()
-                .accessToken(token.getAccessToken())
-                .refreshToken(token.getRefreshToken())
-                .build();
-    }
-
     public static ReissueTokenDTO toReissueTokenDTO(Token token){
 
         return ReissueTokenDTO.builder()

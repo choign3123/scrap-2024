@@ -227,21 +227,6 @@ public class TokenProvider {
 
         return isNeedToReissueToken;
     }
-
-    /**
-     * 로그아웃된 토큰인지 검사
-     * 유저가 가장 최근 로그인 한 날짜 이전에 발급된 토큰은 무효
-     *
-     * @return if token is logout, return true. else return false.
-     */
-    public boolean isLogoutToken(MemberLog memberLog, String token){
-
-        Date issuedAt = getTokenIssuedDate(token);
-
-        return memberLog.getLoginDate().isAfter(
-                issuedAt.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime()
-        );
-    }
     /* 토큰 유효성 검사 끝 **/
 
     /**

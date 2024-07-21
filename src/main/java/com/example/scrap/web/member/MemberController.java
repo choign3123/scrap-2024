@@ -1,6 +1,7 @@
 package com.example.scrap.web.member;
 
 
+import com.example.scrap.base.code.SuccessCode;
 import com.example.scrap.base.response.ResponseDTO;
 import com.example.scrap.converter.MemberConverter;
 import com.example.scrap.jwt.TokenProvider;
@@ -20,21 +21,16 @@ import org.springframework.web.bind.annotation.*;
 public class MemberController {
 
     private final IMemberCommandService memberCommandService;
-    private final IMemberQueryService memberQueryService;
     private final TokenProvider tokenProvider;
 
     /**
-     * [POST] /me
+     * [GET] /token
      * [API-28] 토큰 유효성 검사
      */
-    @PostMapping("/me")
-    public ResponseEntity<ResponseDTO> tokenValidate(@RequestBody @Validated MemberRequest.ValidateTokenDTO request){
+    @GetMapping("/token/me")
+    public ResponseEntity<ResponseDTO> tokenValidate(@RequestHeader("Authorization") String token){
 
-        Token token = memberQueryService.validateToken(request);
-
-        MemberResponse.ValidateTokenDTO response = MemberConverter.toValidateTokenDTO(token);
-
-        return ResponseEntity.ok(new ResponseDTO(response));
+        return ResponseEntity.ok(new ResponseDTO<Void>(SuccessCode.TOKEN_VALID));
     }
 
     /**

@@ -27,7 +27,6 @@ public class AppConfig implements WebMvcConfigurer {
                 .order(2) // OpenEntityManagerInViewInterceptor 를 먼저 동작시키게 하기 위해서 우선순위 낮춤.
                 .addPathPatterns("/**")
                 .excludePathPatterns("/oauth/login/**")
-                .excludePathPatterns("/me")
                 .excludePathPatterns("/oauth/naver/callback")
                 .excludePathPatterns("/token");
     }
