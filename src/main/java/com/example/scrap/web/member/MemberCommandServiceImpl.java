@@ -52,9 +52,7 @@ public class MemberCommandServiceImpl implements IMemberCommandService {
         Member member = memberQueryService.findMember(memberDTO);
 
         // 토큰 유효성 검사
-        if(!tokenProvider.isTokenValid(refreshToken)){
-            throw new AuthorizationException(ErrorCode.TOKEN_NOT_VALID);
-        }
+        tokenProvider.isTokenValid(refreshToken);
 
         // refresh 토큰이 맞는지 검사
         if(!tokenProvider.isTokenTypeIsRefresh(refreshToken)){

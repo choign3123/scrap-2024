@@ -10,13 +10,13 @@ import com.example.scrap.jwt.dto.Token;
 import com.example.scrap.jwt.dto.TokenType;
 import com.example.scrap.web.member.dto.MemberDTO;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
 
@@ -160,18 +160,21 @@ public class TokenProvider {
 
     /**
      * 토큰 유효성 검사.
-     * @return if token is valid, return true. else return false.
+     * @throws AuthorizationException TOKEN_EXPIRED 토큰 만료시
+     * @throws AuthorizationException TOKEN_NOT_VALID 잘못된 토큰일 시
      */
-    public boolean isTokenValid(String token){
-        try {
+    public boolean isTokenValid(String token) {
+        try{
             Jwts.parser().setSigningKey(jwtSecretKey)
                     .parseClaimsJws(token);
 
             return true;
-
-        } catch (Exception e){
-            log.info("토큰 parse 실패: {}", e.getMessage());
-            return false;
+        }
+        catch (ExpiredJwtException e){
+            throw new AuthorizationException(ErrorCode.TOKEN_EXPIRED);
+        }
+        catch (Exception e){
+            throw new AuthorizationException(ErrorCode.TOKEN_NOT_VALID);
         }
     }
 
