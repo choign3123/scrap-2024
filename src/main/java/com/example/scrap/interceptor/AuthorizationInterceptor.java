@@ -7,6 +7,7 @@ import com.example.scrap.entity.Member;
 import com.example.scrap.jwt.TokenProvider;
 import com.example.scrap.web.member.IMemberQueryService;
 import com.example.scrap.web.member.dto.MemberDTO;
+import io.jsonwebtoken.ExpiredJwtException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -34,9 +35,7 @@ public class AuthorizationInterceptor implements HandlerInterceptor {
         accessToken = tokenProvider.removeTokenPrefix(accessToken);
 
         // 토큰 유효성 검사
-        if(!tokenProvider.isTokenValid(accessToken)){
-            throw new AuthorizationException(ErrorCode.TOKEN_NOT_VALID);
-        }
+        tokenProvider.isTokenValid(accessToken);
 
         // access 토큰이 맞는지 검사
         if(!tokenProvider.isTokenTypeIsAccess(accessToken)){
