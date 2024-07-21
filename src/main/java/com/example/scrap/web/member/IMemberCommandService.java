@@ -1,19 +1,24 @@
 package com.example.scrap.web.member;
 
 import com.example.scrap.entity.Member;
+import com.example.scrap.web.member.dto.MemberDTO;
 import com.example.scrap.web.oauth.dto.NaverResponse;
+import org.springframework.transaction.annotation.Transactional;
 
 public interface IMemberCommandService {
 
     /**
      * 네이버 회원가입
-     * @param profileInfo
-     * @return
      */
     public Member signup(NaverResponse.ProfileInfo.Response profileInfo);
 
     /**
+     * 로그아웃
+     */
+    public void logout(MemberDTO memberDTO);
+
+    /**
      * 회원 탈퇴
      */
-    public void signOut(Member member);
+    public void signOut(MemberDTO memberDTO);
 }

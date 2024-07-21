@@ -1,10 +1,10 @@
-package com.example.scrap.web.manageMember.dto;
+package com.example.scrap.web.member.dto;
 
 import lombok.Getter;
 
 import javax.validation.constraints.NotEmpty;
 
-public class ManageMemberRequest {
+public class MemberRequest {
 
     @Getter
     public static class ValidateTokenDTO {

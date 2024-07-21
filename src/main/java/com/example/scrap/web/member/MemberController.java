@@ -1,12 +1,12 @@
-package com.example.scrap.web.manageMember;
+package com.example.scrap.web.member;
 
 
 import com.example.scrap.base.response.ResponseDTO;
 import com.example.scrap.converter.ManageMemberConverter;
 import com.example.scrap.jwt.TokenProvider;
 import com.example.scrap.jwt.dto.Token;
-import com.example.scrap.web.manageMember.dto.ManageMemberRequest;
-import com.example.scrap.web.manageMember.dto.ManageMemberResponse;
+import com.example.scrap.web.member.dto.MemberRequest;
+import com.example.scrap.web.member.dto.MemberResponse;
 import com.example.scrap.web.member.dto.MemberDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,9 +17,10 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequiredArgsConstructor
 @Slf4j
-public class ManageMemberController {
+public class MemberController {
 
-    private final IMangeMemberService mangeMemberService;
+    private final IMemberCommandService memberCommandService;
+    private final IMemberQueryService memberQueryService;
     private final TokenProvider tokenProvider;
 
     /**
@@ -27,11 +28,11 @@ public class ManageMemberController {
      * [API-28] 토큰 유효성 검사
      */
     @PostMapping("/me")
-    public ResponseEntity<ResponseDTO> tokenValidate(@RequestBody @Validated ManageMemberRequest.ValidateTokenDTO request){
+    public ResponseEntity<ResponseDTO> tokenValidate(@RequestBody @Validated MemberRequest.ValidateTokenDTO request){
 
-        Token token = mangeMemberService.validateToken(request);
+        Token token = memberQueryService.validateToken(request);
 
-        ManageMemberResponse.ValidateTokenDTO response = ManageMemberConverter.toValidateTokenDTO(token);
+        MemberResponse.ValidateTokenDTO response = ManageMemberConverter.toValidateTokenDTO(token);
 
         return ResponseEntity.ok(new ResponseDTO(response));
     }
@@ -44,7 +45,7 @@ public class ManageMemberController {
     public ResponseEntity<ResponseDTO> logout(@RequestHeader("Authorization") String token){
         MemberDTO memberDTO = tokenProvider.parseMemberDTO(token);
 
-        mangeMemberService.logout(memberDTO);
+        memberCommandService.logout(memberDTO);
 
         return ResponseEntity.ok(new ResponseDTO<Void>());
     }
@@ -57,7 +58,7 @@ public class ManageMemberController {
     public ResponseEntity<ResponseDTO> signOut(@RequestHeader("Authorization") String token){
         MemberDTO memberDTO = tokenProvider.parseMemberDTO(token);
 
-        mangeMemberService.signOut(memberDTO);
+        memberCommandService.signOut(memberDTO);
 
         return ResponseEntity.ok(new ResponseDTO<Void>());
     }

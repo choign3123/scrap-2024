@@ -1,9 +1,9 @@
-package com.example.scrap.web.manageMember.dto;
+package com.example.scrap.web.member.dto;
 
 import lombok.Builder;
 import lombok.Getter;
 
-public class ManageMemberResponse {
+public class MemberResponse {
 
     @Getter
     @Builder

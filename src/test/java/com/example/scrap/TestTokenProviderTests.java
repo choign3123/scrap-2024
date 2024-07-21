@@ -4,7 +4,7 @@ import com.example.scrap.base.exception.AuthorizationException;
 import com.example.scrap.entity.enums.SnsType;
 import com.example.scrap.jwt.TestTokenProvider;
 import com.example.scrap.jwt.dto.Token;
-import com.example.scrap.web.manageMember.IMangeMemberService;
+import com.example.scrap.web.member.IMemberQueryService;
 import com.example.scrap.web.member.dto.MemberDTO;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -23,7 +23,7 @@ public class TestTokenProviderTests {
     private TestTokenProvider testTokenProvider;
 
     @Autowired
-    private IMangeMemberService mangeMemberService;
+    private IMemberQueryService memberQueryService;
 
     private Map<String, String> tokenMap;
 
@@ -93,7 +93,7 @@ public class TestTokenProviderTests {
         String refreshToken = tokenMap.get("유효한 refreshToken");
 
         // when
-        Token token = mangeMemberService.validateToken(accessToken, refreshToken);
+        Token token = memberQueryService.validateToken(accessToken, refreshToken);
 
         // then
         Assertions.assertThat(accessToken).isEqualTo(token.getAccessToken());
@@ -108,7 +108,7 @@ public class TestTokenProviderTests {
         String refreshToken = tokenMap.get("유효한 refreshToken (갱신 필요함)");
 
         // when
-        Token token = mangeMemberService.validateToken(accessToken, refreshToken);
+        Token token = memberQueryService.validateToken(accessToken, refreshToken);
 
         // then
         Assertions.assertThat(accessToken).isEqualTo(token.getAccessToken());
@@ -123,7 +123,7 @@ public class TestTokenProviderTests {
         String refreshToken = tokenMap.get("유효하지 않은 refreshToken");
 
         // when
-        Token token = mangeMemberService.validateToken(accessToken, refreshToken);
+        Token token = memberQueryService.validateToken(accessToken, refreshToken);
 
         // then
         Assertions.assertThat(accessToken).isEqualTo(token.getAccessToken());
@@ -138,7 +138,7 @@ public class TestTokenProviderTests {
         String refreshToken = tokenMap.get("유효한 refreshToken");
 
         // when
-        Token token = mangeMemberService.validateToken(accessToken, refreshToken);
+        Token token = memberQueryService.validateToken(accessToken, refreshToken);
 
         // then
         Assertions.assertThat(accessToken).isNotEqualTo(token.getAccessToken());
@@ -153,7 +153,7 @@ public class TestTokenProviderTests {
         String refreshToken = tokenMap.get("유효한 refreshToken (갱신 필요함)");
 
         // when
-        Token token = mangeMemberService.validateToken(accessToken, refreshToken);
+        Token token = memberQueryService.validateToken(accessToken, refreshToken);
 
         // then
         Assertions.assertThat(accessToken).isNotEqualTo(token.getAccessToken());
@@ -168,7 +168,7 @@ public class TestTokenProviderTests {
         String refreshToken = tokenMap.get("유효하지 않은 refreshToken");
 
         // when
-        Token token = mangeMemberService.validateToken(accessToken, refreshToken);
+        Token token = memberQueryService.validateToken(accessToken, refreshToken);
 
         // then
         Assertions.assertThat(accessToken).isNotEqualTo(token.getAccessToken());
@@ -183,7 +183,7 @@ public class TestTokenProviderTests {
         String refreshToken = tokenMap.get("유효한 refreshToken");
 
         // when
-        Token token = mangeMemberService.validateToken(accessToken, refreshToken);
+        Token token = memberQueryService.validateToken(accessToken, refreshToken);
 
         // then
         Assertions.assertThat(accessToken).isNotEqualTo(token.getAccessToken());
@@ -198,7 +198,7 @@ public class TestTokenProviderTests {
         String refreshToken = tokenMap.get("유효한 refreshToken (갱신 필요함)");
 
         // when
-        Token token = mangeMemberService.validateToken(accessToken, refreshToken);
+        Token token = memberQueryService.validateToken(accessToken, refreshToken);
 
         // then
         Assertions.assertThat(accessToken).isNotEqualTo(token.getAccessToken());
@@ -214,7 +214,7 @@ public class TestTokenProviderTests {
 
         // then
         Assertions.assertThatThrownBy(
-                () -> mangeMemberService.validateToken(accessToken, refreshToken)
+                () -> memberQueryService.validateToken(accessToken, refreshToken)
         ).isInstanceOf(AuthorizationException.class);
     }
 
@@ -227,7 +227,7 @@ public class TestTokenProviderTests {
 
         // then
         Assertions.assertThatThrownBy(
-                () -> mangeMemberService.validateToken(accessToken, refreshToken)
+                () -> memberQueryService.validateToken(accessToken, refreshToken)
         ).isInstanceOf(AuthorizationException.class);
     }
 
@@ -240,7 +240,7 @@ public class TestTokenProviderTests {
 
         // then
         Assertions.assertThatThrownBy(
-                () -> mangeMemberService.validateToken(accessToken, refreshToken)
+                () -> memberQueryService.validateToken(accessToken, refreshToken)
         ).isInstanceOf(AuthorizationException.class);
     }
 
@@ -261,7 +261,7 @@ public class TestTokenProviderTests {
 
         // then
         Assertions.assertThatThrownBy(
-                () -> mangeMemberService.validateToken(accessToken, refreshToken)
+                () -> memberQueryService.validateToken(accessToken, refreshToken)
         ).isInstanceOf(AuthorizationException.class);
     }
 }
