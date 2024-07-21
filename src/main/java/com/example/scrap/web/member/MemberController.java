@@ -2,7 +2,7 @@ package com.example.scrap.web.member;
 
 
 import com.example.scrap.base.response.ResponseDTO;
-import com.example.scrap.converter.ManageMemberConverter;
+import com.example.scrap.converter.MemberConverter;
 import com.example.scrap.jwt.TokenProvider;
 import com.example.scrap.jwt.dto.Token;
 import com.example.scrap.web.member.dto.MemberRequest;
@@ -32,7 +32,20 @@ public class MemberController {
 
         Token token = memberQueryService.validateToken(request);
 
-        MemberResponse.ValidateTokenDTO response = ManageMemberConverter.toValidateTokenDTO(token);
+        MemberResponse.ValidateTokenDTO response = MemberConverter.toValidateTokenDTO(token);
+
+        return ResponseEntity.ok(new ResponseDTO(response));
+    }
+
+    /**
+     * [POST] /token
+     * [API-34] 토큰 재발급
+     */
+    @PostMapping("/token")
+    public ResponseEntity<ResponseDTO> tokenReissue(@RequestParam("refresh_token") String refreshToken){
+
+        Token token = memberCommandService.reissueToken(refreshToken);
+        MemberResponse.ReissueTokenDTO response = MemberConverter.toReissueTokenDTO(token);
 
         return ResponseEntity.ok(new ResponseDTO(response));
     }

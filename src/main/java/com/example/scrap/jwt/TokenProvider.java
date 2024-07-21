@@ -4,6 +4,7 @@ import com.example.scrap.base.data.DefaultData;
 import com.example.scrap.base.code.ErrorCode;
 import com.example.scrap.base.exception.AuthorizationException;
 import com.example.scrap.entity.Member;
+import com.example.scrap.entity.MemberLog;
 import com.example.scrap.entity.enums.SnsType;
 import com.example.scrap.jwt.dto.Token;
 import com.example.scrap.jwt.dto.TokenType;
@@ -15,6 +16,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Date;
 
 @Component
@@ -110,6 +113,20 @@ public class TokenProvider {
     }
 
     /**
+     * accessToken 재발급하기
+     */
+    public Token reissueAccessToken(String refreshToken){
+
+        MemberDTO memberDTO = parseMemberDTO(refreshToken);
+
+        String reissuedAccessToken = createToken(memberDTO, parseDayToMs(expireDayOfAccessToken), TokenType.ACCESS);
+
+        return Token.builder()
+                .accessToken(reissuedAccessToken)
+                .build();
+    }
+
+    /**
      * refresh 토큰 재발급하기
      * 오직 accessToken으로만 refresh 토큰 재발급 가능
      */
@@ -147,8 +164,6 @@ public class TokenProvider {
      */
     public boolean isTokenValid(String token){
         try {
-            token = token.replace(DefaultData.AUTH_PREFIX, "");
-
             Jwts.parser().setSigningKey(jwtSecretKey)
                     .parseClaimsJws(token);
 
@@ -164,42 +179,26 @@ public class TokenProvider {
      * 토큰 타입이 Access인지 겁사
      */
     public boolean isTokenTypeIsAccess(String token){
-        try {
-            token = token.replace(DefaultData.AUTH_PREFIX, "");
-
-            return TokenType.ACCESS.name().equals(
-                    Jwts.parser().setSigningKey(jwtSecretKey)
-                            .parseClaimsJws(token)
-                            .getBody()
-                            .get("type", String.class)
-            );
-
-        } catch (Exception e) {
-            log.info("토큰 parse 실패: {}", e.getMessage());
-            e.printStackTrace();
-            return false;
-        }
+        return TokenType.ACCESS.name()
+                .equals(
+                        Jwts.parser().setSigningKey(jwtSecretKey)
+                                .parseClaimsJws(token)
+                                .getBody()
+                                .get("type", String.class)
+                );
     }
 
     /**
      * 토큰 타입이 Refressh인지 겁사
      */
     public boolean isTokenTypeIsRefresh(String token){
-        try {
-            token = token.replace(DefaultData.AUTH_PREFIX, "");
-
-            return TokenType.REFRESH.name().equals(
+        return TokenType.REFRESH.name()
+                .equals(
                     Jwts.parser().setSigningKey(jwtSecretKey)
                             .parseClaimsJws(token)
                             .getBody()
                             .get("type", String.class)
-            );
-
-        } catch (Exception e) {
-            log.info("토큰 parse 실패: {}", e.getMessage());
-            e.printStackTrace();
-            return false;
-        }
+                );
     }
 
     /**
@@ -208,31 +207,37 @@ public class TokenProvider {
      * @throws AuthorizationException TokenType값이 잘못 되었을 때
      */
     public boolean isRequiredTokenReissue(String token){
-        try {
-            token = token.replace(DefaultData.AUTH_PREFIX, "");
+        Claims claims = Jwts.parser().setSigningKey(jwtSecretKey)
+                .parseClaimsJws(token)
+                .getBody();
 
-            Claims claims = Jwts.parser().setSigningKey(jwtSecretKey)
-                    .parseClaimsJws(token)
-                    .getBody();
+        Date expireDate = claims.getExpiration();
 
-            Date expireDate = claims.getExpiration();
-
-            long standardOfReissueTime;
-            switch (TokenType.valueOf(claims.get("type", String.class))){
-                case ACCESS -> standardOfReissueTime = pareHourToMs(hourOfRequiredReissueAccessToken);
-                case REFRESH -> standardOfReissueTime = parseDayToMs(dayOfRequiredReissueRefreshToken);
-                default -> throw new AuthorizationException(ErrorCode.TOKEN_TYPE_ILLEGAL);
-            }
-
-            boolean isNeedToReissueToken = (expireDate.getTime() - System.currentTimeMillis() < standardOfReissueTime); // 만료시간 - 현재시간 < 재발금 필요 시간
-
-            return isNeedToReissueToken;
-
-        } catch (Exception ex) {
-            log.info("토큰 parse 실패: {}", ex.getMessage());
-            ex.printStackTrace();
-            return true;
+        long standardOfReissueTime;
+        switch (TokenType.valueOf(claims.get("type", String.class))){
+            case ACCESS -> standardOfReissueTime = pareHourToMs(hourOfRequiredReissueAccessToken);
+            case REFRESH -> standardOfReissueTime = parseDayToMs(dayOfRequiredReissueRefreshToken);
+            default -> throw new AuthorizationException(ErrorCode.TOKEN_TYPE_ILLEGAL);
         }
+
+        boolean isNeedToReissueToken = (expireDate.getTime() - System.currentTimeMillis() < standardOfReissueTime); // 만료시간 - 현재시간 < 재발금 필요 시간
+
+        return isNeedToReissueToken;
+    }
+
+    /**
+     * 로그아웃된 토큰인지 검사
+     * 유저가 가장 최근 로그인 한 날짜 이전에 발급된 토큰은 무효
+     *
+     * @return if token is logout, return true. else return false.
+     */
+    public boolean isLogoutToken(MemberLog memberLog, String token){
+
+        Date issuedAt = getTokenIssuedDate(token);
+
+        return memberLog.getLoginDate().isBefore(
+                issuedAt.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime()
+        );
     }
     /* 토큰 유효성 검사 끝 **/
 
@@ -241,16 +246,13 @@ public class TokenProvider {
      * @throws AuthorizationException 토큰 만료시, 잘못된 TokenType일시
      */
     public MemberDTO parseMemberDTO(String token){
-        token = token.replace(DefaultData.AUTH_PREFIX, "");
-
-        if(!isTokenValid(token)){
-            throw new AuthorizationException(ErrorCode.TOKEN_NOT_VALID);
-        }
+        token = removeTokenPrefix(token);
 
         Claims claims = Jwts.parser().setSigningKey(jwtSecretKey)
                 .parseClaimsJws(token)
                 .getBody();
 
+        // 토큰의 값 조회
         SnsType snsType;
         try {
             snsType = SnsType.valueOf(claims.get("snsType", String.class));
@@ -262,6 +264,23 @@ public class TokenProvider {
         Long memberId = Long.parseLong(claims.getAudience());
 
         return new MemberDTO(memberId, snsType, snsId);
+    }
+
+    /**
+     * 토큰 발급 시간 조회
+     */
+    private Date getTokenIssuedDate(String token){
+        return Jwts.parser().setSigningKey(jwtSecretKey)
+                .parseClaimsJws(token)
+                .getBody()
+                .getIssuedAt();
+    }
+
+    /**
+     * 토큰 prefix 지우기
+     */
+    public String removeTokenPrefix(String token){
+        return token.replace(DefaultData.AUTH_PREFIX, "");
     }
 
     /**

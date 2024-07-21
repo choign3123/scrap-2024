@@ -1,9 +1,14 @@
 package com.example.scrap.web.member;
 
+import com.example.scrap.base.code.ErrorCode;
+import com.example.scrap.base.exception.AuthorizationException;
 import com.example.scrap.converter.MemberConverter;
 import com.example.scrap.entity.Member;
 import com.example.scrap.entity.MemberLog;
+import com.example.scrap.entity.enums.LoginStatus;
 import com.example.scrap.entity.enums.SnsType;
+import com.example.scrap.jwt.TokenProvider;
+import com.example.scrap.jwt.dto.Token;
 import com.example.scrap.web.category.CategoryRepository;
 import com.example.scrap.web.category.ICategoryCommandService;
 import com.example.scrap.web.member.dto.MemberDTO;
@@ -22,6 +27,7 @@ public class MemberCommandServiceImpl implements IMemberCommandService {
     private final IMemberQueryService memberQueryService;
     private final ICategoryCommandService categoryCommandService;
     private final IScrapCommandService scrapCommandService;
+    private final TokenProvider tokenProvider;
 
     /**
      * 네이버 회원가입
@@ -34,6 +40,36 @@ public class MemberCommandServiceImpl implements IMemberCommandService {
         categoryCommandService.createDefaultCategory(member);
 
         return memberRepository.save(member);
+    }
+
+    /**
+     * 토큰 재발급
+     */
+    public Token reissueToken(String refreshToken){
+
+        refreshToken = tokenProvider.removeTokenPrefix(refreshToken);
+        MemberDTO memberDTO = tokenProvider.parseMemberDTO(refreshToken);
+        Member member = memberQueryService.findMember(memberDTO);
+
+        // 토큰 유효성 검사
+        if(!tokenProvider.isTokenValid(refreshToken)){
+            throw new AuthorizationException(ErrorCode.TOKEN_NOT_VALID);
+        }
+
+        // 로그아웃된 토큰인지 검사
+        if(tokenProvider.isLogoutToken(member.getMemberLog(), refreshToken)){
+            throw new AuthorizationException(ErrorCode.TOKEN_NOT_VALID);
+        }
+
+        // 로그인한 유저인지 검사
+        switch (member.getMemberLog().getLoginStatus()){
+            case ACTIVE -> {} // pass
+            case LOGOUT -> throw new AuthorizationException(ErrorCode.LOGOUT_STATUS);
+            case UNREGISTER -> throw new AuthorizationException(ErrorCode.UNREGISTER_STATUS);
+        }
+
+        // 토큰 재발급
+        return tokenProvider.reissueAccessToken(refreshToken);
     }
 
     /**
