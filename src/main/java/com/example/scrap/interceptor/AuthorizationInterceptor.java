@@ -51,9 +51,8 @@ public class AuthorizationInterceptor implements HandlerInterceptor {
 
         // 로그인 상태인지 검사
         switch (member.getMemberLog().getLoginStatus()){
-            case ACTIVE -> {}
+            case ACTIVE -> {} // pass
             case LOGOUT -> throw new AuthorizationException(ErrorCode.LOGOUT_STATUS);
-            case UNREGISTER -> throw new AuthorizationException(ErrorCode.UNREGISTER_STATUS);
             default -> throw new AuthorizationException(ErrorCode.MEMBER_LOG_STATUS_NOT_MATCH);
         }
 

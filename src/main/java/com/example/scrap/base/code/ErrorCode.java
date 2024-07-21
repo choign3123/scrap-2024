@@ -24,7 +24,6 @@ public enum ErrorCode implements BaseCode{
     ACCESS_MEMBER_AND_REFRESH_MEMBER_NOT_MATCH(HttpStatus.NOT_ACCEPTABLE, "Authorization005", "다시 로그인후 서비스 이용 바랍니다."),
     TOKEN_VALUE_NOT_MATCH_TO_MEMBER(HttpStatus.NOT_ACCEPTABLE, "Authorization006", "다시 로그인후 서비스 이용 바랍니다."),
     LOGOUT_STATUS(HttpStatus.NOT_ACCEPTABLE, "Authorization007", "다시 로그인후 서비스 이용 바랍니다."),
-    UNREGISTER_STATUS(HttpStatus.NOT_ACCEPTABLE, "Authorization008", "해당하는 사용자가 존재하지 않습니다."),
     TOKEN_TYPE_ILLEGAL(HttpStatus.NOT_ACCEPTABLE, "Authorization009", "다시 로그인후 서비스 이용 바랍니다."),
 
     // Oauth Error

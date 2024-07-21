@@ -68,7 +68,6 @@ public class MemberCommandServiceImpl implements IMemberCommandService {
         switch (member.getMemberLog().getLoginStatus()){
             case ACTIVE -> {} // pass
             case LOGOUT -> throw new AuthorizationException(ErrorCode.LOGOUT_STATUS);
-            case UNREGISTER -> throw new AuthorizationException(ErrorCode.UNREGISTER_STATUS);
         }
 
         // 토큰 재발급
