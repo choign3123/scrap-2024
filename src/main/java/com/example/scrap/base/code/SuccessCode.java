@@ -8,7 +8,8 @@ import org.springframework.http.HttpStatus;
 @AllArgsConstructor
 public enum SuccessCode implements BaseCode{
 
-    OK(HttpStatus.OK, "OK001", "요청에 성공했습니다.");
+    OK(HttpStatus.OK, "OK001", "요청에 성공했습니다."),
+    TOKEN_VALID(HttpStatus.OK, "OK002", "유효한 토큰입니다.");
 
     private final HttpStatus httpStatus;
     private final String code;

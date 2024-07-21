@@ -13,14 +13,4 @@ public interface IMemberQueryService {
      * @return
      */
     public Member findMember(MemberDTO memberDTO);
-
-    /**
-     * 토큰 유효성 검사
-     */
-    public Token validateToken(MemberRequest.ValidateTokenDTO request);
-
-    /**
-     * 토큰 유효성 검사
-     */
-    public Token validateToken(String accessToken, String refreshToken);
 }

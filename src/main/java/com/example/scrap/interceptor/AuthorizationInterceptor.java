@@ -42,9 +42,10 @@ public class AuthorizationInterceptor implements HandlerInterceptor {
             throw new AuthorizationException(ErrorCode.NOT_ACCESS_TOKEN);
         }
 
-        // member의 id와 snsId, snsType이 token의 값과 일치하는지 확인
         MemberDTO memberDTO = tokenProvider.parseMemberDTO(accessToken);
         Member member = memberQueryService.findMember(memberDTO);
+
+        // member의 id와 snsId, snsType이 token의 값과 일치하는지 확인
         if(!memberDTO.isMatchMember(member)){
             throw new AuthorizationException(ErrorCode.TOKEN_VALUE_NOT_MATCH_TO_MEMBER);
         }
