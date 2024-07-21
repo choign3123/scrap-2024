@@ -166,8 +166,8 @@ public class Scrap extends BaseEntity {
      * @return
      */
     public boolean toggleFavorite(boolean isFavorite){
-        isFavorite = isFavorite;
-        return isFavorite;
+        this.isFavorite = isFavorite;
+        return this.isFavorite;
     }
 
     /**

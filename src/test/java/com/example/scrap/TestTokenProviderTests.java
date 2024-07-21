@@ -38,8 +38,8 @@ public class TestTokenProviderTests {
 
         Map<String, String> map = testTokenProvider.createTestToken(
                 MemberDTO.builder()
-                        .memberId(1L)
-                        .snsId("temp1234")
+                        .memberId(2L)
+                        .snsId("test1234")
                         .snsType(SnsType.NAVER)
                         .build()
         );
