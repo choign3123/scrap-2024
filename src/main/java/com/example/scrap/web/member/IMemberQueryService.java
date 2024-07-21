@@ -1,6 +1,8 @@
 package com.example.scrap.web.member;
 
 import com.example.scrap.entity.Member;
+import com.example.scrap.jwt.dto.Token;
+import com.example.scrap.web.member.dto.MemberRequest;
 import com.example.scrap.web.member.dto.MemberDTO;
 
 public interface IMemberQueryService {
@@ -11,4 +13,14 @@ public interface IMemberQueryService {
      * @return
      */
     public Member findMember(MemberDTO memberDTO);
+
+    /**
+     * 토큰 유효성 검사
+     */
+    public Token validateToken(MemberRequest.ValidateTokenDTO request);
+
+    /**
+     * 토큰 유효성 검사
+     */
+    public Token validateToken(String accessToken, String refreshToken);
 }
