@@ -56,6 +56,11 @@ public class MemberCommandServiceImpl implements IMemberCommandService {
             throw new AuthorizationException(ErrorCode.TOKEN_NOT_VALID);
         }
 
+        // refresh 토큰이 맞는지 검사
+        if(!tokenProvider.isTokenTypeIsRefresh(refreshToken)){
+            throw new AuthorizationException(ErrorCode.NOT_REFRESH_TOKEN);
+        }
+
         // 로그아웃된 토큰인지 검사
         if(tokenProvider.isLogoutToken(member.getMemberLog(), refreshToken)){
             throw new AuthorizationException(ErrorCode.TOKEN_NOT_VALID);
