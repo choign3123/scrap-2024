@@ -84,29 +84,6 @@ public class TokenProvider {
     }
 
     /**
-     * access 토큰 재발급하기
-     * @param by 어느 토큰을 기준으로 accessToken을 재발급 할지
-     * @throws AuthorizationException accessToken과 refreshToken의 member가 다르면
-     * @throws IllegalArgumentException by 값이 잘못되었을 때
-     */
-    public Token reissueAccessToken(Token token, TokenType by){
-
-        MemberDTO memberDTO;
-        switch (by){
-            case ACCESS -> memberDTO = parseMemberDTO(token.getAccessToken());
-            case REFRESH -> memberDTO = parseMemberDTO(token.getRefreshToken());
-            default -> throw new IllegalArgumentException("by의 값이 잘못되었습니다.");
-        }
-
-        String reissuedAccessToken = createToken(memberDTO, parseDayToMs(expireDayOfAccessToken), TokenType.ACCESS);
-
-        return Token.builder()
-                .accessToken(reissuedAccessToken)
-                .refreshToken(token.getRefreshToken())
-                .build();
-    }
-
-    /**
      * accessToken 재발급하기
      */
     public Token reissueAccessToken(String refreshToken){
@@ -137,20 +114,6 @@ public class TokenProvider {
     /* 토큰 발급 끝 **/
 
     /* 토큰 유효성 검사 **/
-    /**
-     * access토큰과 refresh토큰이 동일한 유저의 것인지 확인
-     * @return if member of accessToken and member of refreshToken is same, return true. else return false.
-     */
-    public boolean isMemberOfTokenSame(Token token){
-        if(token == null){
-            return false;
-        }
-
-        MemberDTO accessOfMemberDTO = parseMemberDTO(token.getAccessToken());
-        MemberDTO refreshOfMemberDTO = parseMemberDTO(token.getRefreshToken());
-
-        return accessOfMemberDTO.equals(refreshOfMemberDTO);
-    }
 
     /**
      * 토큰 유효성 검사.
@@ -222,16 +185,6 @@ public class TokenProvider {
         Long memberId = Long.parseLong(claims.getAudience());
 
         return new MemberDTO(memberId, snsType, snsId);
-    }
-
-    /**
-     * 토큰 발급 시간 조회
-     */
-    private Date getTokenIssuedDate(String token){
-        return Jwts.parser().setSigningKey(jwtSecretKey)
-                .parseClaimsJws(token)
-                .getBody()
-                .getIssuedAt();
     }
 
     /**
