@@ -31,8 +31,6 @@ public class AuthorizationInterceptor implements HandlerInterceptor {
             throw new ValidationException("Authorization", "인증 토큰이 없습니다.");
         }
 
-        accessToken = tokenProvider.removeTokenPrefix(accessToken);
-
         // 토큰 유효성 검사
         tokenProvider.isTokenValid(accessToken);
 

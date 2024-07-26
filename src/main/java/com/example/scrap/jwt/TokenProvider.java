@@ -143,6 +143,8 @@ public class TokenProvider {
      * @throws AuthorizationException TOKEN_NOT_VALID 잘못된 토큰일 시
      */
     public boolean isTokenValid(String token) {
+        token = removeTokenPrefix(token);
+
         try{
             Jwts.parser().setSigningKey(jwtSecretKey)
                     .parseClaimsJws(token);
@@ -161,6 +163,8 @@ public class TokenProvider {
      * 토큰 타입이 Access인지 겁사
      */
     public boolean isTokenTypeIsAccess(String token){
+        token = removeTokenPrefix(token);
+
         return TokenType.ACCESS.name()
                 .equals(
                         Jwts.parser().setSigningKey(jwtSecretKey)
@@ -174,6 +178,8 @@ public class TokenProvider {
      * 토큰 타입이 Refressh인지 겁사
      */
     public boolean isTokenTypeIsRefresh(String token){
+        token = removeTokenPrefix(token);
+
         return TokenType.REFRESH.name()
                 .equals(
                     Jwts.parser().setSigningKey(jwtSecretKey)
@@ -248,6 +254,8 @@ public class TokenProvider {
      * refreshToken으로 Member 찾기
      */
     private Member findMemberByRefreshToken(String refreshToken){
+        refreshToken = removeTokenPrefix(refreshToken);
+
         // [TODO] refreshToken인지 확인하기
 
         Claims claims = Jwts.parser().setSigningKey(jwtSecretKey)

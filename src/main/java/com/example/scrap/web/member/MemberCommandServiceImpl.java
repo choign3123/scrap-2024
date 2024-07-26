@@ -45,8 +45,6 @@ public class MemberCommandServiceImpl implements IMemberCommandService {
      */
     public Token reissueToken(String refreshToken){
 
-        refreshToken = tokenProvider.removeTokenPrefix(refreshToken);
-
         // 토큰 유효성 검사
         tokenProvider.isTokenValid(refreshToken);
 
