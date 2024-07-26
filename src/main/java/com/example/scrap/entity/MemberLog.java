@@ -2,10 +2,7 @@ package com.example.scrap.entity;
 
 import com.example.scrap.entity.base.BaseEntity;
 import com.example.scrap.entity.enums.LoginStatus;
-import lombok.AccessLevel;
-import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -19,7 +16,7 @@ public class MemberLog extends BaseEntity {
     private Long id;
 
     @Column(nullable = false)
-    private LocalDateTime loginDate;
+    private LocalDateTime loginAt;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -30,7 +27,7 @@ public class MemberLog extends BaseEntity {
      * loginDate, loginStatus 자동 설정 해줌.
      */
     public MemberLog() {
-        this.loginDate = LocalDateTime.now();
+        this.loginAt = LocalDateTime.now();
         this.loginStatus = LoginStatus.ACTIVE;
     }
 
@@ -38,7 +35,7 @@ public class MemberLog extends BaseEntity {
      * 로그인
      */
     public void login(){
-        this.loginDate = LocalDateTime.now();
+        this.loginAt = LocalDateTime.now();
         this.loginStatus = LoginStatus.ACTIVE;
     }
 
