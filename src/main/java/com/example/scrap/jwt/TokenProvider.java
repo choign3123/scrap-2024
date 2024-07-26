@@ -4,7 +4,6 @@ import com.example.scrap.base.data.DefaultData;
 import com.example.scrap.base.code.ErrorCode;
 import com.example.scrap.base.exception.AuthorizationException;
 import com.example.scrap.entity.Member;
-import com.example.scrap.entity.MemberLog;
 import com.example.scrap.entity.enums.SnsType;
 import com.example.scrap.jwt.dto.Token;
 import com.example.scrap.jwt.dto.TokenType;
@@ -17,7 +16,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import java.time.ZoneId;
 import java.util.Date;
 import java.util.Random;
 
@@ -44,7 +42,10 @@ public class TokenProvider {
 
         String accessToken = createToken(member, expireDayOfAccessToken, TokenType.ACCESS);
 
-        String refreshToken = createRefreshToken(memberDTO, member.getMemberLog().getRefreshTokenId(), expireDayOfRefreshToken);
+        // 기존과 다른 refreshToken id 생성.
+        Long newRefreshTokenId = member.getMemberLog().createRefreshTokenId();
+        member.setRefreshTokenId(newRefreshTokenId);
+        String refreshToken = createRefreshToken(memberDTO, newRefreshTokenId, expireDayOfRefreshToken);
 
         return Token.builder()
                 .accessToken(accessToken)
@@ -90,18 +91,11 @@ public class TokenProvider {
     /**
      * 갱신 토큰 생성
      */
-    private String createRefreshToken(MemberDTO memberDTO, Long prevRefreshTokenId, long expireMs){
+    private String createRefreshToken(MemberDTO memberDTO, Long refreshTokenId, long expireMs){
         Claims claims = Jwts.claims();
         claims.put("snsType", memberDTO.getSnsType());
         claims.put("snsId", memberDTO.getSnsId());
         claims.put("type", TokenType.REFRESH);
-
-        // refreshToken id 생성. 단 이전 id와 다른값으로 발급하기
-        Random random = new Random();
-        Long refreshTokenId = random.nextLong();
-        while(refreshTokenId.equals(prevRefreshTokenId)){
-            refreshTokenId = random.nextLong();
-        }
 
         long currentTimeMills = System.currentTimeMillis();
 
