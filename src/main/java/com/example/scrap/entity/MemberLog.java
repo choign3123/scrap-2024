@@ -1,5 +1,6 @@
 package com.example.scrap.entity;
 
+import com.example.scrap.base.data.DefaultData;
 import com.example.scrap.entity.base.BaseEntity;
 import com.example.scrap.entity.enums.LoginStatus;
 import lombok.Getter;
@@ -68,11 +69,15 @@ public class MemberLog extends BaseEntity {
      */
     public Long createRefreshTokenId(){
         Random random = new Random();
-        Long refreshTokenId = random.nextLong();
+        Long refreshTokenId = random.nextLong(DefaultData.MIN_REFRESH_TOKEN_ID, DefaultData.MAX_REFRESH_TOKEN_ID);
         while(refreshTokenId.equals(this.refreshTokenId)){
-            refreshTokenId = random.nextLong();
+            refreshTokenId = random.nextLong(DefaultData.MIN_REFRESH_TOKEN_ID, DefaultData.MAX_REFRESH_TOKEN_ID);
         }
 
         return refreshTokenId;
+    }
+
+    public boolean equalRefreshTokenId(Long refreshTokenId){
+        return this.refreshTokenId.equals(refreshTokenId);
     }
 }

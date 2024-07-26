@@ -1,13 +1,9 @@
 package com.example.scrap.web.member;
 
 import com.example.scrap.base.code.ErrorCode;
-import com.example.scrap.base.exception.AuthorizationException;
 import com.example.scrap.base.exception.BaseException;
 import com.example.scrap.entity.Member;
-import com.example.scrap.jwt.TokenProvider;
-import com.example.scrap.jwt.dto.Token;
-import com.example.scrap.jwt.dto.TokenType;
-import com.example.scrap.web.member.dto.MemberRequest;
+import com.example.scrap.entity.enums.SnsType;
 import com.example.scrap.web.member.dto.MemberDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -24,7 +20,22 @@ public class MemberQueryServiceImpl implements IMemberQueryService {
      * 멤버 조회
      */
     public Member findMember(MemberDTO memberDTO){
-        return memberRepository.findById(memberDTO.getMemberId())
+
+        if(memberDTO.getMemberId().isPresent()){
+            return memberRepository.findById(memberDTO.getMemberId().get())
+                    .orElseThrow(() -> new BaseException(ErrorCode.MEMBER_NOT_FOUND));
+        }
+        else{
+            return memberRepository.findBySnsTypeAndSnsId(memberDTO.getSnsType(), memberDTO.getSnsId())
+                    .orElseThrow(() -> new BaseException(ErrorCode.MEMBER_NOT_FOUND));
+        }
+    }
+
+    /**
+     * 멤버 조회
+     */
+    public Member findMember(String snsId, SnsType snsType){
+        return memberRepository.findBySnsTypeAndSnsId(snsType, snsId)
                 .orElseThrow(() -> new BaseException(ErrorCode.MEMBER_NOT_FOUND));
     }
 }

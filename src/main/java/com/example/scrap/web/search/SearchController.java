@@ -46,7 +46,7 @@ public class SearchController {
                                                    @RequestParam(name = "size", defaultValue = DefaultData.PAGING_SIZE) @PagingSize int size,
                                                    @RequestParam(name = "q") @NotBlank String query){
 
-        MemberDTO memberDTO = tokenProvider.parseMemberDTO(token);
+        MemberDTO memberDTO = tokenProvider.parseAccessToMemberDTO(token);
 
         /** 시작, 종료 날짜 검증 **/
         if(request.getStartDate() == null){

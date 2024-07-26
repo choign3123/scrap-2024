@@ -7,7 +7,6 @@ import com.example.scrap.entity.Member;
 import com.example.scrap.jwt.TokenProvider;
 import com.example.scrap.web.member.IMemberQueryService;
 import com.example.scrap.web.member.dto.MemberDTO;
-import io.jsonwebtoken.ExpiredJwtException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -42,7 +41,7 @@ public class AuthorizationInterceptor implements HandlerInterceptor {
             throw new AuthorizationException(ErrorCode.NOT_ACCESS_TOKEN);
         }
 
-        MemberDTO memberDTO = tokenProvider.parseMemberDTO(accessToken);
+        MemberDTO memberDTO = tokenProvider.parseAccessToMemberDTO(accessToken);
         Member member = memberQueryService.findMember(memberDTO);
 
         // member의 id와 snsId, snsType이 token의 값과 일치하는지 확인

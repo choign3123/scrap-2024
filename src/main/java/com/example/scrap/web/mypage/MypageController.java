@@ -25,7 +25,7 @@ public class MypageController {
      */
     @GetMapping
     public ResponseEntity<ResponseDTO> mypage(@RequestHeader("Authorization") String token){
-        MemberDTO memberDTO = tokenProvider.parseMemberDTO(token);
+        MemberDTO memberDTO = tokenProvider.parseAccessToMemberDTO(token);
 
         MypageResponse.MypageDTO response = mypageService.mypage(memberDTO);
 
