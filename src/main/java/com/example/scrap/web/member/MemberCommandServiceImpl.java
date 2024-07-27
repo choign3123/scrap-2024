@@ -8,6 +8,7 @@ import com.example.scrap.entity.MemberLog;
 import com.example.scrap.entity.enums.SnsType;
 import com.example.scrap.jwt.TokenProvider;
 import com.example.scrap.jwt.dto.Token;
+import com.example.scrap.jwt.dto.TokenType;
 import com.example.scrap.web.category.ICategoryCommandService;
 import com.example.scrap.web.member.dto.MemberDTO;
 import com.example.scrap.web.oauth.dto.NaverResponse;
@@ -50,6 +51,10 @@ public class MemberCommandServiceImpl implements IMemberCommandService {
 
         MemberDTO memberDTO = tokenProvider.pasreRefreshToMemberDTO(refreshToken);
         Member member = memberQueryService.findMemberWithLog(memberDTO);
+
+        if(!tokenProvider.equalsTokenType(refreshToken, TokenType.REFRESH)){
+            throw new AuthorizationException(ErrorCode.NOT_REFRESH_TOKEN);
+        }
 
         // 로그인한 유저인지 검사
         switch (member.getMemberLog().getLoginStatus()){
