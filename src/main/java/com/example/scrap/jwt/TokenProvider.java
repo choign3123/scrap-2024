@@ -98,6 +98,7 @@ public class TokenProvider {
 
     /**
      * 접근 토큰 생성하기
+     * @throws NullPointerException memberId가 null 일때
      */
     // [TODO] 토큰에 어떤 값을 담을지 고민 필요.
     // https://velog.io/@kimcno3/Jwt-Token%EC%97%90-%EB%8B%B4%EA%B8%B8-%EC%82%AC%EC%9A%A9%EC%9E%90-%EC%A0%95%EB%B3%B4%EC%97%90-%EB%8C%80%ED%95%9C-%EA%B2%B0%EC%A0%95%EA%B3%BC-%ED%91%9C%EC%A4%80%EC%97%90-%EB%8C%80%ED%95%9C-%EC%9D%B4%ED%95%B4
@@ -108,8 +109,10 @@ public class TokenProvider {
         Claims claims = Jwts.claims();
         claims.put("snsType", memberDTO.getSnsType());
         claims.put("snsId", memberDTO.getSnsId());
-        claims.setAudience(memberDTO.getMemberId().toString());
         claims.put("type", TokenType.ACCESS);
+        claims.setAudience(memberDTO.getMemberId().orElseThrow(
+                () -> new NullPointerException("memberId가 null임")
+        ).toString());
 
         long currentTimeMills = System.currentTimeMillis();
 
