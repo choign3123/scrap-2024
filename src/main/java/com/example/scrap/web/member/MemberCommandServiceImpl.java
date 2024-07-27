@@ -5,11 +5,10 @@ import com.example.scrap.base.exception.AuthorizationException;
 import com.example.scrap.converter.MemberConverter;
 import com.example.scrap.entity.Member;
 import com.example.scrap.entity.MemberLog;
-import com.example.scrap.entity.enums.LoginStatus;
 import com.example.scrap.entity.enums.SnsType;
 import com.example.scrap.jwt.TokenProvider;
 import com.example.scrap.jwt.dto.Token;
-import com.example.scrap.web.category.CategoryRepository;
+import com.example.scrap.jwt.dto.TokenType;
 import com.example.scrap.web.category.ICategoryCommandService;
 import com.example.scrap.web.member.dto.MemberDTO;
 import com.example.scrap.web.oauth.dto.NaverResponse;
@@ -47,20 +46,15 @@ public class MemberCommandServiceImpl implements IMemberCommandService {
      */
     public Token reissueToken(String refreshToken){
 
-        refreshToken = tokenProvider.removeTokenPrefix(refreshToken);
-
         // 토큰 유효성 검사
         tokenProvider.isTokenValid(refreshToken);
 
-        MemberDTO memberDTO = tokenProvider.parseMemberDTO(refreshToken);
-        Member member = memberQueryService.findMember(memberDTO);
+        MemberDTO memberDTO = tokenProvider.pasreRefreshToMemberDTO(refreshToken);
+        Member member = memberQueryService.findMemberWithLog(memberDTO);
 
-        // refresh 토큰이 맞는지 검사
-        if(!tokenProvider.isTokenTypeIsRefresh(refreshToken)){
+        if(!tokenProvider.equalsTokenType(refreshToken, TokenType.REFRESH)){
             throw new AuthorizationException(ErrorCode.NOT_REFRESH_TOKEN);
         }
-
-        // [TODO] 로그아웃된 토큰인지 검사
 
         // 로그인한 유저인지 검사
         switch (member.getMemberLog().getLoginStatus()){
@@ -69,7 +63,7 @@ public class MemberCommandServiceImpl implements IMemberCommandService {
         }
 
         // 토큰 재발급
-        return tokenProvider.reissueAccessToken(refreshToken);
+        return tokenProvider.reissueToken(refreshToken);
     }
 
     /**

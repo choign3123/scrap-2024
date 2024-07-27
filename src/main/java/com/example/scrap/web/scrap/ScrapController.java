@@ -44,7 +44,7 @@ public class ScrapController {
     public ResponseEntity<ResponseDTO> scrapSave(@RequestHeader("Authorization") String token, @PathVariable("category-id") @ExistCategory Long categoryId,
                                                  @RequestBody @Validated ScrapRequest.CreateScrapDTO request){
 
-        MemberDTO memberDTO = tokenProvider.parseMemberDTO(token);
+        MemberDTO memberDTO = tokenProvider.parseAccessToMemberDTO(token);
 
         Scrap newScrap = scrapCommandService.createScrap(memberDTO, categoryId, request);
         ScrapResponse.CreateScrapDTO response = ScrapConverter.toCreateScrapDTO(newScrap);
@@ -64,7 +64,7 @@ public class ScrapController {
                                            @RequestParam(name = "page", defaultValue = "0") @PagingPage int page,
                                            @RequestParam(name = "size", defaultValue = DefaultData.PAGING_SIZE) @PagingSize int size){
 
-        MemberDTO memberDTO = tokenProvider.parseMemberDTO(token);
+        MemberDTO memberDTO = tokenProvider.parseAccessToMemberDTO(token);
 
         log.info("sort: {}, direction: {}, page: {}, size: {}", sort, direction, page, size);
 
@@ -92,7 +92,7 @@ public class ScrapController {
                                          @RequestParam(name = "page", defaultValue = "0") @PagingPage int page,
                                          @RequestParam(name = "size", defaultValue = DefaultData.PAGING_SIZE) @PagingSize int size){
 
-        MemberDTO memberDTO = tokenProvider.parseMemberDTO(token);
+        MemberDTO memberDTO = tokenProvider.parseAccessToMemberDTO(token);
 
         // string -> enum 변경
         Sorts sortsEnum = Sorts.valueOf(sort.toUpperCase());
@@ -113,7 +113,7 @@ public class ScrapController {
      */
     @GetMapping("/{scrap-id}")
     public ResponseEntity<ResponseDTO> scrapDetails(@RequestHeader("Authorization") String token, @PathVariable("scrap-id") @ExistAvailableScrap Long scrapId){
-        MemberDTO memberDTO = tokenProvider.parseMemberDTO(token);
+        MemberDTO memberDTO = tokenProvider.parseAccessToMemberDTO(token);
 
         Scrap scrap = scrapQueryService.getScrapDetails(memberDTO, scrapId);
         ScrapResponse.GetScrapDetailsDTO response = ScrapConverter.toGetScrapDetails(scrap);
@@ -133,7 +133,7 @@ public class ScrapController {
                                           @RequestParam(name = "category", required = false) @ExistCategory(required = false) Long categoryId,
                                           @RequestParam("q") @NotBlank String query){
 
-        MemberDTO memberDTO = tokenProvider.parseMemberDTO(token);
+        MemberDTO memberDTO = tokenProvider.parseAccessToMemberDTO(token);
 
         // string -> enum 변경
         Sorts sortsEnum = Sorts.valueOf(sorts.toUpperCase());
@@ -160,7 +160,7 @@ public class ScrapController {
                                      @RequestParam(name = "range") @EnumValid(enumC = QueryRange.class) String queryRangeStr,
                                      @RequestParam(name = "category", required = false) @ExistCategory(required = false) Long categoryId){
 
-        MemberDTO memberDTO = tokenProvider.parseMemberDTO(token);
+        MemberDTO memberDTO = tokenProvider.parseAccessToMemberDTO(token);
 
         QueryRange queryRange = checkQueryRangeMissing(queryRangeStr);
 
@@ -179,7 +179,7 @@ public class ScrapController {
     @PatchMapping("{scrap-id}/favorite")
     public ResponseEntity<ResponseDTO> scrapFavoriteToggle(@RequestHeader("Authorization") String token, @PathVariable("scrap-id") @ExistAvailableScrap Long scrapId){
 
-        MemberDTO memberDTO = tokenProvider.parseMemberDTO(token);
+        MemberDTO memberDTO = tokenProvider.parseAccessToMemberDTO(token);
 
         Scrap scrap = scrapCommandService.toggleScrapFavorite(memberDTO, scrapId);
         ScrapResponse.ToggleScrapFavoriteDTO response = ScrapConverter.toToggleScrapFavorite(scrap);
@@ -198,7 +198,7 @@ public class ScrapController {
                                                @RequestParam(name = "category", required = false) @ExistCategory(required = false) Long categoryId,
                                                @RequestBody @Validated ScrapRequest.ToggleScrapFavoriteListDTO request){
 
-        MemberDTO memberDTO = tokenProvider.parseMemberDTO(token);
+        MemberDTO memberDTO = tokenProvider.parseAccessToMemberDTO(token);
 
         QueryRange queryRange = null;
         if(isAllFavorite){
@@ -223,7 +223,7 @@ public class ScrapController {
     public ResponseEntity<ResponseDTO> categoryOfScrapMove(@RequestHeader("Authorization") String token, @PathVariable("scrap-id") @ExistAvailableScrap Long scrapId,
                                            @RequestBody @Validated ScrapRequest.MoveCategoryOfScrapDTO request){
 
-        MemberDTO memberDTO = tokenProvider.parseMemberDTO(token);
+        MemberDTO memberDTO = tokenProvider.parseAccessToMemberDTO(token);
 
         Scrap scrap = scrapCommandService.moveCategoryOfScrap(memberDTO, scrapId, request);
         ScrapResponse.MoveCategoryOfScrapDTO response = ScrapConverter.toMoveCategoryOfScrap(scrap);
@@ -241,7 +241,7 @@ public class ScrapController {
                                             @RequestParam(name = "range", required = false) @EnumValid(enumC = QueryRange.class, required = false) String queryRangeStr,
                                             @RequestParam(name = "category", required = false) @ExistCategory(required = false) Long categoryId){
 
-        MemberDTO memberDTO = tokenProvider.parseMemberDTO(token);
+        MemberDTO memberDTO = tokenProvider.parseAccessToMemberDTO(token);
 
         QueryRange queryRange = null;
         if(isAllMove){
@@ -266,7 +266,7 @@ public class ScrapController {
     public ResponseEntity<ResponseDTO> scrapMemoModify(@RequestHeader("Authorization") String token, @PathVariable("scrap-id") @ExistAvailableScrap Long scrapId,
                                        @RequestBody @Validated ScrapRequest.UpdateScrapMemoDTO request){
 
-        MemberDTO memberDTO = tokenProvider.parseMemberDTO(token);
+        MemberDTO memberDTO = tokenProvider.parseAccessToMemberDTO(token);
 
         Scrap scrap = scrapCommandService.updateScrapMemo(memberDTO, scrapId, request);
         ScrapResponse.UpdateScrapMemoDTO response = ScrapConverter.toUpdateScrapMemo(scrap);
@@ -281,7 +281,7 @@ public class ScrapController {
     @PatchMapping("/{scrap-id}/trash")
     public ResponseEntity<ResponseDTO> scrapRemove(@RequestHeader("Authorization") String token, @PathVariable("scrap-id") @ExistAvailableScrap Long scrapId){
 
-        MemberDTO memberDTO = tokenProvider.parseMemberDTO(token);
+        MemberDTO memberDTO = tokenProvider.parseAccessToMemberDTO(token);
 
         scrapCommandService.thrwoScrapInTrash(memberDTO, scrapId);
 
@@ -298,7 +298,7 @@ public class ScrapController {
                                        @RequestParam(name = "range", required = false) @EnumValid(enumC = QueryRange.class, required = false) String queryRangeStr,
                                        @RequestParam(name = "category", required = false) @ExistCategory(required = false) Long categoryId){
 
-        MemberDTO memberDTO = tokenProvider.parseMemberDTO(token);
+        MemberDTO memberDTO = tokenProvider.parseAccessToMemberDTO(token);
 
         // string -> enum
         QueryRange queryRange = null;

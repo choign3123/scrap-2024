@@ -1,7 +1,6 @@
 package com.example.scrap.entity;
 
 import com.example.scrap.entity.base.BaseEntity;
-import com.example.scrap.entity.enums.LoginStatus;
 import com.example.scrap.entity.enums.SnsType;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -9,7 +8,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -58,5 +56,12 @@ public class Member extends BaseEntity {
      */
     public void logout() {
         this.getMemberLog().logout();
+    }
+
+    /**
+     * refreshTokenId 갱신
+     */
+    public void setRefreshTokenId(Long refreshTokenId){
+        memberLog.setRefreshTokenId(refreshTokenId);
     }
 }

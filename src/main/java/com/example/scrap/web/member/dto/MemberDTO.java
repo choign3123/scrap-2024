@@ -5,6 +5,8 @@ import com.example.scrap.entity.enums.SnsType;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.util.Optional;
+
 @Getter
 public class MemberDTO {
 
@@ -32,17 +34,11 @@ public class MemberDTO {
      */
     @Override
     public boolean equals(Object obj) {
-        if(!(obj instanceof MemberDTO)){ // obj가 MemberDTO가 아닐 경우
+        if(!(obj instanceof MemberDTO otherMemberDTO)){ // obj가 MemberDTO가 아닐 경우
             throw new IllegalArgumentException(obj.getClass().getName() + "는 MemberDTO.class가 아닙니다.");
         }
 
-        MemberDTO otherMemberDTO = (MemberDTO) obj;
-
-        boolean isSnsIdSame = snsId.equals(otherMemberDTO.getSnsId());
-        boolean isSnsTypeSame = (snsType == otherMemberDTO.getSnsType());
-        boolean isMemberIdSame = memberId.equals(otherMemberDTO.getMemberId());
-
-        return isSnsTypeSame && isSnsIdSame && isMemberIdSame;
+        return isMatchValue(otherMemberDTO.memberId, otherMemberDTO.snsId, otherMemberDTO.snsType);
     }
 
     /**
@@ -51,10 +47,24 @@ public class MemberDTO {
      * @return if snsType, snsId and memberId are all the same, return true. else return false.
      */
     public boolean isMatchMember(Member member){
-        boolean isSnsIdSame = snsId.equals(member.getSnsId());
-        boolean isSnsTypeSame = (snsType == member.getSnsType());
-        boolean isMemberIdSame = memberId.equals(member.getId());
+        return isMatchValue(member.getId(), member.getSnsId(), member.getSnsType());
+    }
+
+    private boolean isMatchValue(Long memberId, String snsId, SnsType snsType){
+        boolean isSnsIdSame = this.snsId.equals(snsId);
+        boolean isSnsTypeSame = (this.snsType == snsType);
+        boolean isMemberIdSame;
+        if(this.memberId == null){
+            isMemberIdSame = true;
+        }
+        else{
+            isMemberIdSame = this.memberId.equals(memberId);
+        }
 
         return isSnsTypeSame && isSnsIdSame && isMemberIdSame;
+    }
+
+    public Optional<Long> getMemberId(){
+        return Optional.ofNullable(memberId);
     }
 }

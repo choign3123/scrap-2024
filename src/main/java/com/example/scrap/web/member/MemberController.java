@@ -6,13 +6,11 @@ import com.example.scrap.base.response.ResponseDTO;
 import com.example.scrap.converter.MemberConverter;
 import com.example.scrap.jwt.TokenProvider;
 import com.example.scrap.jwt.dto.Token;
-import com.example.scrap.web.member.dto.MemberRequest;
 import com.example.scrap.web.member.dto.MemberResponse;
 import com.example.scrap.web.member.dto.MemberDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -52,7 +50,7 @@ public class MemberController {
      */
     @PatchMapping("/logout")
     public ResponseEntity<ResponseDTO> logout(@RequestHeader("Authorization") String token){
-        MemberDTO memberDTO = tokenProvider.parseMemberDTO(token);
+        MemberDTO memberDTO = tokenProvider.parseAccessToMemberDTO(token);
 
         memberCommandService.logout(memberDTO);
 
@@ -65,7 +63,7 @@ public class MemberController {
      */
     @PatchMapping("/signout")
     public ResponseEntity<ResponseDTO> signOut(@RequestHeader("Authorization") String token){
-        MemberDTO memberDTO = tokenProvider.parseMemberDTO(token);
+        MemberDTO memberDTO = tokenProvider.parseAccessToMemberDTO(token);
 
         memberCommandService.signOut(memberDTO);
 

@@ -25,6 +25,7 @@ public enum ErrorCode implements BaseCode{
     TOKEN_VALUE_NOT_MATCH_TO_MEMBER(HttpStatus.NOT_ACCEPTABLE, "Authorization006", "다시 로그인후 서비스 이용 바랍니다."),
     LOGOUT_STATUS(HttpStatus.NOT_ACCEPTABLE, "Authorization007", "다시 로그인후 서비스 이용 바랍니다."),
     TOKEN_TYPE_ILLEGAL(HttpStatus.NOT_ACCEPTABLE, "Authorization009", "다시 로그인후 서비스 이용 바랍니다."),
+    REFRESH_TOKEN_ALREADY_USED(HttpStatus.NOT_ACCEPTABLE, "Authorization010", "이미 사용된 갱신 토큰입니다."),
 
     // Oauth Error
     OAUTH_NAVER_LOGIN_FAIL(HttpStatus.NOT_ACCEPTABLE, "Oauth001", "다시 네이버 로그인후 서비스 이용 바랍니다."),

@@ -15,9 +15,6 @@ spring:
 
 jwt:
   secret: ${JWT_SECRET}
-  reissue_time:
-    access: ${REISSUE_HOUR_OF_ACCESS}
-    refresh: ${REISSUE_DAY_OF_REFRESH}
   expire_day:
     access: ${EXPIRE_DAY_OF_ACCESS}
     refresh: ${EXPIRE_DAY_OF_REFRESH}

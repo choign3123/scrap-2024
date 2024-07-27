@@ -36,7 +36,7 @@ public class CategoryController {
     @PostMapping()
     public ResponseEntity<ResponseDTO> categorySave(@RequestHeader("Authorization") String token, @RequestBody @Valid CategoryRequest.CreateCategoryDTO request){
 
-        MemberDTO memberDTO = tokenProvider.parseMemberDTO(token);
+        MemberDTO memberDTO = tokenProvider.parseAccessToMemberDTO(token);
 
         Category newCategory = categoryCommandService.createCategory(memberDTO, request);
 
@@ -52,7 +52,7 @@ public class CategoryController {
     @GetMapping()
     public ResponseEntity<ResponseDTO> categoryWholeList(@RequestHeader("Authorization") String token){
 
-        MemberDTO memberDTO = tokenProvider.parseMemberDTO(token);
+        MemberDTO memberDTO = tokenProvider.parseAccessToMemberDTO(token);
 
         List<Category> categoryList = categoryQueryService.getCategoryWholeList(memberDTO);
         CategoryResponse.GetCategoryListDTO response = CategoryConverter.toGetCategoryListDTO(categoryList);
@@ -68,7 +68,7 @@ public class CategoryController {
     @GetMapping("/selection")
     public ResponseEntity<ResponseDTO> categoryListForSelection(@RequestHeader("Authorization") String token){
 
-        MemberDTO memberDTO = tokenProvider.parseMemberDTO(token);
+        MemberDTO memberDTO = tokenProvider.parseAccessToMemberDTO(token);
 
         List<Category> categoryList = categoryQueryService.getCategoryWholeList(memberDTO);
         CategoryResponse.GetCategoryListForSelectionDTO response = CategoryConverter.toGetCategoryListForSelectionDTO(categoryList);
@@ -85,7 +85,7 @@ public class CategoryController {
     public ResponseEntity<ResponseDTO> categoryRemove(@RequestHeader("Authorization") String token, @PathVariable("category-id") @ExistCategory Long categoryId,
                                       @RequestParam("allow_delete_scrap") Boolean allowDeleteScrap){
 
-        MemberDTO memberDTO = tokenProvider.parseMemberDTO(token);
+        MemberDTO memberDTO = tokenProvider.parseAccessToMemberDTO(token);
 
         categoryCommandService.deleteCategory(memberDTO, categoryId, allowDeleteScrap);
 
@@ -99,7 +99,7 @@ public class CategoryController {
     public ResponseEntity<ResponseDTO> categoryTitleModify(@RequestHeader("Authorization") String token, @PathVariable("category-id") @ExistCategory Long categoryId,
                                            @RequestBody @Valid CategoryRequest.UpdateCategoryTitleDTO request){
 
-        MemberDTO memberDTO = tokenProvider.parseMemberDTO(token);
+        MemberDTO memberDTO = tokenProvider.parseAccessToMemberDTO(token);
 
         Category category = categoryCommandService.updateCategoryTitle(memberDTO, categoryId, request);
         CategoryResponse.UpdateCategoryTitleDTO response = CategoryConverter.toUpdateCategoryTitleDTO(category);
@@ -114,7 +114,7 @@ public class CategoryController {
     @PatchMapping("/sequence")
     public ResponseEntity<ResponseDTO> categorySequenceModify(@RequestHeader("Authorization") String token, @RequestBody @Validated CategoryRequest.UpdateCategorySequenceDTO request){
 
-        MemberDTO memberDTO = tokenProvider.parseMemberDTO(token);
+        MemberDTO memberDTO = tokenProvider.parseAccessToMemberDTO(token);
 
         // 중복된 카테고리 있는지 확인
         boolean includeDuplicateCategory = (request.getCategoryList().size() != request.getCategoryList().stream().distinct().count());

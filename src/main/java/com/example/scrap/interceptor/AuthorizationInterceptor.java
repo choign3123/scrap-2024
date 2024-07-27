@@ -5,9 +5,9 @@ import com.example.scrap.base.exception.AuthorizationException;
 import com.example.scrap.base.exception.ValidationException;
 import com.example.scrap.entity.Member;
 import com.example.scrap.jwt.TokenProvider;
+import com.example.scrap.jwt.dto.TokenType;
 import com.example.scrap.web.member.IMemberQueryService;
 import com.example.scrap.web.member.dto.MemberDTO;
-import io.jsonwebtoken.ExpiredJwtException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -25,25 +25,23 @@ public class AuthorizationInterceptor implements HandlerInterceptor {
     private final IMemberQueryService memberQueryService;
 
     @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler){
 
         String accessToken = request.getHeader("Authorization");
         if(accessToken == null){
             throw new ValidationException("Authorization", "인증 토큰이 없습니다.");
         }
 
-        accessToken = tokenProvider.removeTokenPrefix(accessToken);
-
         // 토큰 유효성 검사
         tokenProvider.isTokenValid(accessToken);
 
         // access 토큰이 맞는지 검사
-        if(!tokenProvider.isTokenTypeIsAccess(accessToken)){
+        if(!tokenProvider.equalsTokenType(accessToken, TokenType.ACCESS)){
             throw new AuthorizationException(ErrorCode.NOT_ACCESS_TOKEN);
         }
 
-        MemberDTO memberDTO = tokenProvider.parseMemberDTO(accessToken);
-        Member member = memberQueryService.findMember(memberDTO);
+        MemberDTO memberDTO = tokenProvider.parseAccessToMemberDTO(accessToken);
+        Member member = memberQueryService.findMemberWithLog(memberDTO);
 
         // member의 id와 snsId, snsType이 token의 값과 일치하는지 확인
         if(!memberDTO.isMatchMember(member)){
