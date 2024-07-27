@@ -25,7 +25,7 @@ public class AuthorizationInterceptor implements HandlerInterceptor {
     private final IMemberQueryService memberQueryService;
 
     @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler){
 
         String accessToken = request.getHeader("Authorization");
         if(accessToken == null){

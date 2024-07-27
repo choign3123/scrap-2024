@@ -205,7 +205,7 @@ public class TokenProvider {
         String snsId = claims.get("snsId", String.class);
         Long memberId = Long.parseLong(claims.getAudience());
 
-        SnsType snsType = null;
+        SnsType snsType;
         try {
             snsType = SnsType.valueOf(claims.get("snsType", String.class));
         } catch (IllegalArgumentException e){
@@ -233,7 +233,7 @@ public class TokenProvider {
         // 토큰의 값 조회
         String snsId = claims.get("snsId", String.class);
 
-        SnsType snsType = null;
+        SnsType snsType;
         try {
             snsType = SnsType.valueOf(claims.get("snsType", String.class));
         } catch (IllegalArgumentException e){
