@@ -51,11 +51,6 @@ public class MemberCommandServiceImpl implements IMemberCommandService {
         MemberDTO memberDTO = tokenProvider.pasreRefreshToMemberDTO(refreshToken);
         Member member = memberQueryService.findMember(memberDTO);
 
-        // refresh 토큰이 맞는지 검사
-        if(!tokenProvider.isTokenTypeIsRefresh(refreshToken)){
-            throw new AuthorizationException(ErrorCode.NOT_REFRESH_TOKEN);
-        }
-
         // 로그인한 유저인지 검사
         switch (member.getMemberLog().getLoginStatus()){
             case ACTIVE -> {} // pass

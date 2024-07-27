@@ -5,6 +5,7 @@ import com.example.scrap.base.exception.AuthorizationException;
 import com.example.scrap.base.exception.ValidationException;
 import com.example.scrap.entity.Member;
 import com.example.scrap.jwt.TokenProvider;
+import com.example.scrap.jwt.dto.TokenType;
 import com.example.scrap.web.member.IMemberQueryService;
 import com.example.scrap.web.member.dto.MemberDTO;
 import lombok.RequiredArgsConstructor;
@@ -35,12 +36,12 @@ public class AuthorizationInterceptor implements HandlerInterceptor {
         tokenProvider.isTokenValid(accessToken);
 
         // access 토큰이 맞는지 검사
-        if(!tokenProvider.isTokenTypeIsAccess(accessToken)){
+        if(!tokenProvider.equalsTokenType(accessToken, TokenType.ACCESS)){
             throw new AuthorizationException(ErrorCode.NOT_ACCESS_TOKEN);
         }
 
         MemberDTO memberDTO = tokenProvider.parseAccessToMemberDTO(accessToken);
-        Member member = memberQueryService.findMember(memberDTO);
+        Member member = memberQueryService.findMember(memberDTO); // [TODO] MemberLog fetch join 하기
 
         // member의 id와 snsId, snsType이 token의 값과 일치하는지 확인
         if(!memberDTO.isMatchMember(member)){

@@ -62,8 +62,15 @@ public class TokenProvider {
     /**
      * token 갱신하기
      * @param refreshToken refreshToken으로 토큰 갱신함
+     * @throws IllegalArgumentException refresh 토큰이 아닐 경우
      */
     public Token reissueToken(String refreshToken){
+        refreshToken = removeTokenPrefix(refreshToken);
+
+        // refresh 토큰이 아닐경우
+        if(!equalsTokenType(refreshToken, TokenType.REFRESH)){
+            throw new IllegalArgumentException("refresh 토큰이 아님");
+        }
 
         Member member = findMemberByRefreshToken(refreshToken);
 
@@ -160,32 +167,17 @@ public class TokenProvider {
     }
 
     /**
-     * 토큰 타입이 Access인지 겁사
+     * 토큰 타입 겁사
      */
-    public boolean isTokenTypeIsAccess(String token){
+    public boolean equalsTokenType(String token, TokenType tokenType){
         token = removeTokenPrefix(token);
 
-        return TokenType.ACCESS.name()
+        return tokenType.name()
                 .equals(
                         Jwts.parser().setSigningKey(jwtSecretKey)
                                 .parseClaimsJws(token)
                                 .getBody()
                                 .get("type", String.class)
-                );
-    }
-
-    /**
-     * 토큰 타입이 Refressh인지 겁사
-     */
-    public boolean isTokenTypeIsRefresh(String token){
-        token = removeTokenPrefix(token);
-
-        return TokenType.REFRESH.name()
-                .equals(
-                    Jwts.parser().setSigningKey(jwtSecretKey)
-                            .parseClaimsJws(token)
-                            .getBody()
-                            .get("type", String.class)
                 );
     }
     /* 토큰 유효성 검사 끝 **/
@@ -197,7 +189,8 @@ public class TokenProvider {
     public MemberDTO parseAccessToMemberDTO(String accessToken){
         accessToken = removeTokenPrefix(accessToken);
 
-        if(!isTokenTypeIsAccess(accessToken)){
+        // access 토큰인지 검사
+        if(!equalsTokenType(accessToken, TokenType.ACCESS)){
            throw new IllegalArgumentException("access 토큰이 아님");
         }
 
@@ -219,11 +212,15 @@ public class TokenProvider {
         return new MemberDTO(memberId, snsType, snsId);
     }
 
+    /**
+     * refresh 토큰을 MemberDTO로 변환
+     * @throws IllegalArgumentException refresh 토큰이 아닐시
+     */
     public MemberDTO pasreRefreshToMemberDTO(String refreshToken){
         refreshToken = removeTokenPrefix(refreshToken);
 
-        if(!isTokenTypeIsRefresh(refreshToken)){
-            throw new IllegalArgumentException("access 토큰이 아님");
+        if(!equalsTokenType(refreshToken, TokenType.REFRESH)){
+            throw new IllegalArgumentException("refresh 토큰이 아님");
         }
 
         Claims claims = Jwts.parser().setSigningKey(jwtSecretKey)
@@ -252,11 +249,15 @@ public class TokenProvider {
 
     /**
      * refreshToken으로 Member 찾기
+     * @throws IllegalArgumentException refresh 토큰이 아닐시
      */
     private Member findMemberByRefreshToken(String refreshToken){
         refreshToken = removeTokenPrefix(refreshToken);
 
-        // [TODO] refreshToken인지 확인하기
+        // refreshToken인지 확인하기
+        if(!equalsTokenType(refreshToken, TokenType.REFRESH)){
+            throw new IllegalArgumentException("refresh 토큰이 아님");
+        }
 
         Claims claims = Jwts.parser().setSigningKey(jwtSecretKey)
                 .parseClaimsJws(refreshToken)
