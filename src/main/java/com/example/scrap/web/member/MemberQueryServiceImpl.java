@@ -38,4 +38,19 @@ public class MemberQueryServiceImpl implements IMemberQueryService {
         return memberRepository.findBySnsTypeAndSnsId(snsType, snsId)
                 .orElseThrow(() -> new BaseException(ErrorCode.MEMBER_NOT_FOUND));
     }
+
+    /**
+     * MemberLog fetch join한 Member 조회
+     */
+    public Member findMemberWithLog(MemberDTO memberDTO) {
+
+        if(memberDTO.getMemberId().isPresent()){
+            return memberRepository.findByIdWithMemberLog(memberDTO.getMemberId().get())
+                    .orElseThrow(() -> new BaseException(ErrorCode.MEMBER_NOT_FOUND));
+        }
+        else{
+            return memberRepository.findBySnsTypeAndSnsIdWithMemberLog(memberDTO.getSnsType(), memberDTO.getSnsId())
+                    .orElseThrow(() -> new BaseException(ErrorCode.MEMBER_NOT_FOUND));
+        }
+    }
 }

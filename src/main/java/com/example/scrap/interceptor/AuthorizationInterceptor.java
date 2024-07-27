@@ -41,7 +41,7 @@ public class AuthorizationInterceptor implements HandlerInterceptor {
         }
 
         MemberDTO memberDTO = tokenProvider.parseAccessToMemberDTO(accessToken);
-        Member member = memberQueryService.findMember(memberDTO); // [TODO] MemberLog fetch join 하기
+        Member member = memberQueryService.findMemberWithLog(memberDTO);
 
         // member의 id와 snsId, snsType이 token의 값과 일치하는지 확인
         if(!memberDTO.isMatchMember(member)){

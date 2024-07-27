@@ -19,4 +19,9 @@ public interface IMemberQueryService {
      * 멤버 조회
      */
     public Member findMember(String snsId, SnsType snsType);
+
+    /**
+     * MemberLog fetch join한 Member 조회
+     */
+    public Member findMemberWithLog(MemberDTO memberDTO);
 }

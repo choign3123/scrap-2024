@@ -49,7 +49,7 @@ public class MemberCommandServiceImpl implements IMemberCommandService {
         tokenProvider.isTokenValid(refreshToken);
 
         MemberDTO memberDTO = tokenProvider.pasreRefreshToMemberDTO(refreshToken);
-        Member member = memberQueryService.findMember(memberDTO);
+        Member member = memberQueryService.findMemberWithLog(memberDTO);
 
         // 로그인한 유저인지 검사
         switch (member.getMemberLog().getLoginStatus()){
