@@ -118,9 +118,8 @@ public class CategoryCommandServiceImpl implements ICategoryCommandService {
         Member member = memberService.findMember(memberDTO);
         Category category = categoryQueryService.findCategory(categoryId);
 
-        if(category.checkIllegalMember(member)){
-            throw new BaseException(ErrorCode.CATEGORY_MEMBER_NOT_MATCH);
-        }
+        // 카테고리를 만든 사용자가 맞는지 확인
+        category.checkIllegalMember(member);
 
         // 기본 카테고리명은 수정 불가
         if(category.getIsDefault()){
