@@ -30,8 +30,8 @@ import java.util.List;
 @Slf4j
 public class ScrapQueryServiceImpl implements IScrapQueryService {
 
-    private final IMemberQueryService memberService;
-    private final ICategoryQueryService categoryService;
+    private final IMemberQueryService memberQueryService;
+    private final ICategoryQueryService categoryQueryService;
     private final ScrapRepository scrapRepository;
 
     /**
@@ -42,8 +42,8 @@ public class ScrapQueryServiceImpl implements IScrapQueryService {
      * @return
      */
     public Page<Scrap> getScrapListByCategory(MemberDTO memberDTO, Long categoryId, PageRequest pageRequest){
-        Member member = memberService.findMember(memberDTO);
-        Category category = categoryService.findCategory(categoryId);
+        Member member = memberQueryService.findMember(memberDTO);
+        Category category = categoryQueryService.findCategory(categoryId);
 
         category.checkIllegalMember(member);
 
@@ -62,7 +62,7 @@ public class ScrapQueryServiceImpl implements IScrapQueryService {
      * @return 즐겨찾기된 스크랩
      */
     public Page<Scrap> getFavoriteScrapList(MemberDTO memberDTO, PageRequest pageRequest){
-        Member member = memberService.findMember(memberDTO);
+        Member member = memberQueryService.findMember(memberDTO);
 
         Specification<Scrap> spec = Specification.where(ScrapSpecification.isAvailable())
                 .and(ScrapSpecification.equalMember(member))
@@ -79,7 +79,7 @@ public class ScrapQueryServiceImpl implements IScrapQueryService {
      * @return
      */
     public Scrap getScrapDetails(MemberDTO memberDTO, Long scrapId){
-        Member member = memberService.findMember(memberDTO);
+        Member member = memberQueryService.findMember(memberDTO);
 
         Scrap scrap = findScrap(scrapId);
 
@@ -93,7 +93,7 @@ public class ScrapQueryServiceImpl implements IScrapQueryService {
      * @param query 제목
      */
     public List<Scrap> findScrapByTitle(MemberDTO memberDTO, QueryRange queryRange, Long categoryId, String query, Sort sort){
-        Member member = memberService.findMember(memberDTO);
+        Member member = memberQueryService.findMember(memberDTO);
 
         Specification<Scrap> spec = createSpecByQueryType(member, queryRange, categoryId);
 
@@ -112,7 +112,7 @@ public class ScrapQueryServiceImpl implements IScrapQueryService {
      */
     public List<Scrap> shareAllScrap(MemberDTO memberDTO, QueryRange queryRange, Long categoryId){
 
-        Member member = memberService.findMember(memberDTO);
+        Member member = memberQueryService.findMember(memberDTO);
 
         return findAllByQueryType(member, queryRange, categoryId);
     }
@@ -146,7 +146,7 @@ public class ScrapQueryServiceImpl implements IScrapQueryService {
         // 어떤 프레스 타입인지
         switch (queryRange){
             case CATEGORY -> {
-                Category category = categoryService.findCategory(categoryId);
+                Category category = categoryQueryService.findCategory(categoryId);
                 if(category.isIllegalMember(member)){
                     throw new BaseException(ErrorCode.CATEGORY_MEMBER_NOT_MATCH_IN_SCRAP);
                 }
