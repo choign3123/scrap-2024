@@ -41,7 +41,7 @@ public class CategoryQueryServiceImpl implements ICategoryQueryService {
      */
     public Category findDefaultCategory(Member member){
         return categoryRepository.findByMemberAndIsDefaultTrue(member)
-                .orElseThrow(() -> new BaseException(ErrorCode.DEFAULT_CATEGORY_NOT_FOUND));
+                .orElseThrow(() -> new BaseException(ErrorCode.CATEGORY_NOT_FOUND));
     }
 
     /**
