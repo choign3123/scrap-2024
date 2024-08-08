@@ -44,7 +44,7 @@ public class Scrap extends BaseEntity {
     @ColumnDefault("'ACTIVE'")
     private ScrapStatus status;
 
-    private LocalDateTime trashed_date;
+    private LocalDateTime trashedAt;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "member_id")
@@ -135,7 +135,7 @@ public class Scrap extends BaseEntity {
      */
     public void toTrash(){
         this.status = ScrapStatus.TRASH;
-        trashed_date = LocalDateTime.now();
+        trashedAt = LocalDateTime.now();
     }
 
     /**
