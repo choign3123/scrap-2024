@@ -38,11 +38,19 @@ public class Category extends BaseEntity implements Comparable<Category>{
     @OneToMany(mappedBy = "category")
     private List<Scrap> scrapList = new ArrayList<>();
 
+    /**
+     * @param sequence 1 이상
+     * @throws IllegalArgumentException sequence가 0 이하의 숫자일 시
+     */
     @Builder
     public Category(String title, int sequence, Member member, Boolean isDefault) {
         this.title = title;
-        this.sequence = sequence;
         this.isDefault = isDefault == null ? false : isDefault;
+
+        if(sequence <= 0){
+            throw new IllegalArgumentException("sequence는 1 이상의 숫자여야 함");
+        }
+        this.sequence = sequence;
 
         setMember(member);
     }
