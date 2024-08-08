@@ -116,7 +116,7 @@ public class CategoryCommandServiceImpl implements ICategoryCommandService {
      */
     public Category updateCategoryTitle(MemberDTO memberDTO, Long categoryId, CategoryRequest.UpdateCategoryTitleDTO request){
         Member member = memberService.findMember(memberDTO);
-        Category category = categoryRepository.findById(categoryId).get();
+        Category category = categoryQueryService.findCategory(categoryId);
 
         if(category.checkIllegalMember(member)){
             throw new BaseException(ErrorCode.CATEGORY_MEMBER_NOT_MATCH);
