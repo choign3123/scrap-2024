@@ -8,7 +8,6 @@ import com.example.scrap.entity.Category;
 import com.example.scrap.entity.Member;
 import com.example.scrap.entity.Scrap;
 import com.example.scrap.base.enums.QueryRange;
-import com.example.scrap.entity.enums.LoginStatus;
 import com.example.scrap.specification.ScrapSpecification;
 import com.example.scrap.web.category.ICategoryQueryService;
 import com.example.scrap.web.member.IMemberQueryService;
@@ -96,7 +95,7 @@ public class ScrapCommandServiceImpl implements IScrapCommandService {
 
         // 전체 즐겨찾기
         if(isAllFavorite){
-            favoriteScrapList = scrapQueryService.findAllByQueryType(member, queryRange, categoryId);
+            favoriteScrapList = scrapQueryService.findAllByQueryRange(member, queryRange, categoryId);
         }
         // 요청된 스크랩만 즐겨찾기
         else{
@@ -171,7 +170,7 @@ public class ScrapCommandServiceImpl implements IScrapCommandService {
 
         // 전체 이동하기
         if(isAllMove){
-            moveScrapList = scrapQueryService.findAllByQueryType(member, queryRange, categoryId);
+            moveScrapList = scrapQueryService.findAllByQueryRange(member, queryRange, categoryId);
         }
         // 요청된 스크랩만 이동하기
         else{
@@ -231,7 +230,7 @@ public class ScrapCommandServiceImpl implements IScrapCommandService {
 
         // 모든 스크랩 삭제
         if(isAllDelete){
-            deleteScrapList = scrapQueryService.findAllByQueryType(member, queryRange, categoryId);
+            deleteScrapList = scrapQueryService.findAllByQueryRange(member, queryRange, categoryId);
         }
         // 요청된 스크랩만 삭제
         else{

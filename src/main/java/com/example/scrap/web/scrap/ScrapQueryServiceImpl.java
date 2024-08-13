@@ -95,7 +95,7 @@ public class ScrapQueryServiceImpl implements IScrapQueryService {
     public List<Scrap> findScrapByTitle(MemberDTO memberDTO, QueryRange queryRange, Long categoryId, String query, Sort sort){
         Member member = memberQueryService.findMember(memberDTO);
 
-        Specification<Scrap> spec = createSpecByQueryType(member, queryRange, categoryId);
+        Specification<Scrap> spec = createSpecByQueryRange(member, queryRange, categoryId);
 
         // 제목으로 검색
         spec = spec.and(ScrapSpecification.containingTitle(query));
@@ -114,7 +114,7 @@ public class ScrapQueryServiceImpl implements IScrapQueryService {
 
         Member member = memberQueryService.findMember(memberDTO);
 
-        return findAllByQueryType(member, queryRange, categoryId);
+        return findAllByQueryRange(member, queryRange, categoryId);
     }
 
     /**
@@ -130,8 +130,8 @@ public class ScrapQueryServiceImpl implements IScrapQueryService {
      * 조회 타입에 따른 스크랩 조회
      * @throws BaseException CATEGORY_MEMBER_NOT_MATCH_IN_SCRAP
      */
-    public List<Scrap> findAllByQueryType(Member member, QueryRange queryRange, Long categoryId){
-        Specification<Scrap> spec = createSpecByQueryType(member, queryRange, categoryId);
+    public List<Scrap> findAllByQueryRange(Member member, QueryRange queryRange, Long categoryId){
+        Specification<Scrap> spec = createSpecByQueryRange(member, queryRange, categoryId);
 
         return scrapRepository.findAll(spec);
     }
@@ -139,7 +139,7 @@ public class ScrapQueryServiceImpl implements IScrapQueryService {
     /**
      * 조회 타입에 따른 스크랩 Specification 생성
      */
-    public Specification<Scrap> createSpecByQueryType(Member member, QueryRange queryRange, Long categoryId){
+    public Specification<Scrap> createSpecByQueryRange(Member member, QueryRange queryRange, Long categoryId){
         Specification<Scrap> spec = Specification.where(ScrapSpecification.isAvailable())
                 .and(ScrapSpecification.equalMember(member));
 
