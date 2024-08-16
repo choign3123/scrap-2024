@@ -26,6 +26,7 @@ public class MemberQueryServiceImpl implements IMemberQueryService {
                     .orElseThrow(() -> new BaseException(ErrorCode.MEMBER_NOT_FOUND));
         }
         else{
+            // [TODO] findMember(String snsId, SnsType snsType) 이용하기
             return memberRepository.findBySnsTypeAndSnsId(memberDTO.getSnsType(), memberDTO.getSnsId())
                     .orElseThrow(() -> new BaseException(ErrorCode.MEMBER_NOT_FOUND));
         }

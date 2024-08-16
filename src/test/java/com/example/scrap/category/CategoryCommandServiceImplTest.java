@@ -455,7 +455,7 @@ public class CategoryCommandServiceImplTest {
 
     private MemberDTO setupMemberDTO(Member member){
         return MemberDTO.builder()
-                .memberId(1L)
+                .memberId(member.getId())
                 .snsId(member.getSnsId())
                 .snsType(member.getSnsType())
                 .build();

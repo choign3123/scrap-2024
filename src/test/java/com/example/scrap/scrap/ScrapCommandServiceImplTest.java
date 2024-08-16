@@ -31,7 +31,6 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -924,7 +923,7 @@ public class ScrapCommandServiceImplTest {
 
     private MemberDTO setupMemberDTO(Member member){
         return MemberDTO.builder()
-                .memberId(1L)
+                .memberId(member.getId())
                 .snsId(member.getSnsId())
                 .snsType(member.getSnsType())
                 .build();

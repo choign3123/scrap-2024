@@ -38,48 +38,6 @@ public class CategoryQueryServiceImplTest {
     @Mock
     private CategoryRepository categoryRepository;
 
-    private Member setupMember(){
-        return Member.builder()
-                .name("홍길동")
-                .snsId("testSnsId")
-                .snsType(SnsType.NAVER)
-                .build();
-    }
-
-    private MemberDTO setupMemberDTO(Member member){
-        return MemberDTO.builder()
-                .memberId(1L)
-                .snsId(member.getSnsId())
-                .snsType(member.getSnsType())
-                .build();
-    }
-
-    private List<Category> createCategoryList(Member member){
-        List<Category> categoryList = new ArrayList<>();
-
-        Category category;
-        for(int i=0; i<10; i++){
-             category = Category.builder()
-                    .title("카테고리" + i)
-                    .sequence(i+1)
-                    .isDefault(i==0 ? true : false) // 하나는 기본 카테고리로 만들기
-                    .member(member)
-                    .build();
-
-             categoryList.add(category);
-        }
-
-        return categoryList;
-    }
-
-    private Category setupCategory(Member member, boolean isDefault){
-        return Category.builder()
-                .member(member)
-                .title("카테고리명")
-                .sequence(1)
-                .isDefault(isDefault)
-                .build();
-    }
 
     @DisplayName("카테고리 전체 조회")
     @Test
@@ -154,5 +112,48 @@ public class CategoryQueryServiceImplTest {
         //** then
         assertThat(findCategory.getId())
                 .isEqualTo(category.getId());
+    }
+
+    private Member setupMember(){
+        return Member.builder()
+                .name("홍길동")
+                .snsId("testSnsId")
+                .snsType(SnsType.NAVER)
+                .build();
+    }
+
+    private MemberDTO setupMemberDTO(Member member){
+        return MemberDTO.builder()
+                .memberId(member.getId())
+                .snsId(member.getSnsId())
+                .snsType(member.getSnsType())
+                .build();
+    }
+
+    private List<Category> createCategoryList(Member member){
+        List<Category> categoryList = new ArrayList<>();
+
+        Category category;
+        for(int i=0; i<10; i++){
+            category = Category.builder()
+                    .title("카테고리" + i)
+                    .sequence(i+1)
+                    .isDefault(i==0 ? true : false) // 하나는 기본 카테고리로 만들기
+                    .member(member)
+                    .build();
+
+            categoryList.add(category);
+        }
+
+        return categoryList;
+    }
+
+    private Category setupCategory(Member member, boolean isDefault){
+        return Category.builder()
+                .member(member)
+                .title("카테고리명")
+                .sequence(1)
+                .isDefault(isDefault)
+                .build();
     }
 }
