@@ -30,24 +30,19 @@ import java.util.List;
 @Slf4j
 public class ScrapQueryServiceImpl implements IScrapQueryService {
 
-    private final IMemberQueryService memberService;
-    private final ICategoryQueryService categoryService;
+    private final IMemberQueryService memberQueryService;
+    private final ICategoryQueryService categoryQueryService;
     private final ScrapRepository scrapRepository;
 
     /**
      * 스크랩 전체 조회 - 카테고리별
-     * @param memberDTO
-     * @param categoryId
-     * @param pageRequest
-     * @return
      */
     public Page<Scrap> getScrapListByCategory(MemberDTO memberDTO, Long categoryId, PageRequest pageRequest){
-        Member member = memberService.findMember(memberDTO);
-        Category category = categoryService.findCategory(categoryId);
+        Member member = memberQueryService.findMember(memberDTO);
+        Category category = categoryQueryService.findCategory(categoryId);
 
         category.checkIllegalMember(member);
 
-//        Page<Scrap> scrapPage = scrapRepository.findAllByMemberAndCategoryAndStatus(member, category, ScrapStatus.ACTIVE, pageRequest);
         Specification<Scrap> spec = Specification.where(ScrapSpecification.isAvailable())
                 .and(ScrapSpecification.equalMember(member))
                 .and(ScrapSpecification.equalCategory(category));
@@ -57,29 +52,23 @@ public class ScrapQueryServiceImpl implements IScrapQueryService {
 
     /**
      * 즐겨찾기된 스크랩 조회
-     * @param memberDTO
-     * @param pageRequest
      * @return 즐겨찾기된 스크랩
      */
     public Page<Scrap> getFavoriteScrapList(MemberDTO memberDTO, PageRequest pageRequest){
-        Member member = memberService.findMember(memberDTO);
+        Member member = memberQueryService.findMember(memberDTO);
 
         Specification<Scrap> spec = Specification.where(ScrapSpecification.isAvailable())
                 .and(ScrapSpecification.equalMember(member))
                 .and(ScrapSpecification.isFavorite());
 
-//        return scrapRepository.findAllByMemberAndFavoriteAndStatus(member, true, ScrapStatus.ACTIVE, pageRequest);
         return scrapRepository.findAll(spec, pageRequest);
     }
 
     /**
      * 스크랩 세부 조회
-     * @param memberDTO
-     * @param scrapId
-     * @return
      */
     public Scrap getScrapDetails(MemberDTO memberDTO, Long scrapId){
-        Member member = memberService.findMember(memberDTO);
+        Member member = memberQueryService.findMember(memberDTO);
 
         Scrap scrap = findScrap(scrapId);
 
@@ -93,9 +82,9 @@ public class ScrapQueryServiceImpl implements IScrapQueryService {
      * @param query 제목
      */
     public List<Scrap> findScrapByTitle(MemberDTO memberDTO, QueryRange queryRange, Long categoryId, String query, Sort sort){
-        Member member = memberService.findMember(memberDTO);
+        Member member = memberQueryService.findMember(memberDTO);
 
-        Specification<Scrap> spec = createSpecByQueryType(member, queryRange, categoryId);
+        Specification<Scrap> spec = createSpecByQueryRange(member, queryRange, categoryId);
 
         // 제목으로 검색
         spec = spec.and(ScrapSpecification.containingTitle(query));
@@ -105,22 +94,16 @@ public class ScrapQueryServiceImpl implements IScrapQueryService {
 
     /**
      * 스크랩 전체 공유하기
-     * @param memberDTO
-     * @param queryRange
-     * @param categoryId
-     * @return
      */
     public List<Scrap> shareAllScrap(MemberDTO memberDTO, QueryRange queryRange, Long categoryId){
 
-        Member member = memberService.findMember(memberDTO);
+        Member member = memberQueryService.findMember(memberDTO);
 
-        return findAllByQueryType(member, queryRange, categoryId);
+        return findAllByQueryRange(member, queryRange, categoryId);
     }
 
     /**
      * 스크랩 찾기
-     * @param scrapId
-     * @return
      */
     public Scrap findScrap(Long scrapId){
         return scrapRepository.findById(scrapId).get();
@@ -130,23 +113,25 @@ public class ScrapQueryServiceImpl implements IScrapQueryService {
      * 조회 타입에 따른 스크랩 조회
      * @throws BaseException CATEGORY_MEMBER_NOT_MATCH_IN_SCRAP
      */
-    public List<Scrap> findAllByQueryType(Member member, QueryRange queryRange, Long categoryId){
-        Specification<Scrap> spec = createSpecByQueryType(member, queryRange, categoryId);
+    public List<Scrap> findAllByQueryRange(Member member, QueryRange queryRange, Long categoryId){
+        Specification<Scrap> spec = createSpecByQueryRange(member, queryRange, categoryId);
 
         return scrapRepository.findAll(spec);
     }
 
     /**
      * 조회 타입에 따른 스크랩 Specification 생성
+     * @throws BaseException CATEGORY_MEMBER_NOT_MATCH_IN_SCRAP
      */
-    public Specification<Scrap> createSpecByQueryType(Member member, QueryRange queryRange, Long categoryId){
+    public Specification<Scrap> createSpecByQueryRange(Member member, QueryRange queryRange, Long categoryId){
         Specification<Scrap> spec = Specification.where(ScrapSpecification.isAvailable())
                 .and(ScrapSpecification.equalMember(member));
 
         // 어떤 프레스 타입인지
         switch (queryRange){
             case CATEGORY -> {
-                Category category = categoryService.findCategory(categoryId);
+                Category category = categoryQueryService.findCategory(categoryId);
+                // [TODO] checkIllegalMember()로 변경하기
                 if(category.isIllegalMember(member)){
                     throw new BaseException(ErrorCode.CATEGORY_MEMBER_NOT_MATCH_IN_SCRAP);
                 }
@@ -162,13 +147,13 @@ public class ScrapQueryServiceImpl implements IScrapQueryService {
 
     /**
      * 요청된 스크랩 조회
-     * @throws ValidationException if scrapIdList empty
+     * @throws IllegalArgumentException if scrapIdList empty
      */
     public List<Scrap> findAllByRequest(List<Long> scrapIdList, Member member){
         List<Scrap> scrapList = new ArrayList<>();
 
         if(scrapIdList.isEmpty()){
-            throw new ValidationException("scraps", "적어도 하나 이상의 스크랩을 포함하여야 됩니다.");
+            throw new IllegalArgumentException("scrapIdList가 비어있습니다.");
         }
         for(Long scrapId : scrapIdList){
             Scrap scrap = findScrap(scrapId);
