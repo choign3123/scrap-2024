@@ -18,14 +18,12 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 public class MypageQueryServiceImpl implements IMypageQueryService {
 
-    private final IMemberQueryService memberService;
+    private final IMemberQueryService memberService; // [TODO] 변수명 변경하기
     private final CategoryRepository categoryRepository;
     private final ScrapRepository scrapRepository;
 
     /**
      * 마이페이지 조회
-     * @param memberDTO
-     * @return
      */
     public MypageDTO mypage(MemberDTO memberDTO){
         Member member = memberService.findMember(memberDTO);
