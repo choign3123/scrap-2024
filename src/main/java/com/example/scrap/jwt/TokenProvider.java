@@ -219,6 +219,7 @@ public class TokenProvider {
      * refresh 토큰을 MemberDTO로 변환
      * @throws IllegalArgumentException refresh 토큰이 아닐시
      */
+    // [TODO] 메소드명 오타 수정하기
     public MemberDTO pasreRefreshToMemberDTO(String refreshToken){
         refreshToken = removeTokenPrefix(refreshToken);
 

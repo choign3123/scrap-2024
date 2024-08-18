@@ -38,17 +38,23 @@ public class MemberCommandServiceImpl implements IMemberCommandService {
         // 기본 카테고리 생성
         categoryCommandService.createDefaultCategory(member);
 
-        return memberRepository.save(member);
+        memberRepository.save(member);
+
+        return member;
     }
 
     /**
      * 토큰 재발급
+     * @throws AuthorizationException refresh 토큰이 아닐 경우
+     * @throws AuthorizationException 로그아웃 상태일 경우
+     * @throws AuthorizationException 토큰이 만료되었을 경우
      */
     public Token reissueToken(String refreshToken){
 
         // 토큰 유효성 검사
         tokenProvider.isTokenValid(refreshToken);
 
+        // [TODO] 밑에 코드와 순서 변경하기
         MemberDTO memberDTO = tokenProvider.pasreRefreshToMemberDTO(refreshToken);
         Member member = memberQueryService.findMemberWithLog(memberDTO);
 
@@ -69,6 +75,7 @@ public class MemberCommandServiceImpl implements IMemberCommandService {
     /**
      * 로그아웃
      */
+    // [TODO] @Transactional 삭제하기
     @Transactional
     public void logout(MemberDTO memberDTO){
         Member member = memberQueryService.findMember(memberDTO);
@@ -79,6 +86,7 @@ public class MemberCommandServiceImpl implements IMemberCommandService {
     /**
      * 회원 탈퇴
      */
+    // [TODO] @Transactional 삭제하기
     @Transactional
     public void signOut(MemberDTO memberDTO){
         Member member = memberQueryService.findMember(memberDTO);
