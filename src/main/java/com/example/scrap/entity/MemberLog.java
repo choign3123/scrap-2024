@@ -55,8 +55,9 @@ public class MemberLog extends BaseEntity {
      * refreshTokenId 업데이트
      * @throws IllegalArgumentException 기존과 똑같은 값으로 수정하려는 경우
      */
+    // [TODO] null 체크 로직 추가하기 (2)
     public void setRefreshTokenId(Long refreshTokenId){
-        if(!this.refreshTokenId.equals(refreshTokenId)){
+        if(this.refreshTokenId == null || !this.refreshTokenId.equals(refreshTokenId)){
             this.refreshTokenId = refreshTokenId;
         }
         else{
