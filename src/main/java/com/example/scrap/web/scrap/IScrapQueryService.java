@@ -73,7 +73,7 @@ public interface IScrapQueryService {
      * @return
      * @throws BaseException CATEGORY_MEMBER_NOT_MATCH_IN_SCRAP
      */
-    List<Scrap> findAllByQueryRange(Member member, QueryRange queryRange, Long categoryId);
+    List<Scrap> findAllByQueryType(Member member, QueryRange queryRange, Long categoryId);
 
     /**
      * 요청된 스크랩 조회

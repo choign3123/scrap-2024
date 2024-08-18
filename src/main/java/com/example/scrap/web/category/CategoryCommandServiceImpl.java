@@ -61,9 +61,7 @@ public class CategoryCommandServiceImpl implements ICategoryCommandService {
 
         Category defaultCategory = CategoryConverter.toEntity(member, PolicyData.DEFAULT_CATEGORY_TITLE, true, 1);
 
-        categoryRepository.save(defaultCategory);
-
-        return defaultCategory;
+        return categoryRepository.save(defaultCategory);
     }
 
     /**
@@ -73,7 +71,7 @@ public class CategoryCommandServiceImpl implements ICategoryCommandService {
      */
     public void deleteCategory(MemberDTO memberDTO, Long categoryId, Boolean allowDeleteScrap){
         Member member = memberService.findMember(memberDTO);
-        Category category = categoryQueryService.findCategory(categoryId);
+        Category category = categoryRepository.findById(categoryId).get();
 
         category.checkIllegalMember(member);
 
@@ -118,10 +116,11 @@ public class CategoryCommandServiceImpl implements ICategoryCommandService {
      */
     public Category updateCategoryTitle(MemberDTO memberDTO, Long categoryId, CategoryRequest.UpdateCategoryTitleDTO request){
         Member member = memberService.findMember(memberDTO);
-        Category category = categoryQueryService.findCategory(categoryId);
+        Category category = categoryRepository.findById(categoryId).get();
 
-        // 카테고리를 만든 사용자가 맞는지 확인
-        category.checkIllegalMember(member);
+        if(category.checkIllegalMember(member)){
+            throw new BaseException(ErrorCode.CATEGORY_MEMBER_NOT_MATCH);
+        }
 
         // 기본 카테고리명은 수정 불가
         if(category.getIsDefault()){
@@ -135,7 +134,9 @@ public class CategoryCommandServiceImpl implements ICategoryCommandService {
 
     /**
      * 카테고리 순서 변경
-     * @return 새로운 순서로 정렬된 카테고리 목록
+     * @param memberDTO
+     * @param request
+     * @return
      */
     public List<Category> updateCategorySequence(MemberDTO memberDTO, CategoryRequest.UpdateCategorySequenceDTO request){
         Member member = memberService.findMember(memberDTO);

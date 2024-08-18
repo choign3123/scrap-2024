@@ -20,14 +20,18 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 @Slf4j
-// [TODO] 클래스명 끝에 Impl 붙이기
 public class SearchQueryService implements ISearchQueryService {
 
-    private final IMemberQueryService memberService; // [TODO] 메소드명 바꾸기
+    private final IMemberQueryService memberService;
     private final ScrapRepository scrapRepository;
 
     /**
      * 스크랩 검색
+     * @param memberDTO
+     * @param request
+     * @param pageRequest
+     * @param query
+     * @return
      */
     public Page<Scrap> findScrap(MemberDTO memberDTO, SearchRequest.FindScrapDTO request, PageRequest pageRequest, String query){
 
