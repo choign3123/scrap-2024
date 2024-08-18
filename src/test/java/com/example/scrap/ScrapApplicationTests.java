@@ -8,6 +8,7 @@ class ScrapApplicationTests {
 
 	@Test
 	void contextLoads() {
+		// 테스트 주석 작성
 	}
 
 }
