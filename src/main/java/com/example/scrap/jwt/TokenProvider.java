@@ -63,7 +63,6 @@ public class TokenProvider {
      * token 갱신하기
      * @param refreshToken refreshToken으로 토큰 갱신함
      * @throws IllegalArgumentException refresh 토큰이 아닐 경우
-     * @throws AuthorizationException 이미 사용된 refresh 토큰일 경우
      */
     public Token reissueToken(String refreshToken){
         refreshToken = removeTokenPrefix(refreshToken);
@@ -210,7 +209,6 @@ public class TokenProvider {
         try {
             snsType = SnsType.valueOf(claims.get("snsType", String.class));
         } catch (IllegalArgumentException e){
-            // [TODO] SNS_TYPE_ILLEGAL로 변경해야 할 것 같음.
             throw new AuthorizationException(ErrorCode.TOKEN_TYPE_ILLEGAL);
         }
 
@@ -221,7 +219,6 @@ public class TokenProvider {
      * refresh 토큰을 MemberDTO로 변환
      * @throws IllegalArgumentException refresh 토큰이 아닐시
      */
-    // [TODO] 메소드명 오타 수정하기
     public MemberDTO pasreRefreshToMemberDTO(String refreshToken){
         refreshToken = removeTokenPrefix(refreshToken);
 

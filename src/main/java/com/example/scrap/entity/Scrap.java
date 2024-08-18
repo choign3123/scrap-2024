@@ -44,7 +44,7 @@ public class Scrap extends BaseEntity {
     @ColumnDefault("'ACTIVE'")
     private ScrapStatus status;
 
-    private LocalDateTime trashedAt;
+    private LocalDateTime trashed_date;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "member_id")
@@ -135,7 +135,7 @@ public class Scrap extends BaseEntity {
      */
     public void toTrash(){
         this.status = ScrapStatus.TRASH;
-        trashedAt = LocalDateTime.now();
+        trashed_date = LocalDateTime.now();
     }
 
     /**
@@ -165,7 +165,6 @@ public class Scrap extends BaseEntity {
      * @param isFavorite true=즐겨찾기 됨. false=즐겨찾기 해제
      * @return
      */
-    // [TODO] 메소드명 updateFavorite()이 더 정확할 것 같음
     public boolean toggleFavorite(boolean isFavorite){
         this.isFavorite = isFavorite;
         return this.isFavorite;

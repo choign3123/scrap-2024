@@ -36,7 +36,6 @@ public class NaverService implements IOauthService{
      * @param authorization
      * @return 회원가입이 되어있지 않은 회원의 경우, 자동 회원가입 후 token 반환
      */
-    // [TODO] MemberCommandService쪽으로 이동하기
     @Transactional
     public Token loginOrSignup(String authorization){
         // 네이버로부터 회원 정보 조회하기
