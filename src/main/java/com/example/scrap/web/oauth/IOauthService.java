@@ -7,8 +7,6 @@ public interface IOauthService {
 
     /**
      * 소셜 로그인
-     * @param authorization
-     * @return
      */
     public Token loginOrSignup(String authorization);
 }

@@ -11,15 +11,11 @@ public interface ICategoryQueryService {
 
     /**
      * 카테고리 전체 조회
-     * @param memberDTO
-     * @return 전체 카테고리
      */
     public List<Category> getCategoryWholeList(MemberDTO memberDTO);
 
     /**
      * 기본 카테고리 찾기
-     * @param member
-     * @return
      */
     Category findDefaultCategory(Member member);
 

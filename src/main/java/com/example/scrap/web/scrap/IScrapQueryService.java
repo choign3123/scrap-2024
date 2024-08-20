@@ -16,71 +16,41 @@ public interface IScrapQueryService {
 
     /**
      * 스크랩 전체 조회 - 카테고리별
-     * @param memberDTO
-     * @param categoryId
-     * @param pageRequest
-     * @return
      */
     public Page<Scrap> getScrapListByCategory(MemberDTO memberDTO, Long categoryId, PageRequest pageRequest);
 
     /**
      * 즐겨찾기된 스크랩 조회
-     * @param memberDTO
-     * @param pageRequest
-     * @return 즐겨찾기된 스크랩
      */
     public Page<Scrap> getFavoriteScrapList(MemberDTO memberDTO, PageRequest pageRequest);
 
     /**
      * 스크랩 세부 조회
-     * @param memberDTO
-     * @param scrapId
-     * @return
      */
     public Scrap getScrapDetails(MemberDTO memberDTO, Long scrapId);
 
     /**
      * 스크랩 제목으로 검색 - 카테고리별
-     * @param memberDTO
-     * @param categoryId
-     * @param query
-     * @param sort
-     * @return
      */
     public List<Scrap> findScrapByTitle(MemberDTO memberDTO, QueryRange queryRange, Long categoryId, String query, Sort sort);
 
     /**
      * 스크랩 전체 공유하기
-     * @param memberDTO
-     * @param queryRange
-     * @param categoryId
-     * @return
      */
     public List<Scrap> shareAllScrap(MemberDTO memberDTO, QueryRange queryRange, Long categoryId);
 
     /**
      * 스크랩 찾기
-     * @param scrapId
-     * @return
      */
     public Scrap findScrap(Long scrapId);
 
     /**
      * 프레스 타입에 따른 스크랩 조회
-     * @param member
-     * @param queryRange
-     * @param categoryId
-     * @return
-     * @throws BaseException CATEGORY_MEMBER_NOT_MATCH_IN_SCRAP
      */
     List<Scrap> findAllByQueryRange(Member member, QueryRange queryRange, Long categoryId);
 
     /**
      * 요청된 스크랩 조회
-     * @param scrapIdList
-     * @param member
-     * @return
-     * @throws ValidationException if scrapIdList empty
      */
     public List<Scrap> findAllByRequest(List<Long> scrapIdList, Member member);
 }
