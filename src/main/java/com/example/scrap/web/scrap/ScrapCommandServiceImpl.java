@@ -108,7 +108,7 @@ public class ScrapCommandServiceImpl implements IScrapCommandService {
         }
 
         for(Scrap scrap : favoriteScrapList){
-            scrap.toggleFavorite(toggle);
+            scrap.updateFavorite(toggle);
         }
 
         return favoriteScrapList;
