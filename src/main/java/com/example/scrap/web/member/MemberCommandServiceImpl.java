@@ -54,15 +54,13 @@ public class MemberCommandServiceImpl implements IMemberCommandService {
         // 토큰 유효성 검사
         tokenProvider.isTokenValid(refreshToken);
 
-        // TODO: 밑에 코드와 순서 변경하기
-        MemberDTO memberDTO = tokenProvider.parseRefreshToMemberDTO(refreshToken);
-        Member member = memberQueryService.findMemberWithLog(memberDTO);
-
         if(!tokenProvider.equalsTokenType(refreshToken, TokenType.REFRESH)){
             throw new AuthorizationException(ErrorCode.NOT_REFRESH_TOKEN);
         }
 
         // 로그인한 유저인지 검사
+        MemberDTO memberDTO = tokenProvider.parseRefreshToMemberDTO(refreshToken);
+        Member member = memberQueryService.findMemberWithLog(memberDTO);
         switch (member.getMemberLog().getLoginStatus()){
             case ACTIVE -> {} // pass
             case LOGOUT -> throw new AuthorizationException(ErrorCode.LOGOUT_STATUS);
