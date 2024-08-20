@@ -21,7 +21,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.util.ReflectionTestUtils;
 
@@ -95,7 +94,7 @@ public class MemberCommandServiceImplTest {
                 .refreshToken(newRefreshToken)
                 .build();
 
-        when(tokenProvider.pasreRefreshToMemberDTO(refreshToken)).thenReturn(memberDTO);
+        when(tokenProvider.parseRefreshToMemberDTO(refreshToken)).thenReturn(memberDTO);
         when(memberQueryService.findMemberWithLog(memberDTO)).thenReturn(member);
         when(tokenProvider.equalsTokenType(refreshToken, TokenType.REFRESH)).thenReturn(true);
         when(tokenProvider.reissueToken(refreshToken)).thenReturn(token);
@@ -124,7 +123,7 @@ public class MemberCommandServiceImplTest {
         // 갱신 토큰 설정
         String refreshToken = "testRefreshToken";
 
-        when(tokenProvider.pasreRefreshToMemberDTO(refreshToken)).thenReturn(memberDTO);
+        when(tokenProvider.parseRefreshToMemberDTO(refreshToken)).thenReturn(memberDTO);
         when(memberQueryService.findMemberWithLog(memberDTO)).thenReturn(member);
         when(tokenProvider.equalsTokenType(refreshToken, TokenType.REFRESH)).thenReturn(false);
 
@@ -152,7 +151,7 @@ public class MemberCommandServiceImplTest {
         // 갱신 토큰 설정
         String refreshToken = "testRefreshToken";
 
-        when(tokenProvider.pasreRefreshToMemberDTO(refreshToken)).thenReturn(memberDTO);
+        when(tokenProvider.parseRefreshToMemberDTO(refreshToken)).thenReturn(memberDTO);
         when(memberQueryService.findMemberWithLog(memberDTO)).thenReturn(member);
         when(tokenProvider.equalsTokenType(refreshToken, TokenType.REFRESH)).thenReturn(true);
 

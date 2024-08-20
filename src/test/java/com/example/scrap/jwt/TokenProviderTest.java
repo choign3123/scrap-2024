@@ -81,7 +81,7 @@ public class TokenProviderTest {
                 .isTrue();
         assertThat(getRefreshTokenId(token.getRefreshToken())) // refreshTokenId 설정 됐는지 확인
                 .isEqualTo(member.getMemberLog().getRefreshTokenId());
-        MemberDTO refreshMemberDTO = tokenProvider.pasreRefreshToMemberDTO(token.getRefreshToken());
+        MemberDTO refreshMemberDTO = tokenProvider.parseRefreshToMemberDTO(token.getRefreshToken());
         assertThat(refreshMemberDTO.getMemberId().isEmpty())
                 .isTrue();
         assertThat(refreshMemberDTO.getSnsType())
@@ -127,7 +127,7 @@ public class TokenProviderTest {
                 .isEqualTo(parseDayToMs(expireDayOfRefreshToken));
         assertThat(getRefreshTokenId(reissuedToken.getRefreshToken())) // refreshTokenId 설정 됐는지 확인
                 .isEqualTo(member.getMemberLog().getRefreshTokenId());
-        MemberDTO refreshMemberDTO = tokenProvider.pasreRefreshToMemberDTO(reissuedToken.getRefreshToken());
+        MemberDTO refreshMemberDTO = tokenProvider.parseRefreshToMemberDTO(reissuedToken.getRefreshToken());
         assertThat(refreshMemberDTO.getMemberId().isEmpty())
                 .isTrue();
         assertThat(refreshMemberDTO.getSnsType())
@@ -350,7 +350,7 @@ public class TokenProviderTest {
         Token token = tokenProvider.createToken(member);
 
         //** when
-        MemberDTO memberDTO = tokenProvider.pasreRefreshToMemberDTO(token.getRefreshToken());
+        MemberDTO memberDTO = tokenProvider.parseRefreshToMemberDTO(token.getRefreshToken());
 
         //** then
         assertThat(memberDTO.getSnsType())
@@ -371,7 +371,7 @@ public class TokenProviderTest {
 
         //** when
         Throwable throwable = catchThrowable(() -> {
-            tokenProvider.pasreRefreshToMemberDTO(token.getAccessToken());
+            tokenProvider.parseRefreshToMemberDTO(token.getAccessToken());
         });
 
         //** then

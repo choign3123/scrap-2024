@@ -55,7 +55,7 @@ public class MemberCommandServiceImpl implements IMemberCommandService {
         tokenProvider.isTokenValid(refreshToken);
 
         // TODO: 밑에 코드와 순서 변경하기
-        MemberDTO memberDTO = tokenProvider.pasreRefreshToMemberDTO(refreshToken);
+        MemberDTO memberDTO = tokenProvider.parseRefreshToMemberDTO(refreshToken);
         Member member = memberQueryService.findMemberWithLog(memberDTO);
 
         if(!tokenProvider.equalsTokenType(refreshToken, TokenType.REFRESH)){

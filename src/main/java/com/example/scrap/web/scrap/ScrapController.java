@@ -283,7 +283,7 @@ public class ScrapController {
 
         MemberDTO memberDTO = tokenProvider.parseAccessToMemberDTO(token);
 
-        scrapCommandService.thrwoScrapInTrash(memberDTO, scrapId);
+        scrapCommandService.throwScrapInTrash(memberDTO, scrapId);
 
         return ResponseEntity.ok(new ResponseDTO<Void>());
     }

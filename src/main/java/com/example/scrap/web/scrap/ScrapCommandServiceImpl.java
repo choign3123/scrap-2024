@@ -189,8 +189,7 @@ public class ScrapCommandServiceImpl implements IScrapCommandService {
      * 스크랩 삭제(단건)
      * @throws BaseException 스크랩과 멤버가 일치하지 않을 경우
      */
-    // TODO: 함수명 오타 수정
-    public void thrwoScrapInTrash(MemberDTO memberDTO, Long scrapId){
+    public void throwScrapInTrash(MemberDTO memberDTO, Long scrapId){
         Member member = memberService.findMember(memberDTO);
         Scrap scrap = scrapQueryService.findScrap(scrapId);
 

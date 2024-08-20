@@ -74,7 +74,7 @@ public interface IScrapCommandService {
      * @param memberDTO
      * @param scrapId
      */
-    public void thrwoScrapInTrash(MemberDTO memberDTO, Long scrapId);
+    public void throwScrapInTrash(MemberDTO memberDTO, Long scrapId);
 
     /**
      * 스크랩 삭제(목록)

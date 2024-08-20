@@ -777,7 +777,7 @@ public class ScrapCommandServiceImplTest {
         when(scrapQueryService.findScrap(scrap.getId())).thenReturn(scrap);
 
         //** when
-        scrapCommandService.thrwoScrapInTrash(memberDTO, scrap.getId());
+        scrapCommandService.throwScrapInTrash(memberDTO, scrap.getId());
 
         //** then
         assertThat(scrap.getStatus())
@@ -806,7 +806,7 @@ public class ScrapCommandServiceImplTest {
 
         //** when
         Throwable throwable = catchThrowable(() -> {
-            scrapCommandService.thrwoScrapInTrash(memberDTO, scrap.getId());
+            scrapCommandService.throwScrapInTrash(memberDTO, scrap.getId());
         });
 
         //** then
