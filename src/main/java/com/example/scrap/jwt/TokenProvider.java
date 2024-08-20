@@ -189,6 +189,7 @@ public class TokenProvider {
     /**
      * access 토큰을 MemberDTO로 변환
      * @throws IllegalArgumentException access 토큰이 아닐시
+     * @throws AuthorizationException 토큰에 든 값이 잘못된 경우
      */
     public MemberDTO parseAccessToMemberDTO(String accessToken){
         accessToken = removeTokenPrefix(accessToken);
@@ -203,15 +204,16 @@ public class TokenProvider {
                 .getBody();
 
         // 토큰의 값 조회
-        String snsId = claims.get("snsId", String.class);
-        Long memberId = Long.parseLong(claims.getAudience());
-
+        String snsId;
+        Long memberId;
         SnsType snsType;
         try {
+            snsId = claims.get("snsId", String.class);
+            memberId = Long.parseLong(claims.getAudience());
             snsType = SnsType.valueOf(claims.get("snsType", String.class));
-        } catch (IllegalArgumentException e){
-            // TODO: SNS_TYPE_ILLEGAL로 변경해야 할 것 같음.
-            throw new AuthorizationException(ErrorCode.TOKEN_TYPE_ILLEGAL);
+        }
+        catch (IllegalArgumentException e){
+            throw new AuthorizationException(ErrorCode.INNER_TOKEN_VALUE_WRONG);
         }
 
         return new MemberDTO(memberId, snsType, snsId);
@@ -220,6 +222,7 @@ public class TokenProvider {
     /**
      * refresh 토큰을 MemberDTO로 변환
      * @throws IllegalArgumentException refresh 토큰이 아닐시
+     * @throws AuthorizationException 토큰에 든 값이 잘못된 경우
      */
     public MemberDTO parseRefreshToMemberDTO(String refreshToken){
         refreshToken = removeTokenPrefix(refreshToken);
@@ -233,13 +236,14 @@ public class TokenProvider {
                 .getBody();
 
         // 토큰의 값 조회
-        String snsId = claims.get("snsId", String.class);
-
+        String snsId;
         SnsType snsType;
         try {
+            snsId = claims.get("snsId", String.class);
             snsType = SnsType.valueOf(claims.get("snsType", String.class));
-        } catch (IllegalArgumentException e){
-            throw new AuthorizationException(ErrorCode.TOKEN_TYPE_ILLEGAL);
+        }
+        catch (IllegalArgumentException e){
+            throw new AuthorizationException(ErrorCode.INNER_TOKEN_VALUE_WRONG);
         }
 
         return new MemberDTO(null, snsType, snsId);
@@ -273,7 +277,7 @@ public class TokenProvider {
         try {
             snsType = SnsType.valueOf(claims.get("snsType", String.class));
         } catch (IllegalArgumentException e){
-            throw new AuthorizationException(ErrorCode.TOKEN_TYPE_ILLEGAL);
+            throw new AuthorizationException(ErrorCode.INNER_TOKEN_VALUE_WRONG);
         }
 
         return memberQueryService.findMember(snsId, snsType);
