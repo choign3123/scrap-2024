@@ -23,7 +23,7 @@ import java.util.Date;
 @Component
 @RequiredArgsConstructor
 @Slf4j
-public class TokenProvider {
+public class TokenProvider implements ITokenProvider{
 
     @Value("${jwt.secret}")
     private String jwtSecretKey;
