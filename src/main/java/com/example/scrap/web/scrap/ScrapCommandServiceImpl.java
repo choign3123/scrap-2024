@@ -126,9 +126,9 @@ public class ScrapCommandServiceImpl implements IScrapCommandService {
 
         // 해당 스크랩에 접근할 수 있는지 확인
         scrap.checkIllegalMember(member);
-        // [TODO] category.checkIllegalMember();로 변경하기
+        // TODO: category.checkIllegalMember();로 변경하기
         if(moveCategory.isIllegalMember(member)){
-            throw new BaseException(ErrorCode.CATEGORY_MEMBER_NOT_MATCH_IN_SCRAP); // [TODO] CATEGORY_MEMBER_NOT_MATCH 으로 변경하기
+            throw new BaseException(ErrorCode.CATEGORY_MEMBER_NOT_MATCH_IN_SCRAP); // TODO: CATEGORY_MEMBER_NOT_MATCH 으로 변경하기
         }
 
         // 스크랩 이동하기
@@ -149,7 +149,7 @@ public class ScrapCommandServiceImpl implements IScrapCommandService {
         List<Scrap> moveScrapList;
 
         // 해당 스크랩에 접근할 수 있는지 확인
-        // [TODO] checkIlligalMember로 변경하기
+        // TODO: checkIlligalMember로 변경하기
         if(moveCategory.isIllegalMember(member)){
             throw new BaseException(ErrorCode.CATEGORY_MEMBER_NOT_MATCH_IN_SCRAP);
         }
@@ -189,7 +189,7 @@ public class ScrapCommandServiceImpl implements IScrapCommandService {
      * 스크랩 삭제(단건)
      * @throws BaseException 스크랩과 멤버가 일치하지 않을 경우
      */
-    // [TODO] 함수명 오타 수정
+    // TODO: 함수명 오타 수정
     public void thrwoScrapInTrash(MemberDTO memberDTO, Long scrapId){
         Member member = memberService.findMember(memberDTO);
         Scrap scrap = scrapQueryService.findScrap(scrapId);

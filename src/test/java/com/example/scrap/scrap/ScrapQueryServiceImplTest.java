@@ -161,7 +161,7 @@ public class ScrapQueryServiceImplTest {
                 .isEqualTo(scrap.getMember());
     }
 
-    // [TODO] createSpecByQueryRange(), findAllByRequest()에 대한 테스트 코드 작성
+    // TODO: createSpecByQueryRange(), findAllByRequest()에 대한 테스트 코드 작성
 
     private Member setupMember(){
         return Member.builder()

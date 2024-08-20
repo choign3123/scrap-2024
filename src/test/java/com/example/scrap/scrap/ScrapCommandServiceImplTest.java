@@ -368,7 +368,7 @@ public class ScrapCommandServiceImplTest {
         }
     }
 
-    // [TODO] QueryRange.FAVORITE, CATEGORY를 분리해서 테스트 케이스를 작성해야 하나..?
+    // TODO: QueryRange.FAVORITE, CATEGORY를 분리해서 테스트 케이스를 작성해야 하나..?
     @DisplayName("스크랩 즐겨찾기 (목록) - 전체 카테고리 / O(모두 즐겨찾기 됨)->X ")
     @Test
     public void toggleScrapFavoriteList_all_OtoX_allFavoriteTure(){

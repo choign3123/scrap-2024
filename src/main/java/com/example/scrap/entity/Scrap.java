@@ -165,7 +165,7 @@ public class Scrap extends BaseEntity {
      * @param isFavorite true=즐겨찾기 됨. false=즐겨찾기 해제
      * @return
      */
-    // [TODO] 메소드명 updateFavorite()이 더 정확할 것 같음
+    // TODO: 메소드명 updateFavorite()이 더 정확할 것 같음
     public boolean toggleFavorite(boolean isFavorite){
         this.isFavorite = isFavorite;
         return this.isFavorite;

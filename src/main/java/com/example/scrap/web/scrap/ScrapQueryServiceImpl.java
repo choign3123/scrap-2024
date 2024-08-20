@@ -131,7 +131,7 @@ public class ScrapQueryServiceImpl implements IScrapQueryService {
         switch (queryRange){
             case CATEGORY -> {
                 Category category = categoryQueryService.findCategory(categoryId);
-                // [TODO] checkIllegalMember()로 변경하기
+                // TODO: checkIllegalMember()로 변경하기
                 if(category.isIllegalMember(member)){
                     throw new BaseException(ErrorCode.CATEGORY_MEMBER_NOT_MATCH_IN_SCRAP);
                 }

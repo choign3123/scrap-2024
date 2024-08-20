@@ -36,7 +36,7 @@ public class NaverService implements IOauthService{
      * @param authorization
      * @return 회원가입이 되어있지 않은 회원의 경우, 자동 회원가입 후 token 반환
      */
-    // [TODO] MemberCommandService쪽으로 이동하기
+    // TODO: MemberCommandService쪽으로 이동하기
     @Transactional
     public Token loginOrSignup(String authorization){
         // 네이버로부터 회원 정보 조회하기
@@ -58,7 +58,7 @@ public class NaverService implements IOauthService{
 
     // 접근 토큰을 이용하여 프로필 API 호출하기
     /**
-     * [TODO] 다른 외부 API를 호출할 수 있는 방법에 대해서도 고민해보기
+     * TODO: 다른 외부 API를 호출할 수 있는 방법에 대해서도 고민해보기
      * https://jie0025.tistory.com/531
      * 지금은 외부 API를 호출하는 시점이 소셜 로그인을 할 때 뿐이라, 구현이 복잡하지 않은 기술을 택.
      */

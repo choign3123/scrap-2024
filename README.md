@@ -68,5 +68,5 @@
 
 ### 📌 TODO 컨벤션
 ```
-// [TODO] todo 내용 적기
+// TODO: todo 내용 적기
 ```

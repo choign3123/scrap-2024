@@ -89,7 +89,7 @@ public class CategoryCommandServiceImpl implements ICategoryCommandService {
             }
         }
 
-        // [TODO] 리스트를 복제해서 for 문을 돌리는것 외에 다른 방법은 없는지 고민해봐야 될 것 같음. 이렇게 복제된 리스트를 사용하지 않으면, 요소 삭제로 인해 for 문을 다 돌지 못하고 끝나버림.
+        // TODO: 리스트를 복제해서 for 문을 돌리는것 외에 다른 방법은 없는지 고민해봐야 될 것 같음. 이렇게 복제된 리스트를 사용하지 않으면, 요소 삭제로 인해 for 문을 다 돌지 못하고 끝나버림.
         // 모든 스크랩은 기본 카테고리로 이동
         Category defaultCategory = categoryQueryService.findDefaultCategory(member);
         List<Scrap> scrapCopyList = new ArrayList<>(category.getScrapList());

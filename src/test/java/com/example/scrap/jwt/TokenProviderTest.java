@@ -380,7 +380,7 @@ public class TokenProviderTest {
                 .hasMessageContaining("refresh 토큰이 아님");
     }
 
-    // [TODO] parseMemberDTO 테스트 코드 추가 필요 - snsType이 맞지 않을 때
+    // TODO: parseMemberDTO 테스트 코드 추가 필요 - snsType이 맞지 않을 때
 
     @DisplayName("토큰 prefix 제거하기")
     @Test

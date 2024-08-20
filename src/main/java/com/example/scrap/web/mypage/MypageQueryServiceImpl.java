@@ -18,7 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 public class MypageQueryServiceImpl implements IMypageQueryService {
 
-    private final IMemberQueryService memberService; // [TODO] 변수명 변경하기
+    private final IMemberQueryService memberService; // TODO: 변수명 변경하기
     private final CategoryRepository categoryRepository;
     private final ScrapRepository scrapRepository;
 

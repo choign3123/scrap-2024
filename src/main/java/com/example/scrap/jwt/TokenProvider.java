@@ -101,7 +101,7 @@ public class TokenProvider {
      * 접근 토큰 생성하기
      * @throws NullPointerException memberId가 null 일때
      */
-    // [TODO] 토큰에 어떤 값을 담을지 고민 필요.
+    // TODO: 토큰에 어떤 값을 담을지 고민 필요.
     // https://velog.io/@kimcno3/Jwt-Token%EC%97%90-%EB%8B%B4%EA%B8%B8-%EC%82%AC%EC%9A%A9%EC%9E%90-%EC%A0%95%EB%B3%B4%EC%97%90-%EB%8C%80%ED%95%9C-%EA%B2%B0%EC%A0%95%EA%B3%BC-%ED%91%9C%EC%A4%80%EC%97%90-%EB%8C%80%ED%95%9C-%EC%9D%B4%ED%95%B4
     // snsId는 한번 노출되면 더이상 바꿀 수 있는 값이 아니라 위험할 수 있다는 생각 + 그렇다고 memberId만 넣자니 memberId가 sequence화 된거라 key가 뚤릴 시 위험할 수 있다는 생각.
     // 그렇다고 memberId를 넣지 않자니, 인터셉터와 서비스에서 각각 member를 찾기 위해 sql을 총 2번 실행하게 된다는 성능상의 문제.
@@ -210,7 +210,7 @@ public class TokenProvider {
         try {
             snsType = SnsType.valueOf(claims.get("snsType", String.class));
         } catch (IllegalArgumentException e){
-            // [TODO] SNS_TYPE_ILLEGAL로 변경해야 할 것 같음.
+            // TODO: SNS_TYPE_ILLEGAL로 변경해야 할 것 같음.
             throw new AuthorizationException(ErrorCode.TOKEN_TYPE_ILLEGAL);
         }
 
@@ -221,7 +221,7 @@ public class TokenProvider {
      * refresh 토큰을 MemberDTO로 변환
      * @throws IllegalArgumentException refresh 토큰이 아닐시
      */
-    // [TODO] 메소드명 오타 수정하기
+    // TODO: 메소드명 오타 수정하기
     public MemberDTO pasreRefreshToMemberDTO(String refreshToken){
         refreshToken = removeTokenPrefix(refreshToken);
 
