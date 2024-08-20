@@ -22,7 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Slf4j
 public class SearchQueryServiceImpl implements ISearchQueryService {
 
-    private final IMemberQueryService memberService; // TODO: 메소드명 바꾸기
+    private final IMemberQueryService memberQueryService;
     private final ScrapRepository scrapRepository;
 
     /**
@@ -30,7 +30,7 @@ public class SearchQueryServiceImpl implements ISearchQueryService {
      */
     public Page<Scrap> findScrap(MemberDTO memberDTO, SearchRequest.FindScrapDTO request, PageRequest pageRequest, String query){
 
-        Member member = memberService.findMember(memberDTO);
+        Member member = memberQueryService.findMember(memberDTO);
 
         Specification<Scrap> spec = Specification.where(ScrapSpecification.isAvailable())
                 .and(ScrapSpecification.equalMember(member));
