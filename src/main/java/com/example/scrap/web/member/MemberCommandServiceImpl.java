@@ -11,11 +11,14 @@ import com.example.scrap.jwt.dto.Token;
 import com.example.scrap.jwt.dto.TokenType;
 import com.example.scrap.web.category.ICategoryCommandService;
 import com.example.scrap.web.member.dto.MemberDTO;
+import com.example.scrap.web.oauth.NaverProvider;
 import com.example.scrap.web.oauth.dto.NaverResponse;
 import com.example.scrap.web.scrap.IScrapCommandService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -27,6 +30,29 @@ public class MemberCommandServiceImpl implements IMemberCommandService {
     private final ICategoryCommandService categoryCommandService;
     private final IScrapCommandService scrapCommandService;
     private final TokenProvider tokenProvider;
+    private final NaverProvider naverProvider;
+
+    /**
+     * 네이버 로그인
+     * @param authorization
+     * @return 회원가입이 되어있지 않은 회원의 경우, 자동 회원가입 후 token 반환
+     */
+    public Token login(String authorization){
+        // 네이버로부터 회원 정보 조회하기
+        NaverResponse.ProfileInfo.Response profileInfo = naverProvider.getProfileByAccessToken(authorization).getResponse();
+
+        Optional<Member> optionalMember = memberRepository.findBySnsTypeAndSnsId(SnsType.NAVER, profileInfo.getId());
+
+        // db에 없으면 해당 정보로 로그인 후, 토큰 생성해서 return
+        // db에 있으면 해당 정보로 토큰 생성해서 return
+        Member member = optionalMember.orElseGet(
+                () -> signup(profileInfo)
+        );
+
+        member.login();
+
+        return tokenProvider.createToken(member);
+    }
 
     /**
      * 네이버 회원가입

@@ -1,12 +1,7 @@
 package com.example.scrap.web.oauth;
 
-import com.example.scrap.base.response.ResponseDTO;
-import com.example.scrap.converter.OauthConverter;
-import com.example.scrap.jwt.dto.Token;
-import com.example.scrap.web.oauth.dto.OauthResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -15,23 +10,7 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 public class OauthController {
 
-    private final NaverService naverService;
-
-    /**
-     * [POST] /oauth/naver/login
-     * [API-33] 네이버 로그인/회원가입
-     * @param authorization
-     * @return
-     */
-    @PostMapping("/login/naver")
-    public ResponseEntity<ResponseDTO> naverLoginOrSignup(@RequestHeader("Authorization") String authorization){
-
-        Token token = naverService.loginOrSignup(authorization);
-
-        OauthResponse.TokenDTO response = OauthConverter.toTokenDTO(token);
-
-        return ResponseEntity.ok(new ResponseDTO<>(response));
-    }
+    private final NaverProvider naverProvider;
 
     /**
      * 네이버 로그인 Callback API

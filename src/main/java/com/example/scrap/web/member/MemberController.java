@@ -4,10 +4,12 @@ package com.example.scrap.web.member;
 import com.example.scrap.base.code.SuccessCode;
 import com.example.scrap.base.response.ResponseDTO;
 import com.example.scrap.converter.MemberConverter;
+import com.example.scrap.converter.OauthConverter;
 import com.example.scrap.jwt.TokenProvider;
 import com.example.scrap.jwt.dto.Token;
 import com.example.scrap.web.member.dto.MemberResponse;
 import com.example.scrap.web.member.dto.MemberDTO;
+import com.example.scrap.web.oauth.dto.OauthResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +22,22 @@ public class MemberController {
 
     private final IMemberCommandService memberCommandService;
     private final TokenProvider tokenProvider;
+
+    /**
+     * [POST] /oauth/naver/login
+     * [API-33] 네이버 로그인(회원가입)
+     * @param authorization
+     * @return
+     */
+    @PostMapping("/oauth/login/naver")
+    public ResponseEntity<ResponseDTO> naverLoginOrSignup(@RequestHeader("Authorization") String authorization){
+
+        Token token = memberCommandService.login(authorization);
+
+        OauthResponse.TokenDTO response = OauthConverter.toTokenDTO(token);
+
+        return ResponseEntity.ok(new ResponseDTO<>(response));
+    }
 
     /**
      * [GET] /token

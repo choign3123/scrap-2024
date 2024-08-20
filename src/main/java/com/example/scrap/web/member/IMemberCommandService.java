@@ -9,6 +9,11 @@ import org.springframework.transaction.annotation.Transactional;
 public interface IMemberCommandService {
 
     /**
+     * 네이버 로그인
+     */
+    public Token login(String authorization);
+
+    /**
      * 네이버 회원가입
      */
     public Member signup(NaverResponse.ProfileInfo.Response profileInfo);
