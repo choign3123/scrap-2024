@@ -123,8 +123,6 @@ public class MemberCommandServiceImplTest {
         // 갱신 토큰 설정
         String refreshToken = "testRefreshToken";
 
-        when(tokenProvider.parseRefreshToMemberDTO(refreshToken)).thenReturn(memberDTO);
-        when(memberQueryService.findMemberWithLog(memberDTO)).thenReturn(member);
         when(tokenProvider.equalsTokenType(refreshToken, TokenType.REFRESH)).thenReturn(false);
 
         //** when
