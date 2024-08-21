@@ -4,6 +4,8 @@ import com.example.scrap.validation.annotaion.ExistCategories;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+
 import javax.validation.constraints.NotBlank;
 import java.util.List;
 
@@ -11,6 +13,7 @@ public class CategoryRequest {
 
     @Getter
     @AllArgsConstructor
+    @NoArgsConstructor
     public static class CreateCategoryDTO{
 
         @NotBlank
@@ -22,6 +25,7 @@ public class CategoryRequest {
      */
     @Getter
     @AllArgsConstructor
+    @NoArgsConstructor
     public static class UpdateCategoryTitleDTO{
 
         @NotBlank
@@ -33,6 +37,7 @@ public class CategoryRequest {
      */
     @Getter
     @AllArgsConstructor
+    @NoArgsConstructor
     public static class UpdateCategorySequenceDTO{
 
         @ExistCategories

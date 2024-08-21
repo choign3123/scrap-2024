@@ -71,14 +71,7 @@ public class ScrapCommandServiceImplTest {
         ReflectionTestUtils.setField(category, "id", 99L);
 
         // 생성할 스크랩 설정
-        CreateScrapDTO requestDTO = CreateScrapDTO.builder()
-                .scrapURL(scrapURL)
-                .imageURL(imageURL)
-                .description(description)
-                .isFavorite(isFavorite)
-                .memo(memo)
-                .title(title)
-                .build();
+        CreateScrapDTO requestDTO = new CreateScrapDTO(scrapURL, imageURL, title, description, memo, isFavorite);
 
         when(memberQueryService.findMember(memberDTO)).thenReturn(member);
         when(categoryQueryService.findCategory(category.getId())).thenReturn(category);
@@ -116,14 +109,7 @@ public class ScrapCommandServiceImplTest {
         ReflectionTestUtils.setField(category, "id", 99L);
 
         // 생성할 스크랩 설정
-        CreateScrapDTO requestDTO = CreateScrapDTO.builder()
-                .scrapURL(scrapURL)
-                .imageURL(imageURL)
-                .description(description)
-                .isFavorite(isFavorite)
-                .memo(memo)
-                .title(title)
-                .build();
+        CreateScrapDTO requestDTO = new CreateScrapDTO(scrapURL, imageURL, title, description, memo, isFavorite);
 
         when(memberQueryService.findMember(memberDTO)).thenReturn(member);
         when(categoryQueryService.findCategory(category.getId())).thenReturn(category);
@@ -151,14 +137,7 @@ public class ScrapCommandServiceImplTest {
         ReflectionTestUtils.setField(category, "id", 99L);
 
         // 생성할 스크랩 설정
-        CreateScrapDTO requestDTO = CreateScrapDTO.builder()
-                .scrapURL(scrapURL)
-                .imageURL(imageURL)
-                .description(description)
-                .isFavorite(isFavorite)
-                .memo(memo)
-                .title(title)
-                .build();
+        CreateScrapDTO requestDTO = new CreateScrapDTO(scrapURL, imageURL, title, description, memo, isFavorite);
 
         when(memberQueryService.findMember(memberDTO)).thenReturn(member);
         when(categoryQueryService.findCategory(category.getId())).thenReturn(category);

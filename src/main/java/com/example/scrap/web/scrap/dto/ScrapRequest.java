@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -17,7 +18,9 @@ public class ScrapRequest {
      * 스크랩 생성
      */
     @Getter
-    @Builder
+//    @Builder
+    @AllArgsConstructor
+    @NoArgsConstructor
     public static class CreateScrapDTO {
         @NotBlank
         private String scrapURL;
@@ -39,6 +42,7 @@ public class ScrapRequest {
      */
     @Getter
     @AllArgsConstructor
+    @NoArgsConstructor
     public static class UpdateScrapMemoDTO {
         @NotNull
         private String memo;
@@ -49,6 +53,7 @@ public class ScrapRequest {
      */
     @Getter
     @AllArgsConstructor
+    @NoArgsConstructor
     public static class DeleteScrapListDTO {
 
         @ExistAvailableScraps
@@ -61,6 +66,7 @@ public class ScrapRequest {
      */
     @Getter
     @AllArgsConstructor
+    @NoArgsConstructor
     public static class ToggleScrapFavoriteListDTO {
 
         @ExistAvailableScraps
@@ -73,6 +79,7 @@ public class ScrapRequest {
      */
     @Getter
     @AllArgsConstructor
+    @NoArgsConstructor
     public static class MoveCategoryOfScrapDTO {
 
         @ExistCategory
@@ -85,6 +92,7 @@ public class ScrapRequest {
      */
     @Getter
     @AllArgsConstructor
+    @NoArgsConstructor
     public static class MoveCategoryOfScrapsDTO {
 
         @ExistAvailableScraps
