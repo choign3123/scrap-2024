@@ -6,6 +6,7 @@ import com.example.scrap.base.data.DefaultData;
 import com.example.scrap.base.enums.SearchScopeType;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -16,6 +17,7 @@ public class SearchRequest {
      * 스크랩 검색하기 DTO
      */
     @Getter
+    @NoArgsConstructor
     public static class FindScrapDTO {
 
         @EnumsValid(enumC = SearchScopeType.class)
