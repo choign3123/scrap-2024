@@ -32,9 +32,7 @@ public class MypageQueryServiceImpl implements IMypageQueryService {
         long totalCategory = categoryRepository.countByMember(member);
 
         // 총 스크랩 개수
-        Specification<Scrap> spec = Specification.where(ScrapSpecification.isAvailable())
-                .and(ScrapSpecification.equalMember(member));
-        long totalScrap = scrapRepository.count(spec);
+        long totalScrap = scrapRepository.countAllByMember(member);
 
         return MypageDTO.builder()
                 .name(member.getName())

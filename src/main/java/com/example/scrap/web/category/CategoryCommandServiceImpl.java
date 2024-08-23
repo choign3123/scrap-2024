@@ -11,6 +11,7 @@ import com.example.scrap.base.data.DefaultData;
 import com.example.scrap.web.category.dto.CategoryRequest;
 import com.example.scrap.web.member.IMemberQueryService;
 import com.example.scrap.web.member.dto.MemberDTO;
+import com.example.scrap.web.scrap.IScrapCommandService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -26,7 +27,8 @@ public class CategoryCommandServiceImpl implements ICategoryCommandService {
 
     private final CategoryRepository categoryRepository;
     private final ICategoryQueryService categoryQueryService;
-    private final IMemberQueryService memberService;
+    private final IMemberQueryService memberService; // TODO: 메소드명 바꾸기
+    private final IScrapCommandService scrapCommandService;
 
     /**
      * 카테고리 생성
@@ -71,7 +73,7 @@ public class CategoryCommandServiceImpl implements ICategoryCommandService {
      * @param memberDTO
      * @param categoryId 카테고리 식별자
      */
-    public void deleteCategory(MemberDTO memberDTO, Long categoryId, Boolean allowDeleteScrap){
+    public void deleteCategory(MemberDTO memberDTO, Long categoryId){
         Member member = memberService.findMember(memberDTO);
         Category category = categoryQueryService.findCategory(categoryId);
 
@@ -82,19 +84,10 @@ public class CategoryCommandServiceImpl implements ICategoryCommandService {
             throw new BaseException(ErrorCode.NOT_ALLOW_ACCESS_DEFAULT_CATEGORY);
         }
 
-        // 스크랩을 삭제하기로 결정한 경우
-        if(allowDeleteScrap){
-            for(Scrap scrap : category.getScrapList()){
-                scrap.toTrash();
-            }
-        }
-
-        // TODO: 리스트를 복제해서 for 문을 돌리는것 외에 다른 방법은 없는지 고민해봐야 될 것 같음. 이렇게 복제된 리스트를 사용하지 않으면, 요소 삭제로 인해 for 문을 다 돌지 못하고 끝나버림.
-        // 모든 스크랩은 기본 카테고리로 이동
-        Category defaultCategory = categoryQueryService.findDefaultCategory(member);
-        List<Scrap> scrapCopyList = new ArrayList<>(category.getScrapList());
-        for(Scrap scrap : scrapCopyList){
-            scrap.moveCategory(defaultCategory);
+        // 카테고리에 속한 모든 스크랩 휴지통으로 이동
+        List<Scrap> scrapList = new ArrayList<>(category.getScrapList());
+        for(Scrap scrap : scrapList){
+            scrapCommandService.throwScrapIntoTrash(scrap);
         }
 
         categoryRepository.delete(category);

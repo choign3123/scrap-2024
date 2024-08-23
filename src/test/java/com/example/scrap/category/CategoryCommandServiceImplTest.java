@@ -6,7 +6,6 @@ import com.example.scrap.base.exception.BaseException;
 import com.example.scrap.entity.Category;
 import com.example.scrap.entity.Member;
 import com.example.scrap.entity.Scrap;
-import com.example.scrap.entity.enums.ScrapStatus;
 import com.example.scrap.entity.enums.SnsType;
 import com.example.scrap.web.category.CategoryCommandServiceImpl;
 import com.example.scrap.web.category.CategoryRepository;
@@ -14,6 +13,7 @@ import com.example.scrap.web.category.ICategoryQueryService;
 import com.example.scrap.web.category.dto.CategoryRequest;
 import com.example.scrap.web.member.IMemberQueryService;
 import com.example.scrap.web.member.dto.MemberDTO;
+import com.example.scrap.web.scrap.IScrapCommandService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -45,6 +45,9 @@ public class CategoryCommandServiceImplTest {
 
     @Mock
     private IMemberQueryService memberQueryService;
+
+    @Mock
+    private IScrapCommandService scrapCommandService;
 
     @DisplayName("카테고리 생성")
     @Test
@@ -132,7 +135,7 @@ public class CategoryCommandServiceImplTest {
                 .isEqualTo(1);
     }
 
-    @DisplayName("카테고리 삭제 - 스크랩도 삭제")
+    @DisplayName("카테고리 삭제하기")
     @Test
     public void deleteCategoryWithDeleteScrap() {
         //** given
@@ -140,64 +143,20 @@ public class CategoryCommandServiceImplTest {
         MemberDTO memberDTO = setupMemberDTO(member);
 
         List<Category> testCategoryList = setupCategoryList(member, 2);
-        Category defaultCategory = testCategoryList.get(0); // 기본 카테고리
         Category deleteCategory = testCategoryList.get(1); // 삭제할 카테고리
 
         List<Scrap> scrapList = setupScrapList(member, deleteCategory, 3); // 삭제할 카테고리에 속한 스크랩
 
         when(memberQueryService.findMember(memberDTO)).thenReturn(member);
         when(categoryQueryService.findCategory(deleteCategory.getId())).thenReturn(deleteCategory);
-        when(categoryQueryService.findDefaultCategory(member)).thenReturn(defaultCategory);
+        when(scrapCommandService.throwScrapIntoTrash(isA(Scrap.class))).thenReturn(any());
 
         //** when
-        categoryCommandService.deleteCategory(memberDTO, deleteCategory.getId(), true);
+        categoryCommandService.deleteCategory(memberDTO, deleteCategory.getId());
 
         //** then
-        // 모든 스크랩이 삭제됐는지 확인
-        for(Scrap scrap : scrapList){
-            assertThat(scrap.getStatus()) // 스크랩 상태 확인
-                    .isEqualTo(ScrapStatus.TRASH);
-            assertThat(scrap.getCategory()) // 기본 카테고리로 이동했는지 확인
-                    .isEqualTo(defaultCategory);
-            assertThat(scrap.getTrashedAt()) // 휴지통으로 보내진 날짜 설정됐는지 확인
-                    .isNotNull();
-        }
-
-        // delete()가 1번 호출됐는지 확인
-        verify(categoryRepository, times(1)).delete(deleteCategory);
-    }
-
-    @DisplayName("카테고리 삭제 - 스크랩 삭제 X")
-    @Test
-    public void deleteCategory() {
-        //** given
-        Member member = setupMember();
-        MemberDTO memberDTO = setupMemberDTO(member);
-
-        List<Category> testCategoryList = setupCategoryList(member, 2);
-        Category defaultCategory = testCategoryList.get(0); // 기본 카테고리
-        Category deleteCategory = testCategoryList.get(1); // 삭제할 카테고리
-
-        List<Scrap> scrapList = setupScrapList(member, deleteCategory, 3); // 삭제할 카테고리에 속한 스크랩
-
-        when(memberQueryService.findMember(memberDTO)).thenReturn(member);
-        when(categoryQueryService.findCategory(deleteCategory.getId())).thenReturn(deleteCategory);
-        when(categoryQueryService.findDefaultCategory(member)).thenReturn(defaultCategory);
-
-        //** when
-        categoryCommandService.deleteCategory(memberDTO, deleteCategory.getId(), false);
-
-        //** then
-        // 모든 스크랩이 보존되어 있는지 확인
-        for(Scrap scrap : scrapList){
-            assertThat(scrap.getStatus()) // 스크랩 상태 확인
-                    .isEqualTo(ScrapStatus.ACTIVE);
-            assertThat(scrap.getCategory()) // 기본 카테고리로 이동했는지 확인
-                    .isEqualTo(defaultCategory);
-        }
-
-        // delete()가 1번 호출됐는지 확인
-        verify(categoryRepository, times(1)).delete(deleteCategory);
+        verify(categoryRepository, times(1)).delete(deleteCategory); // delete()가 1번 호출됐는지 확인
+        verify(scrapCommandService, times(scrapList.size())).throwScrapIntoTrash(isA(Scrap.class));
     }
 
     @DisplayName("[에러] 삭제하려는 카테고리와 사용자가 일치하지 않음")
@@ -216,7 +175,7 @@ public class CategoryCommandServiceImplTest {
 
         //** when
         Throwable throwable = catchThrowable(() -> {
-            categoryCommandService.deleteCategory(memberDTO, deleteCategory.getId(), false);
+            categoryCommandService.deleteCategory(memberDTO, deleteCategory.getId());
         });
 
         //** then
@@ -240,7 +199,7 @@ public class CategoryCommandServiceImplTest {
 
         //** when
         Throwable throwable = catchThrowable(() -> {
-            categoryCommandService.deleteCategory(memberDTO, defaultCategory.getId(), false);
+            categoryCommandService.deleteCategory(memberDTO, defaultCategory.getId());
         });
 
         //** then
@@ -504,7 +463,6 @@ public class CategoryCommandServiceImplTest {
             scrap = Scrap.builder()
                     .member(member)
                     .category(category)
-                    .status(ScrapStatus.ACTIVE)
                     .title("스크랩 제목")
                     .scrapURL("https://scrap")
                     .imageURL("https://image")

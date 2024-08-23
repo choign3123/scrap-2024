@@ -1,15 +1,11 @@
 package com.example.scrap.scrap;
 
 import com.example.scrap.base.code.ErrorCode;
-import com.example.scrap.base.data.DefaultData;
-import com.example.scrap.base.enums.Sorts;
 import com.example.scrap.base.exception.BaseException;
 import com.example.scrap.entity.Category;
 import com.example.scrap.entity.Member;
 import com.example.scrap.entity.Scrap;
-import com.example.scrap.entity.enums.ScrapStatus;
 import com.example.scrap.entity.enums.SnsType;
-import com.example.scrap.specification.ScrapSpecification;
 import com.example.scrap.web.category.ICategoryQueryService;
 import com.example.scrap.web.member.IMemberQueryService;
 import com.example.scrap.web.member.dto.MemberDTO;
@@ -20,10 +16,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.data.domain.*;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.ArrayList;
@@ -218,7 +211,6 @@ public class ScrapQueryServiceImplTest {
         return Scrap.builder()
                 .member(member)
                 .category(category)
-                .status(ScrapStatus.ACTIVE)
                 .title("스크랩 제목")
                 .scrapURL("https://scrap")
                 .imageURL("https://image")

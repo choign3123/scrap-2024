@@ -27,7 +27,7 @@ public class ExistAvailableScrapValidator implements ConstraintValidator<ExistAv
 
         // 스크랩 유효성 확인
         Optional<Scrap> scrap = scrapRepository.findById(value);
-        if(scrap.isEmpty() || !scrap.get().isAvailable()){
+        if(scrap.isEmpty()){
             return false;
         }
 

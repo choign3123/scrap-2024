@@ -32,9 +32,7 @@ public class SearchQueryServiceImpl implements ISearchQueryService {
 
         Member member = memberQueryService.findMember(memberDTO);
 
-        Specification<Scrap> spec = Specification.where(ScrapSpecification.isAvailable())
-                .and(ScrapSpecification.equalMember(member));
-
+        Specification<Scrap> spec = Specification.where(ScrapSpecification.equalMember(member));
 
         // 검색범위 지정
         Specification<Scrap> specSearchScope = (root, q, criteriaBuilder) -> null;

@@ -34,6 +34,7 @@ public class MemberLog extends BaseEntity {
     public MemberLog() {
         this.loginAt = LocalDateTime.now();
         this.loginStatus = LoginStatus.ACTIVE;
+        this.refreshTokenId = 0L;
     }
 
     /**
