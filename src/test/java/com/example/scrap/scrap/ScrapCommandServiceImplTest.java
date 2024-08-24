@@ -7,7 +7,7 @@ import com.example.scrap.base.exception.BaseException;
 import com.example.scrap.entity.Category;
 import com.example.scrap.entity.Member;
 import com.example.scrap.entity.Scrap;
-import com.example.scrap.entity.enums.ScrapStatus;
+import com.example.scrap.entity.TrashScrap;
 import com.example.scrap.entity.enums.SnsType;
 import com.example.scrap.web.category.ICategoryQueryService;
 import com.example.scrap.web.member.IMemberQueryService;
@@ -15,6 +15,7 @@ import com.example.scrap.web.member.dto.MemberDTO;
 import com.example.scrap.web.scrap.IScrapQueryService;
 import com.example.scrap.web.scrap.ScrapCommandServiceImpl;
 import com.example.scrap.web.scrap.ScrapRepository;
+import com.example.scrap.web.scrap.TrashScrapRepository;
 import com.example.scrap.web.scrap.dto.ScrapRequest.*;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -31,7 +32,7 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class ScrapCommandServiceImplTest {
@@ -50,6 +51,9 @@ public class ScrapCommandServiceImplTest {
 
     @Mock
     private IScrapQueryService scrapQueryService;
+
+    @Mock
+    private TrashScrapRepository trashScrapRepository;
 
     private final String scrapURL = "https://scrap";
     private final String imageURL = "https://image";
@@ -75,7 +79,7 @@ public class ScrapCommandServiceImplTest {
 
         when(memberQueryService.findMember(memberDTO)).thenReturn(member);
         when(categoryQueryService.findCategory(category.getId())).thenReturn(category);
-        when(scrapRepository.count(any(Specification.class))).thenReturn((long) PolicyData.SCRAP_CREATE_LIMIT-1);
+        when(scrapRepository.countAllByMember(member)).thenReturn(PolicyData.SCRAP_CREATE_LIMIT-1);
 
         //** when
         Scrap newScrap = scrapCommandService.createScrap(memberDTO, category.getId(), requestDTO);
@@ -141,7 +145,7 @@ public class ScrapCommandServiceImplTest {
 
         when(memberQueryService.findMember(memberDTO)).thenReturn(member);
         when(categoryQueryService.findCategory(category.getId())).thenReturn(category);
-        when(scrapRepository.count(any(Specification.class))).thenReturn((long) PolicyData.SCRAP_CREATE_LIMIT);
+        when(scrapRepository.countAllByMember(member)).thenReturn(PolicyData.SCRAP_CREATE_LIMIT);
 
         //** when
         Throwable throwable = catchThrowable(() -> {
@@ -259,7 +263,7 @@ public class ScrapCommandServiceImplTest {
         ToggleScrapFavoriteListDTO requestDTO = new ToggleScrapFavoriteListDTO(scrapIdList);
 
         when(memberQueryService.findMember(memberDTO)).thenReturn(member);
-        when(scrapQueryService.findAllByRequest(requestDTO.getScrapIdList(), member)).thenReturn(scrapList);
+        when(scrapRepository.findAll(isA(Specification.class))).thenReturn(scrapList);
 
         //** when
         scrapCommandService.toggleScrapFavoriteList(memberDTO, false, null, null, requestDTO);
@@ -297,7 +301,7 @@ public class ScrapCommandServiceImplTest {
         ToggleScrapFavoriteListDTO requestDTO = new ToggleScrapFavoriteListDTO(scrapIdList);
 
         when(memberQueryService.findMember(memberDTO)).thenReturn(member);
-        when(scrapQueryService.findAllByRequest(requestDTO.getScrapIdList(), member)).thenReturn(scrapList);
+        when(scrapRepository.findAll(isA(Specification.class))).thenReturn(scrapList);
 
         //** when
         scrapCommandService.toggleScrapFavoriteList(memberDTO, false, null, null, requestDTO);
@@ -335,7 +339,7 @@ public class ScrapCommandServiceImplTest {
         ToggleScrapFavoriteListDTO requestDTO = new ToggleScrapFavoriteListDTO(scrapIdList);
 
         when(memberQueryService.findMember(memberDTO)).thenReturn(member);
-        when(scrapQueryService.findAllByRequest(requestDTO.getScrapIdList(), member)).thenReturn(scrapList);
+        when(scrapRepository.findAll(isA(Specification.class))).thenReturn(scrapList);
 
         //** when
         scrapCommandService.toggleScrapFavoriteList(memberDTO, false, null, null, requestDTO);
@@ -347,10 +351,9 @@ public class ScrapCommandServiceImplTest {
         }
     }
 
-    // TODO: QueryRange.FAVORITE, CATEGORY를 분리해서 테스트 케이스를 작성해야 하나..?
-    @DisplayName("스크랩 즐겨찾기 (목록) - 전체 카테고리 / O(모두 즐겨찾기 됨)->X ")
+    @DisplayName("스크랩 즐겨찾기 (목록) - 즐겨찾기 전체 / O(모두 즐겨찾기 됨)->X ")
     @Test
-    public void toggleScrapFavoriteList_all_OtoX_allFavoriteTure(){
+    public void toggleScrapFavoriteList_allFavorite_OtoX_allFavoriteTure(){
         //** given
         Member member = setupMember();
         MemberDTO memberDTO = setupMemberDTO(member);
@@ -366,7 +369,7 @@ public class ScrapCommandServiceImplTest {
         }
 
         when(memberQueryService.findMember(memberDTO)).thenReturn(member);
-        when(scrapQueryService.findAllByQueryRange(eq(member), isA(QueryRange.class), any())).thenReturn(scrapList);
+        when(scrapRepository.findAll(isA(Specification.class))).thenReturn(scrapList);
 
         //** when
         scrapCommandService.toggleScrapFavoriteList(memberDTO, true, QueryRange.FAVORITE, null, null);
@@ -378,9 +381,9 @@ public class ScrapCommandServiceImplTest {
         }
     }
 
-    @DisplayName("스크랩 즐겨찾기 (목록) - 전체 카테고리 / X(모두 즐겨찾기 안됨)->O ")
+    @DisplayName("스크랩 즐겨찾기 (목록) - 즐겨찾기 전체 / X(모두 즐겨찾기 안됨)->O ")
     @Test
-    public void toggleScrapFavoriteList_all_XtoO_allFavoriteFalse(){
+    public void toggleScrapFavoriteList_allFavorite_XtoO_allFavoriteFalse(){
         //** given
         Member member = setupMember();
         MemberDTO memberDTO = setupMemberDTO(member);
@@ -396,7 +399,7 @@ public class ScrapCommandServiceImplTest {
         }
 
         when(memberQueryService.findMember(memberDTO)).thenReturn(member);
-        when(scrapQueryService.findAllByQueryRange(eq(member), isA(QueryRange.class), any())).thenReturn(scrapList);
+        when(scrapRepository.findAll(isA(Specification.class))).thenReturn(scrapList);
 
         //** when
         scrapCommandService.toggleScrapFavoriteList(memberDTO, true, QueryRange.FAVORITE, null, null);
@@ -408,9 +411,9 @@ public class ScrapCommandServiceImplTest {
         }
     }
 
-    @DisplayName("스크랩 즐겨찾기 (목록) - 전체 카테고리 / X(일부 즐겨찾기 안됨)->O ")
+    @DisplayName("스크랩 즐겨찾기 (목록) - 즐겨찾기 전체 / X(일부 즐겨찾기 안됨)->O ")
     @Test
-    public void toggleScrapFavoriteList_all_XtoO_someFavoriteFalse(){
+    public void toggleScrapFavoriteList_allFavorite_XtoO_someFavoriteFalse(){
         //** given
         Member member = setupMember();
         MemberDTO memberDTO = setupMemberDTO(member);
@@ -426,7 +429,7 @@ public class ScrapCommandServiceImplTest {
         }
 
         when(memberQueryService.findMember(memberDTO)).thenReturn(member);
-        when(scrapQueryService.findAllByQueryRange(eq(member), isA(QueryRange.class), any())).thenReturn(scrapList);
+        when(scrapRepository.findAll(isA(Specification.class))).thenReturn(scrapList);
 
         //** when
         scrapCommandService.toggleScrapFavoriteList(memberDTO, true, QueryRange.FAVORITE, null, null);
@@ -436,6 +439,125 @@ public class ScrapCommandServiceImplTest {
             assertThat(scrap.getIsFavorite())
                     .isTrue();
         }
+    }
+
+    @DisplayName("스크랩 즐겨찾기 (목록) - 특정 카테고리 전체 / O(모두 즐겨찾기 됨)->X ")
+    @Test
+    public void toggleScrapFavoriteList_allCategory_OtoX_allFavoriteTure(){
+        //** given
+        Member member = setupMember();
+        MemberDTO memberDTO = setupMemberDTO(member);
+
+        // 카테고리 설정
+        Category category = setupCategory(member, false);
+        ReflectionTestUtils.setField(category, "id", 99L);
+
+        // 스크랩 설정
+        List<Scrap> scrapList = new ArrayList<>();
+        for(int i=0; i<5; i++){
+            scrapList.add(setupScrap(member, category, true));
+        }
+
+        when(memberQueryService.findMember(memberDTO)).thenReturn(member);
+        when(categoryQueryService.findCategory(category.getId())).thenReturn(category);
+        when(scrapRepository.findAll(isA(Specification.class))).thenReturn(scrapList);
+
+        //** when
+        scrapCommandService.toggleScrapFavoriteList(memberDTO, true, QueryRange.CATEGORY, category.getId(), null);
+
+        //** then
+        for(Scrap scrap : scrapList){
+            assertThat(scrap.getIsFavorite())
+                    .isFalse();
+        }
+    }
+
+    @DisplayName("스크랩 즐겨찾기 (목록) - 특정 카테고리 전체 / X(모두 즐겨찾기 안됨)->O ")
+    @Test
+    public void toggleScrapFavoriteList_allCategory_XtoO_allFavoriteFalse(){
+        //** given
+        Member member = setupMember();
+        MemberDTO memberDTO = setupMemberDTO(member);
+
+        // 카테고리 설정
+        Category category = setupCategory(member, false);
+        ReflectionTestUtils.setField(category, "id", 99L);
+
+        // 스크랩 설정
+        List<Scrap> scrapList = new ArrayList<>();
+        for(int i=0; i<5; i++){
+            scrapList.add(setupScrap(member, category, false));
+        }
+
+        when(memberQueryService.findMember(memberDTO)).thenReturn(member);
+        when(categoryQueryService.findCategory(category.getId())).thenReturn(category);
+        when(scrapRepository.findAll(isA(Specification.class))).thenReturn(scrapList);
+
+        //** when
+        scrapCommandService.toggleScrapFavoriteList(memberDTO, true, QueryRange.CATEGORY, category.getId(), null);
+
+        //** then
+        for(Scrap scrap : scrapList){
+            assertThat(scrap.getIsFavorite())
+                    .isTrue();
+        }
+    }
+
+    @DisplayName("스크랩 즐겨찾기 (목록) - 특정 카테고리 전체 / X(일부 즐겨찾기 안됨)->O ")
+    @Test
+    public void toggleScrapFavoriteList_allCategory_XtoO_someFavoriteFalse(){
+        //** given
+        Member member = setupMember();
+        MemberDTO memberDTO = setupMemberDTO(member);
+
+        // 카테고리 설정
+        Category category = setupCategory(member, false);
+        ReflectionTestUtils.setField(category, "id", 99L);
+
+        // 스크랩 설정
+        List<Scrap> scrapList = new ArrayList<>();
+        for(int i=0; i<5; i++){
+            scrapList.add(setupScrap(member, category, i%2==0));
+        }
+
+        when(memberQueryService.findMember(memberDTO)).thenReturn(member);
+        when(categoryQueryService.findCategory(category.getId())).thenReturn(category);
+        when(scrapRepository.findAll(isA(Specification.class))).thenReturn(scrapList);
+
+        //** when
+        scrapCommandService.toggleScrapFavoriteList(memberDTO, true, QueryRange.CATEGORY, category.getId(), null);
+
+        //** then
+        for(Scrap scrap : scrapList){
+            assertThat(scrap.getIsFavorite())
+                    .isTrue();
+        }
+    }
+
+    @DisplayName("[에러]스크랩 즐겨찾기 (목록) - 특정 카테고리 전체 / 카테고리의 멤버와 요청멤버가 일치하지 않음 ")
+    @Test
+    public void errorToggleScrapFavoriteList_allCategory_categoryNotMatchToMember(){
+        //** given
+        Member member = setupMember();
+        MemberDTO memberDTO = setupMemberDTO(member);
+
+        // 카테고리 설정
+        Member otherMember = Member.builder().build();
+        Category category = setupCategory(otherMember, false);
+        ReflectionTestUtils.setField(category, "id", 99L);
+
+        when(memberQueryService.findMember(memberDTO)).thenReturn(member);
+        when(categoryQueryService.findCategory(category.getId())).thenReturn(category);
+
+        //** when
+        Throwable throwable = catchThrowable(() -> {
+            scrapCommandService.toggleScrapFavoriteList(memberDTO, true, QueryRange.CATEGORY, category.getId(), null);
+        });
+
+        //** then
+        assertThat(throwable)
+                .isInstanceOf(BaseException.class)
+                .hasMessageContaining(ErrorCode.CATEGORY_MEMBER_NOT_MATCH.getCode());
     }
 
     @DisplayName("스크랩 이동하기 (단건)")
@@ -539,7 +661,7 @@ public class ScrapCommandServiceImplTest {
                 .hasMessageContaining(ErrorCode.CATEGORY_MEMBER_NOT_MATCH.getMessage());
     }
 
-    @DisplayName("스크랩 이동하기 (목록) - 카테고리 전체")
+    @DisplayName("스크랩 이동하기 (목록) - 특정 카테고리 전체")
     @Test
     public void moveCategoryOfScraps_allCategory() {
         //** given
@@ -548,6 +670,7 @@ public class ScrapCommandServiceImplTest {
 
         // 카테고리 설정
         Category category = setupCategory(member, false);
+        ReflectionTestUtils.setField(category, "id", 99L);
         Category moveCategory = setupCategory(member, false);
         ReflectionTestUtils.setField(moveCategory, "id", 98L);
 
@@ -558,8 +681,9 @@ public class ScrapCommandServiceImplTest {
         MoveCategoryOfScrapsDTO requestDTO = new MoveCategoryOfScrapsDTO(null, moveCategory.getId());
 
         when(memberQueryService.findMember(memberDTO)).thenReturn(member);
+        when(categoryQueryService.findCategory(category.getId())).thenReturn(category);
         when(categoryQueryService.findCategory(moveCategory.getId())).thenReturn(moveCategory);
-        when(scrapQueryService.findAllByQueryRange(member, QueryRange.CATEGORY, category.getId())).thenReturn(scrapList);
+        when(scrapRepository.findAll(isA(Specification.class))).thenReturn(scrapList);
 
         //** when
         scrapCommandService.moveCategoryOfScraps(memberDTO, requestDTO, true, QueryRange.CATEGORY, category.getId());
@@ -569,6 +693,38 @@ public class ScrapCommandServiceImplTest {
             assertThat(scrap.getCategory())
                     .isEqualTo(moveCategory);
         }
+    }
+
+    @DisplayName("[에러] 스크랩 이동하기 (목록) - 특정 카테고리의 멤버와 요청멤버가 일치하지 않음")
+    @Test
+    public void errorMoveCategoryOfScraps_allCategory_categoryNotMatchToMember() {
+        //** given
+        Member member = setupMember();
+        MemberDTO memberDTO = setupMemberDTO(member);
+
+        // 카테고리 설정
+        Member otherMember = Member.builder().build();
+        Category category = setupCategory(otherMember, false);
+        ReflectionTestUtils.setField(category, "id", 99L);
+        Category moveCategory = setupCategory(member, false);
+        ReflectionTestUtils.setField(moveCategory, "id", 98L);
+
+        // requestDTO 설정
+        MoveCategoryOfScrapsDTO requestDTO = new MoveCategoryOfScrapsDTO(null, moveCategory.getId());
+
+        when(memberQueryService.findMember(memberDTO)).thenReturn(member);
+        when(categoryQueryService.findCategory(category.getId())).thenReturn(category);
+        when(categoryQueryService.findCategory(moveCategory.getId())).thenReturn(moveCategory);
+
+        //** when
+        Throwable throwable = catchThrowable(() -> {
+            scrapCommandService.moveCategoryOfScraps(memberDTO, requestDTO, true, QueryRange.CATEGORY, category.getId());
+        });
+
+        //** then
+        assertThat(throwable)
+                .isInstanceOf(BaseException.class)
+                .hasMessageContaining(ErrorCode.CATEGORY_MEMBER_NOT_MATCH.getCode());
     }
 
     @DisplayName("스크랩 이동하기 (목록) - 즐겨찾기됨 전체")
@@ -594,7 +750,7 @@ public class ScrapCommandServiceImplTest {
 
         when(memberQueryService.findMember(memberDTO)).thenReturn(member);
         when(categoryQueryService.findCategory(moveCategory.getId())).thenReturn(moveCategory);
-        when(scrapQueryService.findAllByQueryRange(member, QueryRange.FAVORITE, null)).thenReturn(scrapList);
+        when(scrapRepository.findAll(isA(Specification.class))).thenReturn(scrapList);
 
         //** when
         scrapCommandService.moveCategoryOfScraps(memberDTO, requestDTO, true, QueryRange.FAVORITE, null);
@@ -633,7 +789,7 @@ public class ScrapCommandServiceImplTest {
 
         when(memberQueryService.findMember(memberDTO)).thenReturn(member);
         when(categoryQueryService.findCategory(moveCategory.getId())).thenReturn(moveCategory);
-        when(scrapQueryService.findAllByRequest(scrapIdList, member)).thenReturn(scrapList);
+        when(scrapRepository.findAll(isA(Specification.class))).thenReturn(scrapList);
 
         //** when
         scrapCommandService.moveCategoryOfScraps(memberDTO, requestDTO, false, null, null);
@@ -653,13 +809,9 @@ public class ScrapCommandServiceImplTest {
         MemberDTO memberDTO = setupMemberDTO(member);
 
         // 카테고리 설정
-        Category category = setupCategory(member, false);
         Member otherMember = Member.builder().build();
         Category moveCategory = setupCategory(otherMember, false);
         ReflectionTestUtils.setField(moveCategory, "id", 98L);
-
-        // 스크랩 설정
-        setupScrapList(member, category, 10);
 
         // requestDTO 설정
         MoveCategoryOfScrapsDTO requestDTO = new MoveCategoryOfScrapsDTO(null, moveCategory.getId());
@@ -669,7 +821,7 @@ public class ScrapCommandServiceImplTest {
 
         //** when
         Throwable throwable = catchThrowable(() -> {
-            scrapCommandService.moveCategoryOfScraps(memberDTO, requestDTO, true, null, null);
+            scrapCommandService.moveCategoryOfScraps(memberDTO, requestDTO, false, null, null);
         });
 
         //** then
@@ -756,13 +908,24 @@ public class ScrapCommandServiceImplTest {
         when(scrapQueryService.findScrap(scrap.getId())).thenReturn(scrap);
 
         //** when
-        scrapCommandService.throwScrapInTrash(memberDTO, scrap.getId());
+        TrashScrap trashScrap = scrapCommandService.throwScrapIntoTrash(memberDTO, scrap.getId());
 
         //** then
-        assertThat(scrap.getStatus())
-                .isEqualTo(ScrapStatus.TRASH);
-        assertThat(scrap.getTrashedAt())
-                .isNotNull();
+        verify(scrapRepository).delete(scrap); // delete가 호출되었는지 확인
+        verify(trashScrapRepository, times(1)).save(trashScrap);
+
+        assertThat(trashScrap.getScrapURL())
+                .isEqualTo(scrap.getScrapURL());
+        assertThat(trashScrap.getImageURL())
+                .isEqualTo(scrap.getImageURL());
+        assertThat(trashScrap.getDescription())
+                .isEqualTo(scrap.getDescription());
+        assertThat(trashScrap.getIsFavorite())
+                .isEqualTo(scrap.getIsFavorite());
+        assertThat(trashScrap.getMemo())
+                .isEqualTo(scrap.getMemo());
+        assertThat(trashScrap.getTitle())
+                .isEqualTo(scrap.getTitle());
     }
 
     @DisplayName("[에러] 스크랩 삭제 (단건) / 스크랩과 멤버가 일치하지 않음")
@@ -785,7 +948,7 @@ public class ScrapCommandServiceImplTest {
 
         //** when
         Throwable throwable = catchThrowable(() -> {
-            scrapCommandService.throwScrapInTrash(memberDTO, scrap.getId());
+            scrapCommandService.throwScrapIntoTrash(memberDTO, scrap.getId());
         });
 
         //** then
@@ -794,7 +957,7 @@ public class ScrapCommandServiceImplTest {
                 .hasMessageContaining(ErrorCode.SCRAP_MEMBER_NOT_MATCH.getMessage());
     }
 
-    @DisplayName("스크랩 삭제 (목록) - 카테고리 전채")
+    @DisplayName("스크랩 삭제 (목록) - 특정 카테고리 전채")
     @Test
     public void throwScrapListInTrash_allCategory() {
         //** given
@@ -809,18 +972,47 @@ public class ScrapCommandServiceImplTest {
         List<Scrap> scrapList = setupScrapList(member, category, 10);
 
         when(memberQueryService.findMember(memberDTO)).thenReturn(member);
-        when(scrapQueryService.findAllByQueryRange(member, QueryRange.CATEGORY, category.getId())).thenReturn(scrapList);
+        when(categoryQueryService.findCategory(category.getId())).thenReturn(category);
+        when(scrapRepository.findAll(isA(Specification.class))).thenReturn(scrapList);
 
         //** when
-        scrapCommandService.throwScrapListInTrash(memberDTO,true, QueryRange.CATEGORY, category.getId(), null);
+        List<TrashScrap> trashScrapList = scrapCommandService.throwScrapListIntoTrash(memberDTO,true, QueryRange.CATEGORY, category.getId(), null);
 
         //** then
-        for(Scrap scrap : scrapList){
-            assertThat(scrap.getStatus())
-                    .isEqualTo(ScrapStatus.TRASH);
-            assertThat(scrap.getTrashedAt())
-                    .isNotNull();
-        }
+        verify(scrapRepository, times(scrapList.size())).delete(isA(Scrap.class));
+        verify(trashScrapRepository, times(scrapList.size())).save(isA(TrashScrap.class));
+
+        assertThat(trashScrapList.size())
+                .isEqualTo(scrapList.size());
+    }
+
+    @DisplayName("[에러] 스크랩 삭제 (목록) - 특정 카테고리 전채 / 특정 카테고리의 멤버와 요청멤버가 일치하지 않음")
+    @Test
+    public void errorThrowScrapListInTrash_allCategory_categoryNotMatchToMember() {
+        //** given
+        Member member = setupMember();
+        MemberDTO memberDTO = setupMemberDTO(member);
+
+        // 카테고리 설정
+        Member otherMember = Member.builder().build();
+        Category category = setupCategory(otherMember, false);
+        ReflectionTestUtils.setField(category, "id", 99L);
+
+        // 스크랩 설정
+        List<Scrap> scrapList = setupScrapList(member, category, 10);
+
+        when(memberQueryService.findMember(memberDTO)).thenReturn(member);
+        when(categoryQueryService.findCategory(category.getId())).thenReturn(category);
+
+        //** when
+        Throwable throwable = catchThrowable(() -> {
+            scrapCommandService.throwScrapListIntoTrash(memberDTO,true, QueryRange.CATEGORY, category.getId(), null);
+        });
+
+        //** then
+        assertThat(throwable)
+                .isInstanceOf(BaseException.class)
+                .hasMessageContaining(ErrorCode.CATEGORY_MEMBER_NOT_MATCH.getCode());
     }
 
     @DisplayName("스크랩 삭제 (목록) - 즐겨찾기됨 전채")
@@ -841,18 +1033,17 @@ public class ScrapCommandServiceImplTest {
         }
 
         when(memberQueryService.findMember(memberDTO)).thenReturn(member);
-        when(scrapQueryService.findAllByQueryRange(member, QueryRange.CATEGORY, category.getId())).thenReturn(scrapList);
+        when(scrapRepository.findAll(isA(Specification.class))).thenReturn(scrapList);
 
         //** when
-        scrapCommandService.throwScrapListInTrash(memberDTO,true, QueryRange.CATEGORY, category.getId(), null);
+        List<TrashScrap> trashScrapList = scrapCommandService.throwScrapListIntoTrash(memberDTO,true, QueryRange.FAVORITE, category.getId(), null);
 
         //** then
-        for(Scrap scrap : scrapList){
-            assertThat(scrap.getStatus())
-                    .isEqualTo(ScrapStatus.TRASH);
-            assertThat(scrap.getTrashedAt())
-                    .isNotNull();
-        }
+        verify(scrapRepository, times(scrapList.size())).delete(isA(Scrap.class));
+        verify(trashScrapRepository, times(scrapList.size())).save(isA(TrashScrap.class));
+
+        assertThat(trashScrapList.size())
+                .isEqualTo(scrapList.size());
     }
 
     @DisplayName("스크랩 삭제 (목록) - 요청된 스크랩만")
@@ -881,15 +1072,49 @@ public class ScrapCommandServiceImplTest {
         when(memberQueryService.findMember(memberDTO)).thenReturn(member);
 
         //** when
-        scrapCommandService.throwScrapListInTrash(memberDTO,false, null, null, requestDTO);
+        List<TrashScrap> trashScrapList = scrapCommandService.throwScrapListIntoTrash(memberDTO,false, null, null, requestDTO);
 
         //** then
-        for(Scrap scrap : scrapList){
-            assertThat(scrap.getStatus())
-                    .isEqualTo(ScrapStatus.TRASH);
-            assertThat(scrap.getTrashedAt())
-                    .isNotNull();
-        }
+        verify(scrapRepository, times(scrapList.size())).delete(isA(Scrap.class));
+        verify(trashScrapRepository, times(scrapList.size())).save(isA(TrashScrap.class));
+
+        assertThat(trashScrapList.size())
+                .isEqualTo(scrapList.size());
+    }
+
+    @DisplayName("휴지통에 스크랩 버리기")
+    @Test
+    public void throwScrapIntoTrash(){
+        //** given
+        Member member = setupMember();
+        MemberDTO memberDTO = setupMemberDTO(member);
+
+        // 카테고리 설정
+        Category category = setupCategory(member, false);
+        ReflectionTestUtils.setField(category, "id", 99L);
+
+        // 스크랩 설정
+        Scrap scrap = setupScrap(member, category, false);
+
+        //** when
+        TrashScrap trashScrap = scrapCommandService.throwScrapIntoTrash(scrap);
+
+        //** then
+        verify(scrapRepository).delete(isA(Scrap.class));
+        verify(trashScrapRepository).save(isA(TrashScrap.class));
+
+        assertThat(trashScrap.getScrapURL())
+                .isEqualTo(scrap.getScrapURL());
+        assertThat(trashScrap.getImageURL())
+                .isEqualTo(scrap.getImageURL());
+        assertThat(trashScrap.getDescription())
+                .isEqualTo(scrap.getDescription());
+        assertThat(trashScrap.getIsFavorite())
+                .isEqualTo(scrap.getIsFavorite());
+        assertThat(trashScrap.getMemo())
+                .isEqualTo(scrap.getMemo());
+        assertThat(trashScrap.getTitle())
+                .isEqualTo(scrap.getTitle());
     }
 
     private Member setupMember(){
@@ -947,7 +1172,6 @@ public class ScrapCommandServiceImplTest {
         return Scrap.builder()
                 .member(member)
                 .category(category)
-                .status(ScrapStatus.ACTIVE)
                 .title(title)
                 .scrapURL(scrapURL)
                 .imageURL(imageURL)

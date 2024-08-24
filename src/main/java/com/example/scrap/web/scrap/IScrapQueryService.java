@@ -43,14 +43,4 @@ public interface IScrapQueryService {
      * 스크랩 찾기
      */
     public Scrap findScrap(Long scrapId);
-
-    /**
-     * 프레스 타입에 따른 스크랩 조회
-     */
-    List<Scrap> findAllByQueryRange(Member member, QueryRange queryRange, Long categoryId);
-
-    /**
-     * 요청된 스크랩 조회
-     */
-    public List<Scrap> findAllByRequest(List<Long> scrapIdList, Member member);
 }

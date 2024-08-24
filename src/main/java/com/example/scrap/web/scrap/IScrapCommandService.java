@@ -2,6 +2,7 @@ package com.example.scrap.web.scrap;
 
 import com.example.scrap.entity.Scrap;
 import com.example.scrap.base.enums.QueryRange;
+import com.example.scrap.entity.TrashScrap;
 import com.example.scrap.web.member.dto.MemberDTO;
 import com.example.scrap.web.scrap.dto.ScrapRequest;
 
@@ -44,14 +45,19 @@ public interface IScrapCommandService {
     public Scrap updateScrapMemo(MemberDTO memberDTO, Long scrapId, ScrapRequest.UpdateScrapMemoDTO request);
 
     /**
-     * 스크랩 삭제(단건)
+     * 스크랩 휴지통에 버리기(단건)
      */
-    public void throwScrapInTrash(MemberDTO memberDTO, Long scrapId);
+    public TrashScrap throwScrapIntoTrash(MemberDTO memberDTO, Long scrapId);
 
     /**
-     * 스크랩 삭제(목록)
+     * 스크랩 휴지통에 버리기(목록)
      */
-    public void throwScrapListInTrash(MemberDTO memberDTO, boolean isAllDelete, QueryRange queryRange, Long categoryId, ScrapRequest.DeleteScrapListDTO request);
+    public List<TrashScrap> throwScrapListIntoTrash(MemberDTO memberDTO, boolean isAllDelete, QueryRange queryRange, Long categoryId, ScrapRequest.DeleteScrapListDTO request);
+
+    /**
+     * 스크랩 휴지통에 버리기
+     */
+    public TrashScrap throwScrapIntoTrash(Scrap scrap);
 
     /**
      * 스크랩 전체 삭제

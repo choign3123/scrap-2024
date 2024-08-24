@@ -17,6 +17,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -43,11 +44,7 @@ public class ScrapQueryServiceImpl implements IScrapQueryService {
 
         category.checkIllegalMember(member);
 
-        Specification<Scrap> spec = Specification.where(ScrapSpecification.isAvailable())
-                .and(ScrapSpecification.equalMember(member))
-                .and(ScrapSpecification.equalCategory(category));
-
-        return  scrapRepository.findAll(spec, pageRequest);
+        return scrapRepository.findByMemberAndCategory(member, category, pageRequest);
     }
 
     /**
@@ -57,11 +54,7 @@ public class ScrapQueryServiceImpl implements IScrapQueryService {
     public Page<Scrap> getFavoriteScrapList(MemberDTO memberDTO, PageRequest pageRequest){
         Member member = memberQueryService.findMember(memberDTO);
 
-        Specification<Scrap> spec = Specification.where(ScrapSpecification.isAvailable())
-                .and(ScrapSpecification.equalMember(member))
-                .and(ScrapSpecification.isFavorite());
-
-        return scrapRepository.findAll(spec, pageRequest);
+        return scrapRepository.findByMemberAndIsFavoriteIsTrue(member, pageRequest);
     }
 
     /**
@@ -83,11 +76,18 @@ public class ScrapQueryServiceImpl implements IScrapQueryService {
      */
     public List<Scrap> findScrapByTitle(MemberDTO memberDTO, QueryRange queryRange, Long categoryId, String query, Sort sort){
         Member member = memberQueryService.findMember(memberDTO);
+        Category category = null;
 
-        Specification<Scrap> spec = createSpecByQueryRange(member, queryRange, categoryId);
+        // 카테고리를 대상으로 조회가 필요한 경우
+        if(queryRange.equals(QueryRange.CATEGORY)){
+            category = categoryQueryService.findCategory(categoryId);
+            category.checkIllegalMember(member);
+        }
 
-        // 제목으로 검색
-        spec = spec.and(ScrapSpecification.containingTitle(query));
+        // 동적인 쿼리 생성
+        Specification<Scrap> spec = Specification.where(ScrapSpecification.equalMember(member))
+                .and(ScrapSpecification.containingTitle(query)); // 제목 조건
+        spec = addQueryRangeSpec(spec, queryRange, category);
 
         return scrapRepository.findAll(spec, sort);
     }
@@ -96,10 +96,20 @@ public class ScrapQueryServiceImpl implements IScrapQueryService {
      * 스크랩 전체 공유하기
      */
     public List<Scrap> shareAllScrap(MemberDTO memberDTO, QueryRange queryRange, Long categoryId){
-
         Member member = memberQueryService.findMember(memberDTO);
+        Category category = null;
 
-        return findAllByQueryRange(member, queryRange, categoryId);
+        // 카테고리를 대상으로 조회가 필요한 경우
+        if(queryRange.equals(QueryRange.CATEGORY)){
+            category = categoryQueryService.findCategory(categoryId);
+            category.checkIllegalMember(member);
+        }
+
+        // 동적인 쿼리 생성
+        Specification<Scrap> spec = Specification.where(ScrapSpecification.equalMember(member));
+        spec = addQueryRangeSpec(spec, queryRange, category);
+
+        return scrapRepository.findAll(spec);
     }
 
     /**
@@ -110,59 +120,18 @@ public class ScrapQueryServiceImpl implements IScrapQueryService {
     }
 
     /**
-     * 조회 타입에 따른 스크랩 조회
-     * @throws BaseException CATEGORY_MEMBER_NOT_MATCH_IN_SCRAP
+     * QueryRange에 따른 Specification 추가
      */
-    public List<Scrap> findAllByQueryRange(Member member, QueryRange queryRange, Long categoryId){
-        Specification<Scrap> spec = createSpecByQueryRange(member, queryRange, categoryId);
-
-        return scrapRepository.findAll(spec);
-    }
-
-    /**
-     * 조회 타입에 따른 스크랩 Specification 생성
-     * @throws BaseException CATEGORY_MEMBER_NOT_MATCH_IN_SCRAP
-     */
-    public Specification<Scrap> createSpecByQueryRange(Member member, QueryRange queryRange, Long categoryId){
-        Specification<Scrap> spec = Specification.where(ScrapSpecification.isAvailable())
-                .and(ScrapSpecification.equalMember(member));
-
-        // 어떤 프레스 타입인지
+    private Specification<Scrap> addQueryRangeSpec(Specification<Scrap> spec, QueryRange queryRange, @Nullable Category category){
         switch (queryRange){
-            case CATEGORY -> {
-                Category category = categoryQueryService.findCategory(categoryId);
-                // TODO: checkIllegalMember()로 변경하기
-                if(category.isIllegalMember(member)){
-                    throw new BaseException(ErrorCode.CATEGORY_MEMBER_NOT_MATCH_IN_SCRAP);
-                }
+            case CATEGORY -> { // 카테고리에서 검색
                 spec = spec.and(ScrapSpecification.equalCategory(category));
             }
-            case FAVORITE -> {
+            case FAVORITE -> { // 즐겨찾기에서 검색
                 spec = spec.and(ScrapSpecification.isFavorite());
             }
         }
 
         return spec;
-    }
-
-    /**
-     * 요청된 스크랩 조회
-     * @throws IllegalArgumentException if scrapIdList empty
-     */
-    public List<Scrap> findAllByRequest(List<Long> scrapIdList, Member member){
-        List<Scrap> scrapList = new ArrayList<>();
-
-        if(scrapIdList.isEmpty()){
-            throw new IllegalArgumentException("scrapIdList가 비어있습니다.");
-        }
-        for(Long scrapId : scrapIdList){
-            Scrap scrap = findScrap(scrapId);
-
-            scrap.checkIllegalMember(member);
-
-            scrapList.add(scrap);
-        }
-
-        return scrapList;
     }
 }

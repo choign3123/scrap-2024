@@ -22,7 +22,7 @@ public interface ICategoryCommandService {
     /**
      * 카테고리 삭제
      */
-    public void deleteCategory(MemberDTO memberDTO, Long categoryId, Boolean allowDeleteScrap);
+    public void deleteCategory(MemberDTO memberDTO, Long categoryId);
 
     /**
      * 모든 카테고리 삭제하기

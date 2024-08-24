@@ -79,15 +79,13 @@ public class CategoryController {
     /**
      * [DELETE] /categories/{category-id}?allow_delete_category=
      * [API-9] 카테고리 삭제
-     * @param allowDeleteScrap 해당 카테고리에 속한 스크랩 삭제 여부
      */
     @DeleteMapping("/{category-id}")
-    public ResponseEntity<ResponseDTO> categoryRemove(@RequestHeader("Authorization") String token, @PathVariable("category-id") @ExistCategory Long categoryId,
-                                      @RequestParam("allow_delete_scrap") Boolean allowDeleteScrap){
+    public ResponseEntity<ResponseDTO> categoryRemove(@RequestHeader("Authorization") String token, @PathVariable("category-id") @ExistCategory Long categoryId){
 
         MemberDTO memberDTO = tokenProvider.parseAccessToMemberDTO(token);
 
-        categoryCommandService.deleteCategory(memberDTO, categoryId, allowDeleteScrap);
+        categoryCommandService.deleteCategory(memberDTO, categoryId);
 
         return ResponseEntity.ok(new ResponseDTO());
     }

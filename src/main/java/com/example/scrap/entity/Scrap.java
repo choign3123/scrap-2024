@@ -3,7 +3,6 @@ package com.example.scrap.entity;
 import com.example.scrap.base.code.ErrorCode;
 import com.example.scrap.base.exception.BaseException;
 import com.example.scrap.entity.base.BaseEntity;
-import com.example.scrap.entity.enums.ScrapStatus;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -11,7 +10,6 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -39,30 +37,22 @@ public class Scrap extends BaseEntity {
     @ColumnDefault("false")
     private Boolean isFavorite;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    @ColumnDefault("'ACTIVE'")
-    private ScrapStatus status;
-
-    private LocalDateTime trashedAt;
-
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
     private Category category;
 
     @Builder
-    public Scrap(String scrapURL, String title, String imageURL, String description, String memo, Boolean isFavorite, ScrapStatus status, Member member, Category category) {
+    public Scrap(String scrapURL, String title, String imageURL, String description, String memo, Boolean isFavorite, Member member, Category category) {
         this.scrapURL = scrapURL;
         this.title = title;
         this.imageURL = imageURL;
         this.description = description;
         this.memo = memo;
         this.isFavorite = isFavorite == null ? false : isFavorite;
-        this.status = status == null ? ScrapStatus.ACTIVE : status;
         setMember(member);
         setCategory(category);
     }
@@ -123,19 +113,12 @@ public class Scrap extends BaseEntity {
     }
 
     /**
-     * 스크랩 유효성 확인
-     * @return if status is ACTIVE return true, else return false.
-     */
-    public boolean isAvailable(){
-        return status == ScrapStatus.ACTIVE;
-    }
-
-    /**
      * 스크랩 휴지통 보내기
      */
-    public void toTrash(){
-        this.status = ScrapStatus.TRASH;
-        trashedAt = LocalDateTime.now();
+    public TrashScrap toTrash(){
+        category.getScrapList().remove(this);
+
+        return new TrashScrap(this);
     }
 
     /**
