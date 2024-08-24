@@ -1,10 +1,10 @@
 package com.example.scrap.category;
 
 import com.example.scrap.base.code.ErrorCode;
-import com.example.scrap.base.data.PolicyData;
 import com.example.scrap.base.exception.BaseException;
 import com.example.scrap.entity.Category;
 import com.example.scrap.entity.Member;
+import com.example.scrap.entity.enums.CategoryStatus;
 import com.example.scrap.entity.enums.SnsType;
 import com.example.scrap.web.category.CategoryQueryServiceImpl;
 import com.example.scrap.web.category.CategoryRepository;
@@ -48,7 +48,7 @@ public class CategoryQueryServiceImplTest {
         List<Category> categoryList = createCategoryList(member);
 
         when(memberQueryService.findMember(memberDTO)).thenReturn(member);
-        when(categoryRepository.findAllByMemberOrderBySequence(member)).thenReturn(categoryList);
+        when(categoryRepository.findAllByMemberAndStatusOrderBySequence(member, CategoryStatus.ACTIVE)).thenReturn(categoryList);
 
         // when
         final List<Category> findCategoryList = categoryQueryService.getCategoryWholeList(memberDTO);
@@ -58,46 +58,7 @@ public class CategoryQueryServiceImplTest {
                 .isEqualTo(categoryList.size());
     }
 
-    @DisplayName("기본 카테고리 찾기")
-    @Test
-    public void findDefaultCategory() {
-        //** given
-        Member member = setupMember();
-        // 기본 카테고리 생성
-        Category defaultCategory = setupCategory(member, true);
-        ReflectionTestUtils.setField(defaultCategory, "id", 1L); // id값 임의로 설정
-
-        when(categoryRepository.findByMemberAndIsDefaultTrue(member)).thenReturn(Optional.of(defaultCategory));
-
-        //** when
-        final Category findDefaultCategory = categoryQueryService.findDefaultCategory(member);
-
-        //** then
-        assertThat(findDefaultCategory.getId())
-                .isEqualTo(defaultCategory.getId());
-    }
-
-    @DisplayName("[에러] 기본 카테고리를 찾을 수 없을 때")
-    @Test
-    public void canNotFoundDefaultCategory() {
-        //** given
-        Member member = setupMember();
-        Optional<Category> defaultCategory = Optional.empty();
-
-        when(categoryRepository.findByMemberAndIsDefaultTrue(member)).thenReturn(defaultCategory);
-
-        //** when
-        Throwable throwable = catchThrowable(() -> {
-            categoryQueryService.findDefaultCategory(member);
-        });
-
-        //** then
-        assertThat(throwable)
-                .isInstanceOf(BaseException.class)
-                .hasMessageContaining(ErrorCode.DEFAULT_CATEGORY_NOT_FOUND.getMessage());
-    }
-
-    @DisplayName("id로 카테고리 찾기")
+    @DisplayName("카테고리 찾기")
     @Test
     public void findCategoryById(){
         //** given
@@ -112,6 +73,27 @@ public class CategoryQueryServiceImplTest {
         //** then
         assertThat(findCategory.getId())
                 .isEqualTo(category.getId());
+    }
+
+    @DisplayName("[에서] 카테고리 찾기 / 삭제된 카테고리 찾음")
+    @Test
+    public void errorFindCategoryById_foundDeleteCategory(){
+        //** given
+        Category category = setupCategory(setupMember(), false);
+        category.delete();
+        ReflectionTestUtils.setField(category, "id", 1L);
+
+        when(categoryRepository.findById(category.getId())).thenReturn(Optional.of(category));
+
+        //** when
+        Throwable throwable = catchThrowable(() -> {
+            categoryQueryService.findCategory(category.getId());
+        });
+
+        //** then
+        assertThat(throwable)
+                .isInstanceOf(BaseException.class)
+                .hasMessageContaining(ErrorCode.DELETED_CATEGORY.getCode());
     }
 
     private Member setupMember(){

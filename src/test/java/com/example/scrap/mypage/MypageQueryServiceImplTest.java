@@ -2,6 +2,7 @@ package com.example.scrap.mypage;
 
 import com.example.scrap.entity.Member;
 import com.example.scrap.entity.MemberLog;
+import com.example.scrap.entity.enums.CategoryStatus;
 import com.example.scrap.entity.enums.SnsType;
 import com.example.scrap.web.category.CategoryRepository;
 import com.example.scrap.web.member.IMemberQueryService;
@@ -15,12 +16,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.data.jpa.domain.Specification;
-import org.springframework.test.util.ReflectionTestUtils;
-
-import static org.assertj.core.api.Assertions.as;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -46,8 +42,8 @@ public class MypageQueryServiceImplTest {
         MemberDTO memberDTO = setupMemberDTO(member);
 
         when(memberQueryService.findMember(memberDTO)).thenReturn(member);
-        when(categoryRepository.countByMember(member)).thenReturn(7L);
-        when(scrapRepository.count(isA(Specification.class))).thenReturn(99L);
+        when(categoryRepository.countByMemberAndStatus(member, CategoryStatus.ACTIVE)).thenReturn(7);
+        when(scrapRepository.countAllByMember(member)).thenReturn(99);
 
         //** when
         MypageResponse.MypageDTO mypageDTO = mypageQueryService.mypage(memberDTO);

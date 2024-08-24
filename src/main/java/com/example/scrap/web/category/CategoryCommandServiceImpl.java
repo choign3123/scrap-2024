@@ -7,7 +7,7 @@ import com.example.scrap.converter.CategoryConverter;
 import com.example.scrap.entity.Category;
 import com.example.scrap.entity.Member;
 import com.example.scrap.entity.Scrap;
-import com.example.scrap.base.data.DefaultData;
+import com.example.scrap.entity.enums.CategoryStatus;
 import com.example.scrap.web.category.dto.CategoryRequest;
 import com.example.scrap.web.member.IMemberQueryService;
 import com.example.scrap.web.member.dto.MemberDTO;
@@ -39,13 +39,16 @@ public class CategoryCommandServiceImpl implements ICategoryCommandService {
         Member member = memberService.findMember(memberDTO);
 
         // 카테고리 생성 개수 제한 확인
-        boolean isExceedCategoryLimit = member.getCategoryList().size() >= PolicyData.CATEGORY_CREATE_LIMIT;
+        long numOfCategory = categoryRepository.countByMemberAndStatus(member, CategoryStatus.ACTIVE);
+        boolean isExceedCategoryLimit = numOfCategory >= PolicyData.CATEGORY_CREATE_LIMIT;
         if(isExceedCategoryLimit){
             throw new BaseException(ErrorCode.EXCEED_CATEGORY_CREATE_LIMIT);
         }
 
-        int newCategorySequence = categoryRepository.findMaxSequenceByMember(member)
-                .orElseThrow(() -> new NoSuchElementException("카테고리의 max sequence를 찾을 수 없음")) + 1;
+        int newCategorySequence = categoryRepository
+                .findMaxSequenceByMemberAndStatus(member, CategoryStatus.ACTIVE)
+                .orElseThrow(() -> new NoSuchElementException("카테고리의 max sequence를 찾을 수 없음"))
+                + 1;
 
         Category newCategory = CategoryConverter.toEntity(member, request, newCategorySequence);
 
@@ -56,8 +59,6 @@ public class CategoryCommandServiceImpl implements ICategoryCommandService {
 
     /**
      * 기본 카테고리 생성
-     * @param member
-     * @return
      */
     public Category createDefaultCategory(Member member){
 
@@ -70,8 +71,8 @@ public class CategoryCommandServiceImpl implements ICategoryCommandService {
 
     /**
      * 카테고리 삭제
-     * @param memberDTO
-     * @param categoryId 카테고리 식별자
+     * @throws BaseException 기본 카테고리를 삭제하려 했을 경우
+     * @throws BaseException 카테고리의 멤버와 요청멤버가 일치하지 않을 경우
      */
     public void deleteCategory(MemberDTO memberDTO, Long categoryId){
         Member member = memberService.findMember(memberDTO);
@@ -90,13 +91,13 @@ public class CategoryCommandServiceImpl implements ICategoryCommandService {
             scrapCommandService.throwScrapIntoTrash(scrap);
         }
 
-        categoryRepository.delete(category);
+        category.delete();
     }
 
     /**
      * 모든 카테고리 삭제하기
      */
-    public void deleteAllCategory(MemberDTO memberDTO){
+    public void deleteAllCategory(MemberDTO memberDTO){ // TODO: 메소드명에 hardDelete 붙이기. memberDTO -> member로 변경하기
         Member member = memberService.findMember(memberDTO);
 
         categoryRepository.deleteAllByMember(member);
@@ -104,10 +105,8 @@ public class CategoryCommandServiceImpl implements ICategoryCommandService {
 
     /** 
      * 카테고리명 수정
-     * @param memberDTO
-     * @param categoryId 카테고리 식별자
-     * @param request
-     * @return 수정된 카테고리
+     * @throws BaseException 기본 카테고리명을 수정하려 했을 경우
+     * @throws BaseException 카테고리의 멤버와 요청멤버가 일치하지 않을 경우
      */
     public Category updateCategoryTitle(MemberDTO memberDTO, Long categoryId, CategoryRequest.UpdateCategoryTitleDTO request){
         Member member = memberService.findMember(memberDTO);
@@ -128,16 +127,21 @@ public class CategoryCommandServiceImpl implements ICategoryCommandService {
 
     /**
      * 카테고리 순서 변경
+     * @throws BaseException 모든 카테고리에 대해 요청을 보내지 않은 경우
+     * @throws BaseException 해당하는 카테고리를 찾을 수 없는 경우
      * @return 새로운 순서로 정렬된 카테고리 목록
      */
     public List<Category> updateCategorySequence(MemberDTO memberDTO, CategoryRequest.UpdateCategorySequenceDTO request){
         Member member = memberService.findMember(memberDTO);
+        List<Category> categoryList = categoryRepository.findAllByMemberAndStatus(member, CategoryStatus.ACTIVE);
 
-        if(request.getCategoryList().size() != member.getCategoryList().size()){
+        // 모든 카테고리에 대해 요청했는지 확인
+        boolean isRequestCategoryNotAll = request.getCategoryList().size() != categoryList.size();
+        if(isRequestCategoryNotAll){
             throw new BaseException(ErrorCode.REQUEST_CATEGORY_COUNT_NOT_ALL);
         }
 
-        // 정렬된 카테고리 id에 sequence 순서대로 부여
+        // 순서가 변경된 카테고리 id에 차례대로 sequence 순서대로 부여
         Map<Long, Integer> changeSequenceMap = new HashMap<>();
         int newSequence = 1;
         for(Long categoryId : request.getCategoryList()){
@@ -146,12 +150,16 @@ public class CategoryCommandServiceImpl implements ICategoryCommandService {
         }
 
         // 순서 변경
-        for(Category category : member.getCategoryList()){
+        for(Category category : categoryList){
+            if(!changeSequenceMap.containsKey(category.getId())){ // 요청한 카테고리를 못찾은 경우
+                throw new BaseException(ErrorCode.CATEGORY_NOT_FOUND);
+            }
+
             category.changeSequence(changeSequenceMap.get(category.getId()));
         }
 
-        Collections.sort(member.getCategoryList());
-        return member.getCategoryList();
+        Collections.sort(categoryList);
+        return categoryList;
     }
 
 }

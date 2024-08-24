@@ -6,6 +6,7 @@ import com.example.scrap.base.exception.BaseException;
 import com.example.scrap.entity.Category;
 import com.example.scrap.entity.Member;
 import com.example.scrap.entity.Scrap;
+import com.example.scrap.entity.enums.CategoryStatus;
 import com.example.scrap.entity.enums.SnsType;
 import com.example.scrap.web.category.CategoryCommandServiceImpl;
 import com.example.scrap.web.category.CategoryRepository;
@@ -22,10 +23,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.util.ReflectionTestUtils;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
+import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
@@ -55,35 +53,36 @@ public class CategoryCommandServiceImplTest {
         //** given
         Member member = setupMember();
         MemberDTO memberDTO = setupMemberDTO(member);
+
+        // requestDTO 설정
         CategoryRequest.CreateCategoryDTO createCategoryDTO = new CategoryRequest.CreateCategoryDTO("테스트카테고리");
 
         when(memberQueryService.findMember(memberDTO)).thenReturn(member);
-        when(categoryRepository.findMaxSequenceByMember(member)).thenReturn(Optional.of(2));
+        when(categoryRepository.findMaxSequenceByMemberAndStatus(member, CategoryStatus.ACTIVE)).thenReturn(Optional.of(3));
+        when(categoryRepository.countByMemberAndStatus(member, CategoryStatus.ACTIVE)).thenReturn(PolicyData.CATEGORY_CREATE_LIMIT-1);
 
         //** when
         Category newCategory = categoryCommandService.createCategory(memberDTO, createCategoryDTO);
 
         //** then
-        // 제목 확인
-        assertThat(newCategory.getTitle())
+        assertThat(newCategory.getTitle()) // 제목 확인
                 .isEqualTo(createCategoryDTO.getCategoryTitle());
-        // sequence 확인
-        assertThat(newCategory.getSequence())
-                .isEqualTo(3);
+        assertThat(newCategory.getSequence()) // sequence 확인
+                .isEqualTo(4);
     }
 
-    @DisplayName("[에러] 카테고리 생성개수 초과")
+    @DisplayName("[에러] 카테고리 생성 / 카테고리 생성개수 초과")
     @Test
-    public void exceedCategoryCreate(){
+    public void errorCreateCategory_exceedCategoryCreateLimit(){
         //** given
         Member member = setupMember();
         MemberDTO memberDTO = setupMemberDTO(member);
+
+        // requestDTO 설정
         CategoryRequest.CreateCategoryDTO createCategoryDTO = new CategoryRequest.CreateCategoryDTO("테스트카테고리");
 
-        // 미리 최대 카테고리 개수만큼 생성해둠
-        setupCategoryList(member, PolicyData.CATEGORY_CREATE_LIMIT);
-
         when(memberQueryService.findMember(memberDTO)).thenReturn(member);
+        when(categoryRepository.countByMemberAndStatus(member, CategoryStatus.ACTIVE)).thenReturn(PolicyData.CATEGORY_CREATE_LIMIT);
 
         //** when
         Throwable throwable = catchThrowable(() -> {
@@ -96,16 +95,16 @@ public class CategoryCommandServiceImplTest {
                 .hasMessageContaining(ErrorCode.EXCEED_CATEGORY_CREATE_LIMIT.getMessage());
     }
 
-    @DisplayName("[에러] 사용자 카테고리 중 max sequence를 찾을 수 없음")
+    @DisplayName("[에러] 카테고리 생성하기 / 사용자 카테고리 중 max sequence를 찾을 수 없음")
     @Test
-    public void canNotFoundCategoryMaxSequence(){
+    public void errorCreateCategory_canNotFoundCategoryMaxSequence(){
         //** given
         Member member = setupMember();
         MemberDTO memberDTO = setupMemberDTO(member);
         CategoryRequest.CreateCategoryDTO createCategoryDTO = new CategoryRequest.CreateCategoryDTO("테스트카테고리");
 
         when(memberQueryService.findMember(memberDTO)).thenReturn(member);
-        when(categoryRepository.findMaxSequenceByMember(member)).thenReturn(Optional.empty());
+        when(categoryRepository.findMaxSequenceByMemberAndStatus(member, CategoryStatus.ACTIVE)).thenReturn(Optional.empty());
 
         //** when
         Throwable throwable = catchThrowable(() -> {
@@ -137,15 +136,16 @@ public class CategoryCommandServiceImplTest {
 
     @DisplayName("카테고리 삭제하기")
     @Test
-    public void deleteCategoryWithDeleteScrap() {
+    public void deleteCategory() {
         //** given
         Member member = setupMember();
         MemberDTO memberDTO = setupMemberDTO(member);
 
-        List<Category> testCategoryList = setupCategoryList(member, 2);
-        Category deleteCategory = testCategoryList.get(1); // 삭제할 카테고리
+        // 삭제할 카테고리 설정
+        Category deleteCategory = setupCategory(member, false);
 
-        List<Scrap> scrapList = setupScrapList(member, deleteCategory, 3); // 삭제할 카테고리에 속한 스크랩
+        // 삭제할 카테고리에 속한 스크랩 설정
+        List<Scrap> scrapList = setupScrapList(member, deleteCategory, 3);
 
         when(memberQueryService.findMember(memberDTO)).thenReturn(member);
         when(categoryQueryService.findCategory(deleteCategory.getId())).thenReturn(deleteCategory);
@@ -155,13 +155,17 @@ public class CategoryCommandServiceImplTest {
         categoryCommandService.deleteCategory(memberDTO, deleteCategory.getId());
 
         //** then
-        verify(categoryRepository, times(1)).delete(deleteCategory); // delete()가 1번 호출됐는지 확인
         verify(scrapCommandService, times(scrapList.size())).throwScrapIntoTrash(isA(Scrap.class));
+
+        assertThat(deleteCategory.getStatus())
+                .isEqualTo(CategoryStatus.DELETED);
+        assertThat(deleteCategory.getDeletedAt())
+                .isNotNull();
     }
 
-    @DisplayName("[에러] 삭제하려는 카테고리와 사용자가 일치하지 않음")
+    @DisplayName("[에러] 카테고리 삭제 / 삭제하려는 카테고리와 사용자가 일치하지 않음")
     @Test
-    public void deleteCategoryNotMatchToMember(){
+    public void errorDeleteCategory_notMatchToMember(){
         //** given
         Member member = setupMember();
         MemberDTO memberDTO = setupMemberDTO(member);
@@ -184,9 +188,9 @@ public class CategoryCommandServiceImplTest {
                 .hasMessageContaining(ErrorCode.CATEGORY_MEMBER_NOT_MATCH.getMessage());
     }
 
-    @DisplayName("[에러] 기본 카테고리는 삭제할 수 없음")
+    @DisplayName("[에러] 카테고리 삭제 / 기본 카테고리는 삭제할 수 없음")
     @Test
-    public void tryDeleteDefaultCategory(){
+    public void errorDeleteCategory_notAllowDeleteDefaultCategory(){
         //** given
         Member member = setupMember();
         MemberDTO memberDTO = setupMemberDTO(member);
@@ -246,9 +250,9 @@ public class CategoryCommandServiceImplTest {
                 .isEqualTo(requestDTO.getNewCategoryTitle());
     }
 
-    @DisplayName("[에러] 카테고리명 수정시, 수정하려는 카테고리와 사용자가 일치하지 않음")
+    @DisplayName("[에러] 카테고리명 수정 / 카테고리의 멤버와 요청멤버가 일치하지 않음")
     @Test
-    public void modifyCategoryNotMatchToMember(){
+    public void errorModifyCategory_categoryNotMatchToMember(){
         //** given
         Member member = setupMember();
         MemberDTO memberDTO = setupMemberDTO(member);
@@ -272,9 +276,9 @@ public class CategoryCommandServiceImplTest {
                 .hasMessageContaining(ErrorCode.CATEGORY_MEMBER_NOT_MATCH.getMessage());
     }
 
-    @DisplayName("[에러] 카테고리명 수정시, 기본 카테고리는 수정 불가")
+    @DisplayName("[에러] 카테고리명 수정 / 기본 카테고리는 수정 불가")
     @Test
-    public void notAllowModifyDefaultCategoryTitle(){
+    public void errorDeleteCategory_notAllowModifyDefaultCategoryTitle(){
         //** given
         Member member = setupMember();
         MemberDTO memberDTO = setupMemberDTO(member);
@@ -304,12 +308,13 @@ public class CategoryCommandServiceImplTest {
         Member member = setupMember();
         MemberDTO memberDTO = setupMemberDTO(member);
 
-        setupCategoryList(member, 5);
+        List<Category> categoryList = setupCategoryList(member, 5);
         CategoryRequest.UpdateCategorySequenceDTO requestDTO = new CategoryRequest.UpdateCategorySequenceDTO(
                 List.of(3L, 1L, 2L, 4L, 5L) // 이 순서대로 카테고리 순서 변경
         );
 
         when(memberQueryService.findMember(memberDTO)).thenReturn(member);
+        when(categoryRepository.findAllByMemberAndStatus(member, CategoryStatus.ACTIVE)).thenReturn(categoryList);
 
         //** when
         List<Category> changeCategoryList = categoryCommandService.updateCategorySequence(memberDTO, requestDTO);
@@ -331,12 +336,13 @@ public class CategoryCommandServiceImplTest {
         Member member = setupMember();
         MemberDTO memberDTO = setupMemberDTO(member);
 
-        setupCategoryList(member, 5);
+        List<Category> categoryList = setupCategoryList(member, 5);
         CategoryRequest.UpdateCategorySequenceDTO requestDTO = new CategoryRequest.UpdateCategorySequenceDTO(
                 List.of(1L, 2L, 4L, 3L, 5L) // 이 순서대로 카테고리 순서 변경
         );
 
         when(memberQueryService.findMember(memberDTO)).thenReturn(member);
+        when(categoryRepository.findAllByMemberAndStatus(member, CategoryStatus.ACTIVE)).thenReturn(categoryList);
 
         //** when
         List<Category> changeCategoryList = categoryCommandService.updateCategorySequence(memberDTO, requestDTO);
@@ -358,12 +364,13 @@ public class CategoryCommandServiceImplTest {
         Member member = setupMember();
         MemberDTO memberDTO = setupMemberDTO(member);
 
-        setupCategoryList(member, 5);
+        List<Category> categoryList = setupCategoryList(member, 5);
         CategoryRequest.UpdateCategorySequenceDTO requestDTO = new CategoryRequest.UpdateCategorySequenceDTO(
                 List.of(1L, 2L, 4L, 5L, 3L) // 이 순서대로 카테고리 순서 변경
         );
 
         when(memberQueryService.findMember(memberDTO)).thenReturn(member);
+        when(categoryRepository.findAllByMemberAndStatus(member, CategoryStatus.ACTIVE)).thenReturn(categoryList);
 
         //** when
         List<Category> changeCategoryList = categoryCommandService.updateCategorySequence(memberDTO, requestDTO);
@@ -378,9 +385,9 @@ public class CategoryCommandServiceImplTest {
                 .containsExactly(1L, 2L, 4L, 5L, 3L);
     }
 
-    @DisplayName("[에러] 카테고리 순서 변경 시, 모든 카테고리에 대해 요청하지 않음")
+    @DisplayName("[에러] 카테고리 순서 변경 / 모든 카테고리에 대해 요청하지 않음")
     @Test
-    public void notRequestAllCategorySequenceChange(){
+    public void errorChangeCategorySequence_notRequestAllCategorySequenceChange(){
         //** given
         Member member = setupMember();
         MemberDTO memberDTO = setupMemberDTO(member);
@@ -403,6 +410,32 @@ public class CategoryCommandServiceImplTest {
                 .hasMessageContaining(ErrorCode.REQUEST_CATEGORY_COUNT_NOT_ALL.getMessage());
     }
 
+    @DisplayName("[에러] 카테고리 순서 변경 / 요청한 카테고리가 존재하지 않음")
+    @Test
+    public void errorChangeCategorySequence_notFoundCategory(){
+        //** given
+        Member member = setupMember();
+        MemberDTO memberDTO = setupMemberDTO(member);
+
+        // 카테고리 설정
+        List<Category> categoryList = setupCategoryList(member, 5);
+        CategoryRequest.UpdateCategorySequenceDTO requestDTO = new CategoryRequest.UpdateCategorySequenceDTO(
+                List.of(1L, 2L, 4L, 5L, 99L) // 없는 카테고리에 대해 요청
+        );
+
+        when(memberQueryService.findMember(memberDTO)).thenReturn(member);
+        when(categoryRepository.findAllByMemberAndStatus(member, CategoryStatus.ACTIVE)).thenReturn(categoryList);
+
+        //** when
+        Throwable throwable = catchThrowable(() -> {
+            categoryCommandService.updateCategorySequence(memberDTO, requestDTO);
+        });
+
+        //** then
+        assertThat(throwable)
+                .isInstanceOf(BaseException.class)
+                .hasMessageContaining(ErrorCode.CATEGORY_NOT_FOUND.getMessage());
+    }
 
     private Member setupMember(){
         return Member.builder()

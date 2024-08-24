@@ -2,6 +2,7 @@ package com.example.scrap.web.category;
 
 import com.example.scrap.entity.Category;
 import com.example.scrap.entity.Member;
+import com.example.scrap.entity.enums.CategoryStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -12,12 +13,10 @@ import java.util.Optional;
 
 public interface CategoryRepository extends JpaRepository<Category, Long> {
 
-    public List<Category> findAllByMemberOrderBySequence(Member member);
-
     /**
-     * 기본 카테고리 찾기
+     * 순서에 맞게 카테고리 조회
      */
-    public Optional<Category> findByMemberAndIsDefaultTrue(Member member);
+    public List<Category> findAllByMemberAndStatusOrderBySequence(Member member, CategoryStatus status);
 
     @Modifying
     @Query("DELETE FROM Category c WHERE c.member =:member")
@@ -26,8 +25,17 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
     /**
      * 가장 높은 sequence를 가진 카테고리 찾기
      */
-    @Query("SELECT MAX(c.sequence) FROM Category c WHERE c.member =:member")
-    public Optional<Integer> findMaxSequenceByMember(@Param("member") Member member);
+    @Query("SELECT MAX(c.sequence) FROM Category c WHERE c.member =:member and c.status =:status")
+    public Optional<Integer> findMaxSequenceByMemberAndStatus(@Param("member") Member member, @Param("status") CategoryStatus status);
 
-    public long countByMember(Member member);
+
+    /**
+     * 총 카테고리 개수 조회
+     */
+    public int countByMemberAndStatus(Member member, CategoryStatus status);
+
+    /**
+     * 모든 카테고리 조회
+     */
+    public List<Category> findAllByMemberAndStatus(Member member, CategoryStatus status);
 }

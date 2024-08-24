@@ -4,6 +4,7 @@ import com.example.scrap.base.code.ErrorCode;
 import com.example.scrap.base.exception.BaseException;
 import com.example.scrap.entity.Category;
 import com.example.scrap.entity.Member;
+import com.example.scrap.entity.enums.CategoryStatus;
 import com.example.scrap.web.member.IMemberQueryService;
 import com.example.scrap.web.member.dto.MemberDTO;
 import lombok.RequiredArgsConstructor;
@@ -25,31 +26,24 @@ public class CategoryQueryServiceImpl implements ICategoryQueryService {
 
     /**
      * 카테고리 전체 조회
-     * @param memberDTO
-     * @return 전체 카테고리
      */
     public List<Category> getCategoryWholeList(MemberDTO memberDTO){
         Member member = memberService.findMember(memberDTO);
 
-        return categoryRepository.findAllByMemberOrderBySequence(member);
-    }
-
-    /**
-     * 기본 카테고리 찾기
-     * @param member
-     * @return
-     */
-    public Category findDefaultCategory(Member member){
-        return categoryRepository.findByMemberAndIsDefaultTrue(member)
-                .orElseThrow(() -> new BaseException(ErrorCode.DEFAULT_CATEGORY_NOT_FOUND));
+        return categoryRepository.findAllByMemberAndStatusOrderBySequence(member, CategoryStatus.ACTIVE);
     }
 
     /**
      * 카테고리 찾기
-     * @param categoryId
-     * @return
+     * @throws BaseException 삭제된 카테고리인 경우
      */
     public Category findCategory(Long categoryId){
-        return categoryRepository.findById(categoryId).get();
+        Category category = categoryRepository.findById(categoryId).get();
+
+        if(category.getStatus().equals(CategoryStatus.DELETED)){
+            throw new BaseException(ErrorCode.DELETED_CATEGORY);
+        }
+
+        return category;
     }
 }

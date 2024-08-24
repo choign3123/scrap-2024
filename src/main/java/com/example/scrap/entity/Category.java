@@ -3,6 +3,7 @@ package com.example.scrap.entity;
 import com.example.scrap.base.code.ErrorCode;
 import com.example.scrap.base.exception.BaseException;
 import com.example.scrap.entity.base.BaseEntity;
+import com.example.scrap.entity.enums.CategoryStatus;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -10,6 +11,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,6 +33,13 @@ public class Category extends BaseEntity implements Comparable<Category>{
     @ColumnDefault("false")
     private Boolean isDefault;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    @ColumnDefault("ACTIVE")
+    private CategoryStatus status;
+
+    private LocalDateTime deletedAt;
+
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "member_id")
     private Member member;
@@ -46,6 +55,7 @@ public class Category extends BaseEntity implements Comparable<Category>{
     public Category(String title, int sequence, Member member, Boolean isDefault) {
         this.title = title;
         this.isDefault = isDefault == null ? false : isDefault;
+        this.status = CategoryStatus.ACTIVE;
 
         if(sequence <= 0){
             throw new IllegalArgumentException("sequence는 1 이상의 숫자여야 함");
@@ -97,4 +107,11 @@ public class Category extends BaseEntity implements Comparable<Category>{
         this.sequence = sequence;
     }
 
+    /**
+     * 카테고리 삭제하기
+     */
+    public void delete(){
+        this.status = CategoryStatus.DELETED;
+        this.deletedAt = LocalDateTime.now();
+    }
 }
