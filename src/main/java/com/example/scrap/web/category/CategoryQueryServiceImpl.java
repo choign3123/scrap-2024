@@ -46,4 +46,21 @@ public class CategoryQueryServiceImpl implements ICategoryQueryService {
 
         return category;
     }
+
+    /**
+     * id로 카테고리 조회하기
+     *
+     * @throws BaseException 삭제된 카테고리인 경우
+     * @throws BaseException id로 찾은 카테고리의 멤버가 매개변수 멤버와 일치하지 않는 경우
+     */
+    @Override
+    public Category findCategory(Long categoryId, Member member) {
+        Category category = findCategory(categoryId);
+
+        if(category.isIllegalMember(member)){
+            throw new BaseException(ErrorCode.CATEGORY_MEMBER_NOT_MATCH);
+        }
+
+        return category;
+    }
 }

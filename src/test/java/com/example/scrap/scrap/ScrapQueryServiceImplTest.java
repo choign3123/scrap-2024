@@ -57,7 +57,9 @@ public class ScrapQueryServiceImplTest {
         ReflectionTestUtils.setField(category, "id", 99L);
 
         when(memberQueryService.findMember(memberDTO)).thenReturn(member);
-        when(categoryQueryService.findCategory(category.getId())).thenReturn(category);
+        when(categoryQueryService.findCategory(category.getId(), member)).thenThrow(
+                new BaseException(ErrorCode.CATEGORY_MEMBER_NOT_MATCH)
+        );
 
         //** when
         Throwable throwable = catchThrowable(() -> {

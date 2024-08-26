@@ -148,7 +148,7 @@ public class CategoryCommandServiceImplTest {
         List<Scrap> scrapList = setupScrapList(member, deleteCategory, 3);
 
         when(memberQueryService.findMember(memberDTO)).thenReturn(member);
-        when(categoryQueryService.findCategory(deleteCategory.getId())).thenReturn(deleteCategory);
+        when(categoryQueryService.findCategory(deleteCategory.getId(), member)).thenReturn(deleteCategory);
         when(scrapCommandService.throwScrapIntoTrash(isA(Scrap.class))).thenReturn(any());
 
         //** when
@@ -175,7 +175,9 @@ public class CategoryCommandServiceImplTest {
         ReflectionTestUtils.setField(deleteCategory, "id", 99L);
 
         when(memberQueryService.findMember(memberDTO)).thenReturn(member);
-        when(categoryQueryService.findCategory(deleteCategory.getId())).thenReturn(deleteCategory);
+        when(categoryQueryService.findCategory(deleteCategory.getId(), member)).thenThrow(
+                new BaseException(ErrorCode.CATEGORY_MEMBER_NOT_MATCH)
+        );
 
         //** when
         Throwable throwable = catchThrowable(() -> {
@@ -199,7 +201,7 @@ public class CategoryCommandServiceImplTest {
         ReflectionTestUtils.setField(defaultCategory, "id", 88L);
 
         when(memberQueryService.findMember(memberDTO)).thenReturn(member);
-        when(categoryQueryService.findCategory(defaultCategory.getId())).thenReturn(defaultCategory);
+        when(categoryQueryService.findCategory(defaultCategory.getId(), member)).thenReturn(defaultCategory);
 
         //** when
         Throwable throwable = catchThrowable(() -> {
@@ -240,7 +242,7 @@ public class CategoryCommandServiceImplTest {
         ReflectionTestUtils.setField(category, "id", 99L);
 
         when(memberQueryService.findMember(memberDTO)).thenReturn(member);
-        when(categoryQueryService.findCategory(category.getId())).thenReturn(category);
+        when(categoryQueryService.findCategory(category.getId(), member)).thenReturn(category);
 
         //** when
         Category modifyCategory = categoryCommandService.updateCategoryTitle(memberDTO, category.getId(), requestDTO);
@@ -263,7 +265,9 @@ public class CategoryCommandServiceImplTest {
         ReflectionTestUtils.setField(category, "id", 99L);
 
         when(memberQueryService.findMember(memberDTO)).thenReturn(member);
-        when(categoryQueryService.findCategory(category.getId())).thenReturn(category);
+        when(categoryQueryService.findCategory(category.getId(), member)).thenThrow(
+                new BaseException(ErrorCode.CATEGORY_MEMBER_NOT_MATCH)
+        );
 
         //** when
         Throwable throwable = catchThrowable(() -> {
@@ -288,7 +292,7 @@ public class CategoryCommandServiceImplTest {
         ReflectionTestUtils.setField(defaultCategory, "id", 88L);
 
         when(memberQueryService.findMember(memberDTO)).thenReturn(member);
-        when(categoryQueryService.findCategory(defaultCategory.getId())).thenReturn(defaultCategory);
+        when(categoryQueryService.findCategory(defaultCategory.getId(), member)).thenReturn(defaultCategory);
 
         //** when
         Throwable throwable = catchThrowable(() -> {

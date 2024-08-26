@@ -76,9 +76,7 @@ public class CategoryCommandServiceImpl implements ICategoryCommandService {
      */
     public void deleteCategory(MemberDTO memberDTO, Long categoryId){
         Member member = memberQueryService.findMember(memberDTO);
-        Category category = categoryQueryService.findCategory(categoryId);
-
-        category.checkIllegalMember(member);
+        Category category = categoryQueryService.findCategory(categoryId, member);
 
         // 기본 카테고리는 삭제할 수 없음
         if(category.getIsDefault()){
@@ -110,10 +108,7 @@ public class CategoryCommandServiceImpl implements ICategoryCommandService {
      */
     public Category updateCategoryTitle(MemberDTO memberDTO, Long categoryId, CategoryRequest.UpdateCategoryTitleDTO request){
         Member member = memberQueryService.findMember(memberDTO);
-        Category category = categoryQueryService.findCategory(categoryId);
-
-        // 카테고리를 만든 사용자가 맞는지 확인
-        category.checkIllegalMember(member);
+        Category category = categoryQueryService.findCategory(categoryId, member);
 
         // 기본 카테고리명은 수정 불가
         if(category.getIsDefault()){

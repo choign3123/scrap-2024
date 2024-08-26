@@ -40,9 +40,7 @@ public class ScrapQueryServiceImpl implements IScrapQueryService {
      */
     public Page<Scrap> getScrapListByCategory(MemberDTO memberDTO, Long categoryId, PageRequest pageRequest){
         Member member = memberQueryService.findMember(memberDTO);
-        Category category = categoryQueryService.findCategory(categoryId);
-
-        category.checkIllegalMember(member);
+        Category category = categoryQueryService.findCategory(categoryId, member);
 
         return scrapRepository.findByMemberAndCategory(member, category, pageRequest);
     }
@@ -80,8 +78,7 @@ public class ScrapQueryServiceImpl implements IScrapQueryService {
 
         // 카테고리를 대상으로 조회가 필요한 경우
         if(queryRange.equals(QueryRange.CATEGORY)){
-            category = categoryQueryService.findCategory(categoryId);
-            category.checkIllegalMember(member);
+            category = categoryQueryService.findCategory(categoryId, member);
         }
 
         // 동적인 쿼리 생성
@@ -101,8 +98,7 @@ public class ScrapQueryServiceImpl implements IScrapQueryService {
 
         // 카테고리를 대상으로 조회가 필요한 경우
         if(queryRange.equals(QueryRange.CATEGORY)){
-            category = categoryQueryService.findCategory(categoryId);
-            category.checkIllegalMember(member);
+            category = categoryQueryService.findCategory(categoryId, member);
         }
 
         // 동적인 쿼리 생성

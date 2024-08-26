@@ -78,7 +78,7 @@ public class ScrapCommandServiceImplTest {
         CreateScrapDTO requestDTO = new CreateScrapDTO(scrapURL, imageURL, title, description, memo, isFavorite);
 
         when(memberQueryService.findMember(memberDTO)).thenReturn(member);
-        when(categoryQueryService.findCategory(category.getId())).thenReturn(category);
+        when(categoryQueryService.findCategory(category.getId(), member)).thenReturn(category);
         when(scrapRepository.countAllByMember(member)).thenReturn(PolicyData.SCRAP_CREATE_LIMIT-1);
 
         //** when
@@ -116,7 +116,9 @@ public class ScrapCommandServiceImplTest {
         CreateScrapDTO requestDTO = new CreateScrapDTO(scrapURL, imageURL, title, description, memo, isFavorite);
 
         when(memberQueryService.findMember(memberDTO)).thenReturn(member);
-        when(categoryQueryService.findCategory(category.getId())).thenReturn(category);
+        when(categoryQueryService.findCategory(category.getId(), member)).thenThrow(
+                new BaseException(ErrorCode.CATEGORY_MEMBER_NOT_MATCH)
+        );
 
         //** when
         Throwable throwable = catchThrowable(() -> {
@@ -144,7 +146,7 @@ public class ScrapCommandServiceImplTest {
         CreateScrapDTO requestDTO = new CreateScrapDTO(scrapURL, imageURL, title, description, memo, isFavorite);
 
         when(memberQueryService.findMember(memberDTO)).thenReturn(member);
-        when(categoryQueryService.findCategory(category.getId())).thenReturn(category);
+        when(categoryQueryService.findCategory(category.getId(), member)).thenReturn(category);
         when(scrapRepository.countAllByMember(member)).thenReturn(PolicyData.SCRAP_CREATE_LIMIT);
 
         //** when
@@ -459,7 +461,7 @@ public class ScrapCommandServiceImplTest {
         }
 
         when(memberQueryService.findMember(memberDTO)).thenReturn(member);
-        when(categoryQueryService.findCategory(category.getId())).thenReturn(category);
+        when(categoryQueryService.findCategory(category.getId(), member)).thenReturn(category);
         when(scrapRepository.findAll(isA(Specification.class))).thenReturn(scrapList);
 
         //** when
@@ -490,7 +492,7 @@ public class ScrapCommandServiceImplTest {
         }
 
         when(memberQueryService.findMember(memberDTO)).thenReturn(member);
-        when(categoryQueryService.findCategory(category.getId())).thenReturn(category);
+        when(categoryQueryService.findCategory(category.getId(), member)).thenReturn(category);
         when(scrapRepository.findAll(isA(Specification.class))).thenReturn(scrapList);
 
         //** when
@@ -521,7 +523,7 @@ public class ScrapCommandServiceImplTest {
         }
 
         when(memberQueryService.findMember(memberDTO)).thenReturn(member);
-        when(categoryQueryService.findCategory(category.getId())).thenReturn(category);
+        when(categoryQueryService.findCategory(category.getId(), member)).thenReturn(category);
         when(scrapRepository.findAll(isA(Specification.class))).thenReturn(scrapList);
 
         //** when
@@ -547,7 +549,9 @@ public class ScrapCommandServiceImplTest {
         ReflectionTestUtils.setField(category, "id", 99L);
 
         when(memberQueryService.findMember(memberDTO)).thenReturn(member);
-        when(categoryQueryService.findCategory(category.getId())).thenReturn(category);
+        when(categoryQueryService.findCategory(category.getId(), member)).thenThrow(
+                new BaseException(ErrorCode.CATEGORY_MEMBER_NOT_MATCH)
+        );
 
         //** when
         Throwable throwable = catchThrowable(() -> {
@@ -581,7 +585,7 @@ public class ScrapCommandServiceImplTest {
 
         when(memberQueryService.findMember(memberDTO)).thenReturn(member);
         when(scrapQueryService.findScrap(scrap.getId())).thenReturn(scrap);
-        when(categoryQueryService.findCategory(moveCategory.getId())).thenReturn(moveCategory);
+        when(categoryQueryService.findCategory(moveCategory.getId(), member)).thenReturn(moveCategory);
 
         //** when
         scrapCommandService.moveCategoryOfScrap(memberDTO, scrap.getId(), requestDTO);
@@ -593,7 +597,7 @@ public class ScrapCommandServiceImplTest {
 
     @DisplayName("[에러] 스크랩 이동하기 (단건) / 스크랩과 멤버가 일치하지 않음")
     @Test
-    public void moveCategoryOfScrapError_scrapNotMatchToMember(){
+    public void errorMoveCategoryOfScrapError_scrapNotMatchToMember(){
         //** given
         Member member = setupMember();
         MemberDTO memberDTO = setupMemberDTO(member);
@@ -613,7 +617,7 @@ public class ScrapCommandServiceImplTest {
 
         when(memberQueryService.findMember(memberDTO)).thenReturn(member);
         when(scrapQueryService.findScrap(scrap.getId())).thenReturn(scrap);
-        when(categoryQueryService.findCategory(moveCategory.getId())).thenReturn(moveCategory);
+        when(categoryQueryService.findCategory(moveCategory.getId(), member)).thenReturn(moveCategory);
 
         //** when
         Throwable throwable = catchThrowable(() -> {
@@ -628,7 +632,7 @@ public class ScrapCommandServiceImplTest {
 
     @DisplayName("[에러] 스크랩 이동하기 (단건) / 카테고리와 멤버가 일치하지 않음")
     @Test
-    public void moveCategoryOfScrapError_categoryNotMatchToMember(){
+    public void errorMoveCategoryOfScrapError_categoryNotMatchToMember(){
         //** given
         Member member = setupMember();
         MemberDTO memberDTO = setupMemberDTO(member);
@@ -648,7 +652,9 @@ public class ScrapCommandServiceImplTest {
 
         when(memberQueryService.findMember(memberDTO)).thenReturn(member);
         when(scrapQueryService.findScrap(scrap.getId())).thenReturn(scrap);
-        when(categoryQueryService.findCategory(moveCategory.getId())).thenReturn(moveCategory);
+        when(categoryQueryService.findCategory(moveCategory.getId(), member)).thenThrow(
+                new BaseException(ErrorCode.CATEGORY_MEMBER_NOT_MATCH)
+        );
 
         //** when
         Throwable throwable = catchThrowable(() -> {
@@ -681,8 +687,8 @@ public class ScrapCommandServiceImplTest {
         MoveCategoryOfScrapsDTO requestDTO = new MoveCategoryOfScrapsDTO(null, moveCategory.getId());
 
         when(memberQueryService.findMember(memberDTO)).thenReturn(member);
-        when(categoryQueryService.findCategory(category.getId())).thenReturn(category);
-        when(categoryQueryService.findCategory(moveCategory.getId())).thenReturn(moveCategory);
+        when(categoryQueryService.findCategory(category.getId(), member)).thenReturn(category);
+        when(categoryQueryService.findCategory(moveCategory.getId(), member)).thenReturn(moveCategory);
         when(scrapRepository.findAll(isA(Specification.class))).thenReturn(scrapList);
 
         //** when
@@ -713,8 +719,10 @@ public class ScrapCommandServiceImplTest {
         MoveCategoryOfScrapsDTO requestDTO = new MoveCategoryOfScrapsDTO(null, moveCategory.getId());
 
         when(memberQueryService.findMember(memberDTO)).thenReturn(member);
-        when(categoryQueryService.findCategory(category.getId())).thenReturn(category);
-        when(categoryQueryService.findCategory(moveCategory.getId())).thenReturn(moveCategory);
+        when(categoryQueryService.findCategory(moveCategory.getId(), member)).thenReturn(moveCategory);
+        when(categoryQueryService.findCategory(category.getId(), member)).thenThrow(
+                new BaseException(ErrorCode.CATEGORY_MEMBER_NOT_MATCH)
+        );
 
         //** when
         Throwable throwable = catchThrowable(() -> {
@@ -749,7 +757,7 @@ public class ScrapCommandServiceImplTest {
         MoveCategoryOfScrapsDTO requestDTO = new MoveCategoryOfScrapsDTO(null, moveCategory.getId());
 
         when(memberQueryService.findMember(memberDTO)).thenReturn(member);
-        when(categoryQueryService.findCategory(moveCategory.getId())).thenReturn(moveCategory);
+        when(categoryQueryService.findCategory(moveCategory.getId(), member)).thenReturn(moveCategory);
         when(scrapRepository.findAll(isA(Specification.class))).thenReturn(scrapList);
 
         //** when
@@ -788,7 +796,7 @@ public class ScrapCommandServiceImplTest {
         MoveCategoryOfScrapsDTO requestDTO = new MoveCategoryOfScrapsDTO(scrapIdList, moveCategory.getId());
 
         when(memberQueryService.findMember(memberDTO)).thenReturn(member);
-        when(categoryQueryService.findCategory(moveCategory.getId())).thenReturn(moveCategory);
+        when(categoryQueryService.findCategory(moveCategory.getId(), member)).thenReturn(moveCategory);
         when(scrapRepository.findAll(isA(Specification.class))).thenReturn(scrapList);
 
         //** when
@@ -803,7 +811,7 @@ public class ScrapCommandServiceImplTest {
 
     @DisplayName("[에러] 스크랩 이동하기 (목록) / 이동하려는 카테고리와 멤버가 일치하지 않음")
     @Test
-    public void moveCategoryOfScrapsError_moveCategoryNotMatchToMember() {
+    public void errorMoveCategoryOfScrapsError_moveCategoryNotMatchToMember() {
         //** given
         Member member = setupMember();
         MemberDTO memberDTO = setupMemberDTO(member);
@@ -817,7 +825,9 @@ public class ScrapCommandServiceImplTest {
         MoveCategoryOfScrapsDTO requestDTO = new MoveCategoryOfScrapsDTO(null, moveCategory.getId());
 
         when(memberQueryService.findMember(memberDTO)).thenReturn(member);
-        when(categoryQueryService.findCategory(moveCategory.getId())).thenReturn(moveCategory);
+        when(categoryQueryService.findCategory(moveCategory.getId(), member)).thenThrow(
+                new BaseException(ErrorCode.CATEGORY_MEMBER_NOT_MATCH)
+        );
 
         //** when
         Throwable throwable = catchThrowable(() -> {
@@ -972,7 +982,7 @@ public class ScrapCommandServiceImplTest {
         List<Scrap> scrapList = setupScrapList(member, category, 10);
 
         when(memberQueryService.findMember(memberDTO)).thenReturn(member);
-        when(categoryQueryService.findCategory(category.getId())).thenReturn(category);
+        when(categoryQueryService.findCategory(category.getId(), member)).thenReturn(category);
         when(scrapRepository.findAll(isA(Specification.class))).thenReturn(scrapList);
 
         //** when
@@ -1002,7 +1012,9 @@ public class ScrapCommandServiceImplTest {
         List<Scrap> scrapList = setupScrapList(member, category, 10);
 
         when(memberQueryService.findMember(memberDTO)).thenReturn(member);
-        when(categoryQueryService.findCategory(category.getId())).thenReturn(category);
+        when(categoryQueryService.findCategory(category.getId(), member)).thenThrow(
+                new BaseException(ErrorCode.CATEGORY_MEMBER_NOT_MATCH)
+        );
 
         //** when
         Throwable throwable = catchThrowable(() -> {
