@@ -31,8 +31,8 @@ import java.util.List;
 @Slf4j
 public class ScrapCommandServiceImpl implements IScrapCommandService {
 
-    private final IMemberQueryService memberService; // TODO: 변수명 변경하기
-    private final ICategoryQueryService categoryService;
+    private final IMemberQueryService memberQueryService;
+    private final ICategoryQueryService categoryQueryService;
     private final IScrapQueryService scrapQueryService;
     private final ScrapRepository scrapRepository;
     private final TrashScrapRepository trashScrapRepository;
@@ -43,8 +43,8 @@ public class ScrapCommandServiceImpl implements IScrapCommandService {
      * @throws BaseException 스크랩 생성 개수를 초과할 경우
      */
     public Scrap createScrap(MemberDTO memberDTO, Long categoryId, ScrapRequest.CreateScrapDTO request){
-        Member member = memberService.findMember(memberDTO);
-        Category category = categoryService.findCategory(categoryId);
+        Member member = memberQueryService.findMember(memberDTO);
+        Category category = categoryQueryService.findCategory(categoryId);
 
         category.checkIllegalMember(member);
 
@@ -66,7 +66,7 @@ public class ScrapCommandServiceImpl implements IScrapCommandService {
      * @throws BaseException 스크랩의 멤버와 요청멤버가 일치하지 않을 경우
      */
     public Scrap toggleScrapFavorite(MemberDTO memberDTO, Long scrapId){
-        Member member = memberService.findMember(memberDTO);
+        Member member = memberQueryService.findMember(memberDTO);
         Scrap scrap = scrapQueryService.findScrap(scrapId);
 
         scrap.checkIllegalMember(member);
@@ -90,7 +90,7 @@ public class ScrapCommandServiceImpl implements IScrapCommandService {
                                                boolean isAllFavorite, QueryRange queryRange, Long categoryId,
                                                ScrapRequest.ToggleScrapFavoriteListDTO request){
 
-        Member member = memberService.findMember(memberDTO);
+        Member member = memberQueryService.findMember(memberDTO);
 
         // 동적인 쿼리 생성
         Specification<Scrap> spec = Specification.where(ScrapSpecification.equalMember(member));
@@ -98,7 +98,7 @@ public class ScrapCommandServiceImpl implements IScrapCommandService {
             Category category = null;
 
             if(queryRange.equals(QueryRange.CATEGORY)){
-                category = categoryService.findCategory(categoryId);
+                category = categoryQueryService.findCategory(categoryId);
                 category.checkIllegalMember(member);
             }
 
@@ -134,9 +134,9 @@ public class ScrapCommandServiceImpl implements IScrapCommandService {
      * @throws BaseException 스크랩의 멤버와 요청멤버가 일치하지 않을 경우
      */
     public Scrap moveCategoryOfScrap(MemberDTO memberDTO, Long scrapId, ScrapRequest.MoveCategoryOfScrapDTO request){
-        Member member = memberService.findMember(memberDTO);
+        Member member = memberQueryService.findMember(memberDTO);
         Scrap scrap = scrapQueryService.findScrap(scrapId);
-        Category moveCategory = categoryService.findCategory(request.getMoveCategoryId());
+        Category moveCategory = categoryQueryService.findCategory(request.getMoveCategoryId());
 
         // 해당 스크랩에 접근할 수 있는지 확인
         scrap.checkIllegalMember(member);
@@ -158,8 +158,8 @@ public class ScrapCommandServiceImpl implements IScrapCommandService {
     public List<Scrap> moveCategoryOfScraps(MemberDTO memberDTO, ScrapRequest.MoveCategoryOfScrapsDTO request,
                                             boolean isAllMove, QueryRange queryRange, Long categoryId){
 
-        Member member = memberService.findMember(memberDTO);
-        Category moveCategory = categoryService.findCategory(request.getMoveCategoryId());
+        Member member = memberQueryService.findMember(memberDTO);
+        Category moveCategory = categoryQueryService.findCategory(request.getMoveCategoryId());
 
         // TODO: moveCategory member 체크하기
 
@@ -169,7 +169,7 @@ public class ScrapCommandServiceImpl implements IScrapCommandService {
             Category category = null;
 
             if(queryRange.equals(QueryRange.CATEGORY)){
-                category = categoryService.findCategory(categoryId);
+                category = categoryQueryService.findCategory(categoryId);
                 category.checkIllegalMember(member);
             }
             spec = addQueryRangeSpec(spec, queryRange, category);
@@ -191,7 +191,7 @@ public class ScrapCommandServiceImpl implements IScrapCommandService {
      * @throws BaseException 스크랩의 멤버와 요청멤버가 일치하지 않을 경우
      */
     public Scrap updateScrapMemo(MemberDTO memberDTO, Long scrapId, ScrapRequest.UpdateScrapMemoDTO request){
-        Member member = memberService.findMember(memberDTO);
+        Member member = memberQueryService.findMember(memberDTO);
         Scrap scrap = scrapQueryService.findScrap(scrapId);
 
         scrap.checkIllegalMember(member);
@@ -206,7 +206,7 @@ public class ScrapCommandServiceImpl implements IScrapCommandService {
      * @throws BaseException 스크랩의 멤버와 요청멤버가 일치하지 않을 경우
      */
     public TrashScrap throwScrapIntoTrash(MemberDTO memberDTO, Long scrapId){
-        Member member = memberService.findMember(memberDTO);
+        Member member = memberQueryService.findMember(memberDTO);
         Scrap scrap = scrapQueryService.findScrap(scrapId);
 
         scrap.checkIllegalMember(member);
@@ -219,7 +219,7 @@ public class ScrapCommandServiceImpl implements IScrapCommandService {
      * @throws BaseException 카테고리의 멤버와 요청멤버가 일치하지 않을 경우
      */
     public List<TrashScrap> throwScrapListIntoTrash(MemberDTO memberDTO, boolean isAllDelete, QueryRange queryRange, Long categoryId, ScrapRequest.DeleteScrapListDTO request){
-        Member member = memberService.findMember(memberDTO);
+        Member member = memberQueryService.findMember(memberDTO);
 
         // 동적인 쿼리 생성
         Specification<Scrap> spec = Specification.where(ScrapSpecification.equalMember(member));
@@ -227,7 +227,7 @@ public class ScrapCommandServiceImpl implements IScrapCommandService {
             Category category = null;
 
             if(queryRange.equals(QueryRange.CATEGORY)){
-                category = categoryService.findCategory(categoryId);
+                category = categoryQueryService.findCategory(categoryId);
                 category.checkIllegalMember(member);
             }
 
@@ -264,7 +264,7 @@ public class ScrapCommandServiceImpl implements IScrapCommandService {
      * 스크랩 전체 삭제
      */
     public void deleteAllScrap(MemberDTO memberDTO){
-        Member member = memberService.findMember(memberDTO);
+        Member member = memberQueryService.findMember(memberDTO);
 
         scrapRepository.deleteAllByMember(member);
     }

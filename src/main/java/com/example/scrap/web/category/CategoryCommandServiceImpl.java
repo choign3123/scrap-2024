@@ -27,7 +27,7 @@ public class CategoryCommandServiceImpl implements ICategoryCommandService {
 
     private final CategoryRepository categoryRepository;
     private final ICategoryQueryService categoryQueryService;
-    private final IMemberQueryService memberService; // TODO: 메소드명 바꾸기
+    private final IMemberQueryService memberQueryService;
     private final IScrapCommandService scrapCommandService;
 
     /**
@@ -36,7 +36,7 @@ public class CategoryCommandServiceImpl implements ICategoryCommandService {
      * @throws NoSuchElementException 카테고리의 max sequence를 찾을 수 없을 시
      */
     public Category createCategory(MemberDTO memberDTO, CategoryRequest.CreateCategoryDTO request){
-        Member member = memberService.findMember(memberDTO);
+        Member member = memberQueryService.findMember(memberDTO);
 
         // 카테고리 생성 개수 제한 확인
         long numOfCategory = categoryRepository.countByMemberAndStatus(member, CategoryStatus.ACTIVE);
@@ -75,7 +75,7 @@ public class CategoryCommandServiceImpl implements ICategoryCommandService {
      * @throws BaseException 카테고리의 멤버와 요청멤버가 일치하지 않을 경우
      */
     public void deleteCategory(MemberDTO memberDTO, Long categoryId){
-        Member member = memberService.findMember(memberDTO);
+        Member member = memberQueryService.findMember(memberDTO);
         Category category = categoryQueryService.findCategory(categoryId);
 
         category.checkIllegalMember(member);
@@ -98,7 +98,7 @@ public class CategoryCommandServiceImpl implements ICategoryCommandService {
      * 모든 카테고리 삭제하기
      */
     public void deleteAllCategory(MemberDTO memberDTO){ // TODO: 메소드명에 hardDelete 붙이기. memberDTO -> member로 변경하기
-        Member member = memberService.findMember(memberDTO);
+        Member member = memberQueryService.findMember(memberDTO);
 
         categoryRepository.deleteAllByMember(member);
     }
@@ -109,7 +109,7 @@ public class CategoryCommandServiceImpl implements ICategoryCommandService {
      * @throws BaseException 카테고리의 멤버와 요청멤버가 일치하지 않을 경우
      */
     public Category updateCategoryTitle(MemberDTO memberDTO, Long categoryId, CategoryRequest.UpdateCategoryTitleDTO request){
-        Member member = memberService.findMember(memberDTO);
+        Member member = memberQueryService.findMember(memberDTO);
         Category category = categoryQueryService.findCategory(categoryId);
 
         // 카테고리를 만든 사용자가 맞는지 확인
@@ -132,7 +132,7 @@ public class CategoryCommandServiceImpl implements ICategoryCommandService {
      * @return 새로운 순서로 정렬된 카테고리 목록
      */
     public List<Category> updateCategorySequence(MemberDTO memberDTO, CategoryRequest.UpdateCategorySequenceDTO request){
-        Member member = memberService.findMember(memberDTO);
+        Member member = memberQueryService.findMember(memberDTO);
         List<Category> categoryList = categoryRepository.findAllByMemberAndStatus(member, CategoryStatus.ACTIVE);
 
         // 모든 카테고리에 대해 요청했는지 확인
