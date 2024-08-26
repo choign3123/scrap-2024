@@ -43,4 +43,6 @@ public interface IScrapQueryService {
      * 스크랩 찾기
      */
     public Scrap findScrap(Long scrapId);
+
+    // TODO: 스크랩 조회시 member 일치 여부도 함께 확인하는 메소드 추가하기
 }

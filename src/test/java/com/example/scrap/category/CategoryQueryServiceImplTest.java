@@ -77,7 +77,7 @@ public class CategoryQueryServiceImplTest {
 
     @DisplayName("[에서] 카테고리 찾기 / 삭제된 카테고리 찾음")
     @Test
-    public void errorFindCategoryById_foundDeleteCategory(){
+    public void errorFindCategoryById_foundDeletedCategory(){
         //** given
         Category category = setupCategory(setupMember(), false);
         category.delete();
@@ -94,6 +94,71 @@ public class CategoryQueryServiceImplTest {
         assertThat(throwable)
                 .isInstanceOf(BaseException.class)
                 .hasMessageContaining(ErrorCode.DELETED_CATEGORY.getCode());
+    }
+
+    @DisplayName("카테고리 찾기 - 멤버 일치 여부도 검증")
+    @Test
+    public void findCategory_validateEqualsMember(){
+        //** given
+        Member member = setupMember();
+
+        Category category = setupCategory(member, false);
+        ReflectionTestUtils.setField(category, "id", 1L);
+
+        when(categoryRepository.findById(category.getId())).thenReturn(Optional.of(category));
+
+        //** when
+        Category findCategory = categoryQueryService.findCategory(category.getId(), member);
+
+        //** then
+        assertThat(findCategory.getId())
+                .isEqualTo(category.getId());
+    }
+
+    @DisplayName("[에러] 카테고리 찾기 - 멤버 일치 여부도 검증 / 삭제된 카테고리 조회")
+    @Test
+    public void errorFindCategory_validateEqualsMember_foundDeletedCategory(){
+        //** given
+        Member member = setupMember();
+
+        Category category = setupCategory(member, false);
+        category.delete(); // 카테고리 삭제처리하기
+        ReflectionTestUtils.setField(category, "id", 1L);
+
+        when(categoryRepository.findById(category.getId())).thenReturn(Optional.of(category));
+
+        //** when
+        Throwable throwable = catchThrowable(() -> {
+            categoryQueryService.findCategory(category.getId(), member);
+        });
+
+        //** then
+        assertThat(throwable)
+                .isInstanceOf(BaseException.class)
+                .hasMessageContaining(ErrorCode.DELETED_CATEGORY.getCode());
+    }
+
+    @DisplayName("[에러] 카테고리 찾기 - 멤버 일치 여부도 검증 / 카테고리의 멤버와 매개변수 멤버가 일치하지 않음")
+    @Test
+    public void errorFindCategory_validateEqualsMember_categoryNotMatchToMember(){
+        //** given
+        Member member = setupMember();
+        Member otherMember = Member.builder().build();
+
+        Category category = setupCategory(otherMember, false);
+        ReflectionTestUtils.setField(category, "id", 1L);
+
+        when(categoryRepository.findById(category.getId())).thenReturn(Optional.of(category));
+
+        //** when
+        Throwable throwable = catchThrowable(() -> {
+            categoryQueryService.findCategory(category.getId(), member);
+        });
+
+        //** then
+        assertThat(throwable)
+                .isInstanceOf(BaseException.class)
+                .hasMessageContaining(ErrorCode.CATEGORY_MEMBER_NOT_MATCH.getCode());
     }
 
     private Member setupMember(){
