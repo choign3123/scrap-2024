@@ -6,7 +6,7 @@ import com.example.scrap.entity.Member;
 import com.example.scrap.entity.MemberLog;
 import com.example.scrap.entity.enums.LoginStatus;
 import com.example.scrap.entity.enums.SnsType;
-import com.example.scrap.jwt.TokenProvider;
+import com.example.scrap.jwt.ITokenProvider;
 import com.example.scrap.jwt.dto.Token;
 import com.example.scrap.jwt.dto.TokenType;
 import com.example.scrap.web.category.ICategoryCommandService;
@@ -47,7 +47,7 @@ public class MemberCommandServiceImplTest {
     private IScrapCommandService scrapCommandService;
 
     @Mock
-    private TokenProvider tokenProvider;
+    private ITokenProvider tokenProvider;
 
 
     @DisplayName("네이버 회워가입")

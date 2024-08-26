@@ -4,7 +4,7 @@ import com.example.scrap.base.exception.ValidationException;
 import com.example.scrap.base.response.ResponseDTO;
 import com.example.scrap.converter.CategoryConverter;
 import com.example.scrap.entity.Category;
-import com.example.scrap.jwt.TokenProvider;
+import com.example.scrap.jwt.ITokenProvider;
 import com.example.scrap.validation.annotaion.ExistCategory;
 import com.example.scrap.web.category.dto.CategoryRequest;
 import com.example.scrap.web.category.dto.CategoryResponse;
@@ -27,7 +27,7 @@ public class CategoryController {
 
     private final ICategoryQueryService categoryQueryService;
     private final ICategoryCommandService categoryCommandService;
-    private final TokenProvider tokenProvider;
+    private final ITokenProvider tokenProvider;
 
     /**
      * [POST] /categories

@@ -60,6 +60,7 @@ public class Member extends BaseEntity {
      * 로그아웃
      */
     public void logout() {
+        // TODO: refresh 토큰도 만료시키기
         this.getMemberLog().logout();
     }
 

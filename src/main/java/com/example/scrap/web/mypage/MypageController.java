@@ -1,7 +1,7 @@
 package com.example.scrap.web.mypage;
 
 import com.example.scrap.base.response.ResponseDTO;
-import com.example.scrap.jwt.TokenProvider;
+import com.example.scrap.jwt.ITokenProvider;
 import com.example.scrap.web.member.dto.MemberDTO;
 import com.example.scrap.web.mypage.dto.MypageResponse;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class MypageController {
 
     private final IMypageQueryService mypageService;
-    private final TokenProvider tokenProvider;
+    private final ITokenProvider tokenProvider;
 
     /**
      * [GET] /mypage

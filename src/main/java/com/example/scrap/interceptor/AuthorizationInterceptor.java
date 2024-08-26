@@ -4,7 +4,7 @@ import com.example.scrap.base.code.ErrorCode;
 import com.example.scrap.base.exception.AuthorizationException;
 import com.example.scrap.base.exception.ValidationException;
 import com.example.scrap.entity.Member;
-import com.example.scrap.jwt.TokenProvider;
+import com.example.scrap.jwt.ITokenProvider;
 import com.example.scrap.jwt.dto.TokenType;
 import com.example.scrap.web.member.IMemberQueryService;
 import com.example.scrap.web.member.dto.MemberDTO;
@@ -21,7 +21,7 @@ import javax.servlet.http.HttpServletResponse;
 @Slf4j
 public class AuthorizationInterceptor implements HandlerInterceptor {
 
-    private final TokenProvider tokenProvider;
+    private final ITokenProvider tokenProvider;
     private final IMemberQueryService memberQueryService;
 
     @Override

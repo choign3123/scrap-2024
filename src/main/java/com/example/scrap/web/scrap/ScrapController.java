@@ -4,7 +4,7 @@ import com.example.scrap.base.exception.ValidationException;
 import com.example.scrap.base.response.ResponseDTO;
 import com.example.scrap.converter.ScrapConverter;
 import com.example.scrap.entity.Scrap;
-import com.example.scrap.jwt.TokenProvider;
+import com.example.scrap.jwt.ITokenProvider;
 import com.example.scrap.validation.annotaion.*;
 import com.example.scrap.base.data.DefaultData;
 import com.example.scrap.base.enums.QueryRange;
@@ -34,7 +34,7 @@ public class ScrapController {
 
     private final IScrapQueryService scrapQueryService;
     private final IScrapCommandService scrapCommandService;
-    private final TokenProvider tokenProvider;
+    private final ITokenProvider tokenProvider;
 
     /**
      * [POST] /scraps/{category-id}

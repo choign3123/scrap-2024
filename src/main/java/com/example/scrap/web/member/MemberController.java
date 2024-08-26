@@ -5,7 +5,7 @@ import com.example.scrap.base.code.SuccessCode;
 import com.example.scrap.base.response.ResponseDTO;
 import com.example.scrap.converter.MemberConverter;
 import com.example.scrap.converter.OauthConverter;
-import com.example.scrap.jwt.TokenProvider;
+import com.example.scrap.jwt.ITokenProvider;
 import com.example.scrap.jwt.dto.Token;
 import com.example.scrap.web.member.dto.MemberResponse;
 import com.example.scrap.web.member.dto.MemberDTO;
@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.*;
 public class MemberController {
 
     private final IMemberCommandService memberCommandService;
-    private final TokenProvider tokenProvider;
+    private final ITokenProvider tokenProvider;
 
     /**
      * [POST] /oauth/naver/login

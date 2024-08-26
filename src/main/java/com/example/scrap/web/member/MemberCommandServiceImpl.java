@@ -6,7 +6,7 @@ import com.example.scrap.converter.MemberConverter;
 import com.example.scrap.entity.Member;
 import com.example.scrap.entity.MemberLog;
 import com.example.scrap.entity.enums.SnsType;
-import com.example.scrap.jwt.TokenProvider;
+import com.example.scrap.jwt.ITokenProvider;
 import com.example.scrap.jwt.dto.Token;
 import com.example.scrap.jwt.dto.TokenType;
 import com.example.scrap.web.category.ICategoryCommandService;
@@ -29,7 +29,7 @@ public class MemberCommandServiceImpl implements IMemberCommandService {
     private final IMemberQueryService memberQueryService;
     private final ICategoryCommandService categoryCommandService;
     private final IScrapCommandService scrapCommandService;
-    private final TokenProvider tokenProvider;
+    private final ITokenProvider tokenProvider;
     private final NaverProvider naverProvider;
 
     /**

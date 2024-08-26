@@ -4,7 +4,7 @@ import com.example.scrap.base.exception.ValidationException;
 import com.example.scrap.base.response.ResponseDTO;
 import com.example.scrap.converter.SearchConverter;
 import com.example.scrap.entity.Scrap;
-import com.example.scrap.jwt.TokenProvider;
+import com.example.scrap.jwt.ITokenProvider;
 import com.example.scrap.validation.annotaion.EnumValid;
 import com.example.scrap.validation.annotaion.PagingPage;
 import com.example.scrap.validation.annotaion.PagingSize;
@@ -32,7 +32,7 @@ import javax.validation.constraints.NotBlank;
 public class SearchController {
 
     private final ISearchQueryService searchService;
-    private final TokenProvider tokenProvider;
+    private final ITokenProvider tokenProvider;
 
     /**
      * [POST] /search

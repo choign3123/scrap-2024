@@ -26,10 +26,10 @@ import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class TokenProviderTest {
+public class TokenProviderImplTest {
 
     @InjectMocks
-    private TokenProvider tokenProvider;
+    private ITokenProvider tokenProvider;
 
     @Mock
     private IMemberQueryService memberQueryService;
