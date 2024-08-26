@@ -29,7 +29,7 @@ import static org.mockito.Mockito.when;
 public class TokenProviderImplTest {
 
     @InjectMocks
-    private ITokenProvider tokenProvider;
+    private TokenProviderImpl tokenProvider;
 
     @Mock
     private IMemberQueryService memberQueryService;
