@@ -6,6 +6,7 @@ import com.example.scrap.base.exception.ValidationException;
 import com.example.scrap.entity.Member;
 import com.example.scrap.jwt.ITokenProvider;
 import com.example.scrap.jwt.dto.TokenType;
+import com.example.scrap.redis.ILogoutBlacklistRedisUtils;
 import com.example.scrap.web.member.IMemberQueryService;
 import com.example.scrap.web.member.dto.MemberDTO;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +24,7 @@ public class AuthorizationInterceptor implements HandlerInterceptor {
 
     private final ITokenProvider tokenProvider;
     private final IMemberQueryService memberQueryService;
+    private final ILogoutBlacklistRedisUtils logoutBlacklistRedisUtils;
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler){
@@ -30,6 +32,11 @@ public class AuthorizationInterceptor implements HandlerInterceptor {
         String accessToken = request.getHeader("Authorization");
         if(accessToken == null){
             throw new ValidationException("Authorization", "인증 토큰이 없습니다.");
+        }
+
+        // 로그아웃 처리된 토큰인지 검사
+        if(logoutBlacklistRedisUtils.existToken(accessToken)){
+            throw new AuthorizationException(ErrorCode.LOGOUT_TOKEN);
         }
 
         // 토큰 유효성 검사

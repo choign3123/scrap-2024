@@ -9,6 +9,7 @@ import com.example.scrap.entity.enums.SnsType;
 import com.example.scrap.jwt.ITokenProvider;
 import com.example.scrap.jwt.dto.Token;
 import com.example.scrap.jwt.dto.TokenType;
+import com.example.scrap.redis.ILogoutBlacklistRedisUtils;
 import com.example.scrap.web.category.ICategoryCommandService;
 import com.example.scrap.web.member.dto.MemberDTO;
 import com.example.scrap.web.oauth.NaverProvider;
@@ -31,6 +32,7 @@ public class MemberCommandServiceImpl implements IMemberCommandService {
     private final IScrapCommandService scrapCommandService;
     private final ITokenProvider tokenProvider;
     private final NaverProvider naverProvider;
+    private final ILogoutBlacklistRedisUtils logoutBlacklistRedisUtils;
 
     /**
      * 네이버 로그인
@@ -99,8 +101,10 @@ public class MemberCommandServiceImpl implements IMemberCommandService {
     /**
      * 로그아웃
      */
-    public void logout(MemberDTO memberDTO){
+    public void logout(MemberDTO memberDTO, String token){
         Member member = memberQueryService.findMember(memberDTO);
+
+        logoutBlacklistRedisUtils.addLogoutToken(token, member);
 
         member.logout();
     }

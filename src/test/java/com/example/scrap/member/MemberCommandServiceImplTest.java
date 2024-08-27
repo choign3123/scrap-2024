@@ -172,10 +172,13 @@ public class MemberCommandServiceImplTest {
         MemberLog memberLog = new MemberLog();
         ReflectionTestUtils.setField(member, "memberLog", memberLog);
 
+        // 임의 토큰 설정
+        String token = "tempToken";
+
         when(memberQueryService.findMember(memberDTO)).thenReturn(member);
 
         //** when
-        memberCommandService.logout(memberDTO);
+        memberCommandService.logout(memberDTO, token);
 
         //** then
         assertThat(member.getMemberLog().getLoginStatus())
