@@ -19,6 +19,6 @@ spring:
 
 jwt:
   secret: ${JWT_SECRET}
-  expire_day:
-    access: ${EXPIRE_DAY_OF_ACCESS}
-    refresh: ${EXPIRE_DAY_OF_REFRESH}
+  expire:
+    access_hour: ${EXPIRE_HOUR_OF_ACCESS}
+    refresh_day: ${EXPIRE_DAY_OF_REFRESH}

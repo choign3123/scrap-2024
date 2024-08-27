@@ -35,14 +35,14 @@ public class TokenProviderImplTest {
     private IMemberQueryService memberQueryService;
 
     private final String jwtSecretKey = System.getenv("JWT_SECRET");
-    private final int expireDayOfAccessToken = Integer.parseInt(System.getenv("EXPIRE_DAY_OF_ACCESS"));
+    private final int expireHourOfAccessToken = Integer.parseInt(System.getenv("EXPIRE_HOUR_OF_ACCESS"));
     private final int expireDayOfRefreshToken = Integer.parseInt(System.getenv("EXPIRE_DAY_OF_REFRESH"));
 
     @BeforeEach
     @DisplayName("tokenProvider 환경 변수 주입")
     public void setupEnvironmentVariable() {
         ReflectionTestUtils.setField(tokenProvider, "jwtSecretKey", jwtSecretKey);
-        ReflectionTestUtils.setField(tokenProvider, "expireDayOfAccessToken", expireDayOfAccessToken);
+        ReflectionTestUtils.setField(tokenProvider, "expireHourOfAccessToken", expireHourOfAccessToken);
         ReflectionTestUtils.setField(tokenProvider, "expireDayOfRefreshToken", expireDayOfRefreshToken);
     }
 
@@ -60,8 +60,8 @@ public class TokenProviderImplTest {
         // access 토큰 검증
         assertThat(tokenProvider.equalsTokenType(token.getAccessToken(), TokenType.ACCESS)) // access 타입인지 확인
                 .isTrue();
-        assertThat(getTokenExpireTime(token.getAccessToken())) // 만료일 설정 잘 됐는지 확인
-                .isEqualTo(parseDayToMs(expireDayOfAccessToken));
+        assertThat(getTokenTTL(token.getAccessToken())) // 만료일 설정 잘 됐는지 확인
+                .isEqualTo(pareHourToMs(expireHourOfAccessToken));
         assertThat(tokenProvider.isTokenValid(token.getAccessToken())) // 토큰 유효성 확인
                 .isTrue();
         MemberDTO accessMemberDTO = tokenProvider.parseAccessToMemberDTO(token.getAccessToken());
@@ -75,7 +75,7 @@ public class TokenProviderImplTest {
         // refresh 토큰 검증
         assertThat(tokenProvider.equalsTokenType(token.getRefreshToken(), TokenType.REFRESH)) // refresh 타입인지 확인
                 .isTrue();
-        assertThat(getTokenExpireTime(token.getRefreshToken())) // 만료일 설정 잘 됐는지 확인
+        assertThat(getTokenTTL(token.getRefreshToken())) // 만료일 설정 잘 됐는지 확인
                 .isEqualTo(parseDayToMs(expireDayOfRefreshToken));
         assertThat(tokenProvider.isTokenValid(token.getRefreshToken())) // 토큰 유효성 확인
                 .isTrue();
@@ -110,8 +110,8 @@ public class TokenProviderImplTest {
         // access 토큰 검증
         assertThat(tokenProvider.equalsTokenType(reissuedToken.getAccessToken(), TokenType.ACCESS)) // access 타입인지 확인
                 .isTrue();
-        assertThat(getTokenExpireTime(reissuedToken.getAccessToken())) // 만료일 설정 잘 됐는지 확인
-                .isEqualTo(parseDayToMs(expireDayOfAccessToken));
+        assertThat(getTokenTTL(reissuedToken.getAccessToken())) // 만료일 설정 잘 됐는지 확인
+                .isEqualTo(pareHourToMs(expireHourOfAccessToken));
         MemberDTO accessMemberDTO = tokenProvider.parseAccessToMemberDTO(reissuedToken.getAccessToken());
         assertThat(accessMemberDTO.getMemberId().orElse(null))
                 .isEqualTo(member.getId());
@@ -123,7 +123,7 @@ public class TokenProviderImplTest {
         // refresh 토큰 검증
         assertThat(tokenProvider.equalsTokenType(reissuedToken.getRefreshToken(), TokenType.REFRESH)) // refresh 타입인지 확인
                 .isTrue();
-        assertThat(getTokenExpireTime(reissuedToken.getRefreshToken())) // 만료일 설정 잘 됐는지 확인
+        assertThat(getTokenTTL(reissuedToken.getRefreshToken())) // 만료일 설정 잘 됐는지 확인
                 .isEqualTo(parseDayToMs(expireDayOfRefreshToken));
         assertThat(getRefreshTokenId(reissuedToken.getRefreshToken())) // refreshTokenId 설정 됐는지 확인
                 .isEqualTo(member.getMemberLog().getRefreshTokenId());
@@ -240,13 +240,13 @@ public class TokenProviderImplTest {
         ReflectionTestUtils.setField(member, "id", 1L);
 
         // 만료된 토큰을 만들기 위한 expireDay 변경
-        ReflectionTestUtils.setField(tokenProvider, "expireDayOfAccessToken", 0);
+        ReflectionTestUtils.setField(tokenProvider, "expireHourOfAccessToken", 0);
         ReflectionTestUtils.setField(tokenProvider, "expireDayOfRefreshToken", 0);
         // 토큰 설정
         Token token = tokenProvider.createToken(member);
 
         // expireDay 원상 복귀
-        ReflectionTestUtils.setField(tokenProvider, "expireDayOfAccessToken", expireDayOfAccessToken);
+        ReflectionTestUtils.setField(tokenProvider, "expireHourOfAccessToken", expireHourOfAccessToken);
         ReflectionTestUtils.setField(tokenProvider, "expireDayOfRefreshToken", expireDayOfRefreshToken);
 
         //** when
@@ -396,7 +396,7 @@ public class TokenProviderImplTest {
                 .isEqualTo("testToken");
     }
 
-    private long getTokenExpireTime(String token){
+    private long getTokenTTL(String token){
         Date issuedAt = Jwts.parser().setSigningKey(jwtSecretKey)
                 .parseClaimsJws(token)
                 .getBody()
@@ -421,6 +421,13 @@ public class TokenProviderImplTest {
 
     private long parseDayToMs(int day){
         return day * 1000 * 60 * 60 * 24L;
+    }
+
+    /**
+     * hour를 밀리초로 변환
+     */
+    private long pareHourToMs(int hour) {
+        return hour * 60L * 60L * 1000L; // 초, 분, 밀리단위
     }
 
     private Member setupMember(){

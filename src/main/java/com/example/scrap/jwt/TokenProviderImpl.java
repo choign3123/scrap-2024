@@ -28,10 +28,10 @@ public class TokenProviderImpl implements ITokenProvider{
     @Value("${jwt.secret}")
     private String jwtSecretKey;
 
-    @Value("${jwt.expire_day.access}")
-    private int expireDayOfAccessToken;
+    @Value("${jwt.expire.access_hour}")
+    private int expireHourOfAccessToken;
 
-    @Value("${jwt.expire_day.refresh}")
+    @Value("${jwt.expire.refresh_day}")
     private int expireDayOfRefreshToken;
 
     private final IMemberQueryService memberQueryService;
@@ -121,7 +121,7 @@ public class TokenProviderImpl implements ITokenProvider{
         return Jwts.builder()
                 .setClaims(claims)
                 .setIssuedAt(new Date(currentTimeMills))
-                .setExpiration(new Date(currentTimeMills + parseDayToMs(expireDayOfAccessToken)))
+                .setExpiration(new Date(currentTimeMills + pareHourToMs(expireHourOfAccessToken)))
                 .signWith(SignatureAlgorithm.HS256, jwtSecretKey)
                 .compact();
     }

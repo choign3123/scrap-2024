@@ -14,8 +14,8 @@ import java.util.concurrent.TimeUnit;
 @RequiredArgsConstructor
 public class LogoutBlacklistLogoutBlacklistRedisUtils implements ILogoutBlacklistRedisUtils {
 
-    @Value("${jwt.expire_day.access}")
-    private int accessTokenDay;
+    @Value("${jwt.expire.access_hour}")
+    private int expireHourOfAccessToken;
 
     private final RedisTemplate<String, String> redisTemplate;
     private final ITokenProvider tokenProvider;
@@ -26,7 +26,7 @@ public class LogoutBlacklistLogoutBlacklistRedisUtils implements ILogoutBlacklis
         String value = createValue(member);
 
         redisTemplate.opsForValue()
-                .set(key, value, accessTokenDay, TimeUnit.DAYS);
+                .set(key, value, expireHourOfAccessToken, TimeUnit.HOURS);
     }
 
     @Override
