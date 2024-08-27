@@ -12,7 +12,7 @@ import java.util.concurrent.TimeUnit;
 
 @Component
 @RequiredArgsConstructor
-public class LogoutBlacklistLogoutBlacklistRedisUtils implements ILogoutBlacklistRedisUtils {
+public class LogoutBlacklistRedisUtils implements ILogoutBlacklistRedisUtils {
 
     @Value("${jwt.expire.access_hour}")
     private int expireHourOfAccessToken;
