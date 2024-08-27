@@ -73,6 +73,7 @@ public class TokenProviderImpl implements ITokenProvider{
             throw new IllegalArgumentException("refresh 토큰이 아님");
         }
 
+        // TODO: 여기서 member를 조회하는 것이 아니라, 이 메소드를 쓰는 쪽에서 member를 인자로 건내주는게 단일책임원칙에 부합할 것 같음!
         Member member = findMemberByRefreshToken(refreshToken);
 
         // 이미 사용된 refreshToken인지 확인 (일회용)

@@ -23,7 +23,6 @@ public enum ErrorCode implements BaseCode{
     NOT_REFRESH_TOKEN(HttpStatus.NOT_ACCEPTABLE, "Authorization004", "다시 로그인후 서비스 이용 바랍니다."),
     ACCESS_MEMBER_AND_REFRESH_MEMBER_NOT_MATCH(HttpStatus.NOT_ACCEPTABLE, "Authorization005", "다시 로그인후 서비스 이용 바랍니다."),
     TOKEN_VALUE_NOT_MATCH_TO_MEMBER(HttpStatus.NOT_ACCEPTABLE, "Authorization006", "다시 로그인후 서비스 이용 바랍니다."),
-    LOGOUT_STATUS(HttpStatus.NOT_ACCEPTABLE, "Authorization007", "다시 로그인후 서비스 이용 바랍니다."),
     INNER_TOKEN_VALUE_WRONG(HttpStatus.NOT_ACCEPTABLE, "Authorization009", "다시 로그인후 서비스 이용 바랍니다."), // 토큰에 든 값이 잘못된 경우
     REFRESH_TOKEN_ALREADY_USED(HttpStatus.NOT_ACCEPTABLE, "Authorization010", "이미 사용된 갱신 토큰입니다."),
     LOGOUT_TOKEN(HttpStatus.NOT_ACCEPTABLE, "Authorization011", "다시 로그인후 서비스 이용 바랍니다."),
@@ -35,7 +34,6 @@ public enum ErrorCode implements BaseCode{
     MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, "MEMBER001", "해당하는 사용자가 존재하지 않습니다."),
 
     // MemberLog 에러
-    MEMBER_LOG_STATUS_NOT_MATCH(HttpStatus.NOT_ACCEPTABLE, "MemberLog001", "다시 로그인후 서비스 이용 바랍니다."),
 
     // Category Error
     CATEGORY_NOT_FOUND(HttpStatus.NOT_FOUND, "CATEGORY001", "해당하는 카테고리가 존재하지 않습니다."),

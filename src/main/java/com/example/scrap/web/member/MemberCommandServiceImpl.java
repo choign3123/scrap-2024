@@ -82,16 +82,8 @@ public class MemberCommandServiceImpl implements IMemberCommandService {
         // 토큰 유효성 검사
         tokenProvider.isTokenValid(refreshToken);
 
-        if(!tokenProvider.equalsTokenType(refreshToken, TokenType.REFRESH)){
+        if(!tokenProvider.equalsTokenType(refreshToken, TokenType.REFRESH)) {
             throw new AuthorizationException(ErrorCode.NOT_REFRESH_TOKEN);
-        }
-
-        // 로그인한 유저인지 검사
-        MemberDTO memberDTO = tokenProvider.parseRefreshToMemberDTO(refreshToken);
-        Member member = memberQueryService.findMemberWithLog(memberDTO);
-        switch (member.getMemberLog().getLoginStatus()){
-            case ACTIVE -> {} // pass
-            case LOGOUT -> throw new AuthorizationException(ErrorCode.LOGOUT_STATUS);
         }
 
         // 토큰 재발급
@@ -106,7 +98,7 @@ public class MemberCommandServiceImpl implements IMemberCommandService {
 
         logoutBlacklistRedisUtils.addLogoutToken(token, member);
 
-        member.logout();
+        // TODO: refresh 토큰도 못쓰게 만들기
     }
 
     /**

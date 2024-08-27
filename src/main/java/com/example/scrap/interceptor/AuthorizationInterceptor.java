@@ -48,18 +48,11 @@ public class AuthorizationInterceptor implements HandlerInterceptor {
         }
 
         MemberDTO memberDTO = tokenProvider.parseAccessToMemberDTO(accessToken);
-        Member member = memberQueryService.findMemberWithLog(memberDTO);
+        Member member = memberQueryService.findMember(memberDTO);
 
         // member의 id와 snsId, snsType이 token의 값과 일치하는지 확인
         if(!memberDTO.isMatchMember(member)){
             throw new AuthorizationException(ErrorCode.TOKEN_VALUE_NOT_MATCH_TO_MEMBER);
-        }
-
-        // 로그인 상태인지 검사
-        switch (member.getMemberLog().getLoginStatus()){
-            case ACTIVE -> {} // pass
-            case LOGOUT -> throw new AuthorizationException(ErrorCode.LOGOUT_STATUS);
-            default -> throw new AuthorizationException(ErrorCode.MEMBER_LOG_STATUS_NOT_MATCH);
         }
 
         log.info("auth 인터셉터-member: {}", member.getName());

@@ -20,10 +20,6 @@ public class MemberLog extends BaseEntity {
     @Column(nullable = false)
     private LocalDateTime loginAt;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private LoginStatus loginStatus;
-
     @Column(nullable = false)
     private Long refreshTokenId;
 
@@ -33,7 +29,6 @@ public class MemberLog extends BaseEntity {
      */
     public MemberLog() {
         this.loginAt = LocalDateTime.now();
-        this.loginStatus = LoginStatus.ACTIVE;
         this.refreshTokenId = 0L;
     }
 
@@ -42,14 +37,6 @@ public class MemberLog extends BaseEntity {
      */
     public void login(){
         this.loginAt = LocalDateTime.now();
-        this.loginStatus = LoginStatus.ACTIVE;
-    }
-
-    /**
-     * 로그아웃
-     */
-    public void logout(){
-        this.loginStatus = LoginStatus.LOGOUT;
     }
 
     /**
