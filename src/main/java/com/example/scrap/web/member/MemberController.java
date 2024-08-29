@@ -70,7 +70,7 @@ public class MemberController {
     public ResponseEntity<ResponseDTO> logout(@RequestHeader("Authorization") String token){
         MemberDTO memberDTO = tokenProvider.parseAccessToMemberDTO(token);
 
-        memberCommandService.logout(memberDTO);
+        memberCommandService.logout(memberDTO, token);
 
         return ResponseEntity.ok(new ResponseDTO<Void>());
     }

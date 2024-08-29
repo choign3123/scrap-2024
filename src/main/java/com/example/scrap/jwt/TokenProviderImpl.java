@@ -28,10 +28,10 @@ public class TokenProviderImpl implements ITokenProvider{
     @Value("${jwt.secret}")
     private String jwtSecretKey;
 
-    @Value("${jwt.expire_day.access}")
-    private int expireDayOfAccessToken;
+    @Value("${jwt.expire.access_hour}")
+    private int expireHourOfAccessToken;
 
-    @Value("${jwt.expire_day.refresh}")
+    @Value("${jwt.expire.refresh_day}")
     private int expireDayOfRefreshToken;
 
     private final IMemberQueryService memberQueryService;
@@ -73,6 +73,7 @@ public class TokenProviderImpl implements ITokenProvider{
             throw new IllegalArgumentException("refresh 토큰이 아님");
         }
 
+        // TODO: 여기서 member를 조회하는 것이 아니라, 이 메소드를 쓰는 쪽에서 member를 인자로 건내주는게 단일책임원칙에 부합할 것 같음!
         Member member = findMemberByRefreshToken(refreshToken);
 
         // 이미 사용된 refreshToken인지 확인 (일회용)
@@ -120,7 +121,7 @@ public class TokenProviderImpl implements ITokenProvider{
         return Jwts.builder()
                 .setClaims(claims)
                 .setIssuedAt(new Date(currentTimeMills))
-                .setExpiration(new Date(currentTimeMills + parseDayToMs(expireDayOfAccessToken)))
+                .setExpiration(new Date(currentTimeMills + pareHourToMs(expireHourOfAccessToken)))
                 .signWith(SignatureAlgorithm.HS256, jwtSecretKey)
                 .compact();
     }

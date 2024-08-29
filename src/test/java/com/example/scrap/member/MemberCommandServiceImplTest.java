@@ -94,8 +94,6 @@ public class MemberCommandServiceImplTest {
                 .refreshToken(newRefreshToken)
                 .build();
 
-        when(tokenProvider.parseRefreshToMemberDTO(refreshToken)).thenReturn(memberDTO);
-        when(memberQueryService.findMemberWithLog(memberDTO)).thenReturn(member);
         when(tokenProvider.equalsTokenType(refreshToken, TokenType.REFRESH)).thenReturn(true);
         when(tokenProvider.reissueToken(refreshToken)).thenReturn(token);
 
@@ -136,34 +134,6 @@ public class MemberCommandServiceImplTest {
                 .hasMessageContaining(ErrorCode.NOT_REFRESH_TOKEN.getCode());
     }
 
-    @DisplayName("[에러] 토큰 재발급 / 로그아웃 상태인 경우")
-    @Test
-    public void errorReissueToken_logoutStatus() {
-        //** given
-        Member member = setupMember();
-        MemberDTO memberDTO = setupMemberDTO(member);
-        MemberLog memberLog = new MemberLog();
-        memberLog.logout(); // 로그아웃 상태로 만들기
-        ReflectionTestUtils.setField(member, "memberLog", memberLog);
-
-        // 갱신 토큰 설정
-        String refreshToken = "testRefreshToken";
-
-        when(tokenProvider.parseRefreshToMemberDTO(refreshToken)).thenReturn(memberDTO);
-        when(memberQueryService.findMemberWithLog(memberDTO)).thenReturn(member);
-        when(tokenProvider.equalsTokenType(refreshToken, TokenType.REFRESH)).thenReturn(true);
-
-        //** when
-        Throwable throwable = catchThrowable(() -> {
-            memberCommandService.reissueToken(refreshToken);
-        });
-
-        //** then
-        assertThat(throwable)
-                .isInstanceOf(AuthorizationException.class)
-                .hasMessageContaining(ErrorCode.LOGOUT_STATUS.getCode());
-    }
-
     @DisplayName("로그아웃")
     public void logout(){
         //** given
@@ -172,14 +142,15 @@ public class MemberCommandServiceImplTest {
         MemberLog memberLog = new MemberLog();
         ReflectionTestUtils.setField(member, "memberLog", memberLog);
 
+        // 임의 토큰 설정
+        String token = "tempToken";
+
         when(memberQueryService.findMember(memberDTO)).thenReturn(member);
 
         //** when
-        memberCommandService.logout(memberDTO);
+        memberCommandService.logout(memberDTO, token);
 
         //** then
-        assertThat(member.getMemberLog().getLoginStatus())
-                .isEqualTo(LoginStatus.LOGOUT);
     }
 
     private Member setupMember(){

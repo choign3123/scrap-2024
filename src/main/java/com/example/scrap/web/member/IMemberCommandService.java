@@ -26,7 +26,7 @@ public interface IMemberCommandService {
     /**
      * 로그아웃
      */
-    public void logout(MemberDTO memberDTO);
+    public void logout(MemberDTO memberDTO, String token);
 
     /**
      * 회원 탈퇴
