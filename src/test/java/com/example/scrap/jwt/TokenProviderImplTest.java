@@ -17,6 +17,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.util.ReflectionTestUtils;
 
@@ -28,11 +29,8 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 public class TokenProviderImplTest {
 
-    @InjectMocks
+    @Spy
     private TokenProviderImpl tokenProvider;
-
-    @Mock
-    private IMemberQueryService memberQueryService;
 
     private final String jwtSecretKey = System.getenv("JWT_SECRET");
     private final int expireHourOfAccessToken = Integer.parseInt(System.getenv("EXPIRE_HOUR_OF_ACCESS"));
@@ -101,10 +99,8 @@ public class TokenProviderImplTest {
         String refreshToken = tokenProvider.createToken(member).getRefreshToken();
         Long prevRefreshTokenId = member.getMemberLog().getRefreshTokenId();
 
-        when(memberQueryService.findMember(member.getSnsId(), member.getSnsType())).thenReturn(member);
-
         //** when
-        Token reissuedToken = tokenProvider.reissueToken(refreshToken);
+        Token reissuedToken = tokenProvider.reissueToken(refreshToken, member);
 
         //** then
         // access 토큰 검증
@@ -148,11 +144,9 @@ public class TokenProviderImplTest {
         // access 토큰 설정
         String accessToken = tokenProvider.createToken(member).getAccessToken();
 
-//        when(memberQueryService.findMember(member.getSnsId(), member.getSnsType())).thenReturn(member);
-
         //** when
         Throwable throwable = catchThrowable(() -> {
-            tokenProvider.reissueToken(accessToken);
+            tokenProvider.reissueToken(accessToken, member);
         });
 
         //** then
@@ -175,11 +169,10 @@ public class TokenProviderImplTest {
         Long newRefreshTokenId = member.getMemberLog().createRefreshTokenId();
         member.setRefreshTokenId(newRefreshTokenId);
 
-        when(memberQueryService.findMember(member.getSnsId(), member.getSnsType())).thenReturn(member);
 
         //** when
         Throwable throwable = catchThrowable(() -> {
-            tokenProvider.reissueToken(refreshToken);
+            tokenProvider.reissueToken(refreshToken, member);
         });
 
         //** then

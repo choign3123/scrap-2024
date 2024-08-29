@@ -82,12 +82,15 @@ public class MemberCommandServiceImpl implements IMemberCommandService {
         // 토큰 유효성 검사
         tokenProvider.isTokenValid(refreshToken);
 
+        // refresh 토큰인지 확인
         if(!tokenProvider.equalsTokenType(refreshToken, TokenType.REFRESH)) {
             throw new AuthorizationException(ErrorCode.NOT_REFRESH_TOKEN);
         }
 
+        Member member = memberQueryService.findMember(tokenProvider.parseRefreshToMemberDTO(refreshToken));
+
         // 토큰 재발급
-        return tokenProvider.reissueToken(refreshToken);
+        return tokenProvider.reissueToken(refreshToken, member);
     }
 
     /**

@@ -7,13 +7,11 @@ import com.example.scrap.entity.Member;
 import com.example.scrap.entity.enums.SnsType;
 import com.example.scrap.jwt.dto.Token;
 import com.example.scrap.jwt.dto.TokenType;
-import com.example.scrap.web.member.IMemberQueryService;
 import com.example.scrap.web.member.dto.MemberDTO;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -21,7 +19,6 @@ import org.springframework.stereotype.Component;
 import java.util.Date;
 
 @Component
-@RequiredArgsConstructor
 @Slf4j
 public class TokenProviderImpl implements ITokenProvider{
 
@@ -33,8 +30,6 @@ public class TokenProviderImpl implements ITokenProvider{
 
     @Value("${jwt.expire.refresh_day}")
     private int expireDayOfRefreshToken;
-
-    private final IMemberQueryService memberQueryService;
 
     /* 토큰 발급 **/
     /**
@@ -65,7 +60,8 @@ public class TokenProviderImpl implements ITokenProvider{
      * @throws IllegalArgumentException refresh 토큰이 아닐 경우
      * @throws AuthorizationException 이미 사용된 refresh 토큰일 경우
      */
-    public Token reissueToken(String refreshToken){
+    @Override
+    public Token reissueToken(String refreshToken, Member member){
         refreshToken = removeTokenPrefix(refreshToken);
 
         // refresh 토큰이 아닐경우
@@ -73,29 +69,13 @@ public class TokenProviderImpl implements ITokenProvider{
             throw new IllegalArgumentException("refresh 토큰이 아님");
         }
 
-        // TODO: 여기서 member를 조회하는 것이 아니라, 이 메소드를 쓰는 쪽에서 member를 인자로 건내주는게 단일책임원칙에 부합할 것 같음!
-        Member member = findMemberByRefreshToken(refreshToken);
-
         // 이미 사용된 refreshToken인지 확인 (일회용)
         Long refreshTokenId = Long.parseLong(getRefreshTokenId(refreshToken));
         if(!member.getMemberLog().equalRefreshTokenId(refreshTokenId)){
             throw new AuthorizationException(ErrorCode.REFRESH_TOKEN_ALREADY_USED);
         }
 
-        MemberDTO memberDTO = new MemberDTO(member);
-        // access 토큰 갱신
-        String reissuedAccessToken = createAccessToken(memberDTO);
-
-        // 기존과 다른 refreshToken id 생성.
-        Long newRefreshTokenId = member.getMemberLog().createRefreshTokenId();
-        member.setRefreshTokenId(newRefreshTokenId);
-        // refresh 토큰 재발급
-        String reissuedRefreshToken = createRefreshToken(memberDTO, newRefreshTokenId);
-
-        return Token.builder()
-                .accessToken(reissuedAccessToken)
-                .refreshToken(reissuedRefreshToken)
-                .build();
+        return createToken(member);
     }
 
     /**
@@ -255,33 +235,6 @@ public class TokenProviderImpl implements ITokenProvider{
                 .parseClaimsJws(refreshToken)
                 .getBody()
                 .getId();
-    }
-
-    /**
-     * refreshToken으로 Member 찾기
-     * @throws IllegalArgumentException refresh 토큰이 아닐시
-     */
-    private Member findMemberByRefreshToken(String refreshToken){
-        refreshToken = removeTokenPrefix(refreshToken);
-
-        // refreshToken인지 확인하기
-        if(!equalsTokenType(refreshToken, TokenType.REFRESH)){
-            throw new IllegalArgumentException("refresh 토큰이 아님");
-        }
-
-        Claims claims = Jwts.parser().setSigningKey(jwtSecretKey)
-                .parseClaimsJws(refreshToken)
-                .getBody();
-
-        String snsId = claims.get("snsId", String.class);
-        SnsType snsType;
-        try {
-            snsType = SnsType.valueOf(claims.get("snsType", String.class));
-        } catch (IllegalArgumentException e){
-            throw new AuthorizationException(ErrorCode.INNER_TOKEN_VALUE_WRONG);
-        }
-
-        return memberQueryService.findMember(snsId, snsType);
     }
 
     /**

@@ -16,7 +16,7 @@ public interface ITokenProvider {
     /**
      * token 갱신하기
      */
-    public Token reissueToken(String refreshToken);
+    public Token reissueToken(String refreshToken, Member member);
     /* 토큰 발급 끝 **/
 
     /* 토큰 유효성 검사 **/

@@ -95,7 +95,9 @@ public class MemberCommandServiceImplTest {
                 .build();
 
         when(tokenProvider.equalsTokenType(refreshToken, TokenType.REFRESH)).thenReturn(true);
-        when(tokenProvider.reissueToken(refreshToken)).thenReturn(token);
+        when(tokenProvider.reissueToken(refreshToken, member)).thenReturn(token);
+        when(tokenProvider.parseRefreshToMemberDTO(refreshToken)).thenReturn(memberDTO);
+        when(memberQueryService.findMember(memberDTO)).thenReturn(member);
 
         //** when
         Token reissueToken = memberCommandService.reissueToken(refreshToken);
