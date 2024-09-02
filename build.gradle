@@ -37,3 +37,8 @@ dependencies {
 tasks.named('test') {
 	useJUnitPlatform()
 }
+
+// jar에 의해 생성되는 plane archive 생성 못하게 막음
+jar {
+	enabled = false
+}
