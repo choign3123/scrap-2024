@@ -73,7 +73,7 @@ jobs:
         run: |
           aws ssm send-command  \
             --region ap-northeast-2 \
-            --instance-ids ${{ secrets.EC2_INSTANCE_ID }} \
+            --instance-ids "i-0810d0775caac2821" \
             --document-name "AWS-RunShellScript" \
             --comment "Deploy Docker container to EC2" \
             --parameters commands="ifconfig"
