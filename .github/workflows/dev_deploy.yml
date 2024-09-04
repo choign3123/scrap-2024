@@ -77,7 +77,7 @@ jobs:
             --comment "Deploy Docker container to EC2" \
             --parameters commands=[
               "sudo docker pull ${{ secrets.DOCKER_REPOSITORY_URL }}:dev" \
-              ,"sudo docker stop ${{ DOCKER_DEV_CONTAINER_NAME }} || true" \
-              ,"sudo docker rm ${{ DOCKER_DEV_CONTAINER_NAME }} || true" \
-              ,"sudo docker run -d --name ${{ DOCKER_DEV_CONTAINER_NAME }} -p 8090:80 ${{ secrets.DOCKER_REPOSITORY_URL }}:dev"
+              ,"sudo docker stop ${{ secrets.DOCKER_DEV_CONTAINER_NAME }} || true" \
+              ,"sudo docker rm ${{ secrets.DOCKER_DEV_CONTAINER_NAME }} || true" \
+              ,"sudo docker run -d --name ${{ secrets.DOCKER_DEV_CONTAINER_NAME }} -p 8090:80 ${{ secrets.DOCKER_REPOSITORY_URL }}:dev"
             ]
