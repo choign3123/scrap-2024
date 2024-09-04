@@ -62,18 +62,13 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v2
+      - name: ssh to ec2
+        uses: appleboy/ssh-action@master
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_ACCESS_KEY_SECRET }}
-          aws-region: ap-northeast-2
-
-      - name: Deploy Docker Container to EC2 via SSM
-        run: |
-          aws ssm send-command  \
-            --region ap-northeast-2 \
-            --instance-ids "i-0810d0775caac2821" \
-            --document-name "AWS-RunShellScript" \
-            --comment "Deploy Docker container to EC2" \
-            --parameters commands="ifconfig"
+          key: ${{ secrets.EC2_SSH_PRIVATE_KEY }} # 키페어 필요
+          host: ${{ secrets.EC2_HOST }} # ip
+          username: ${{ secrets.EC2_USER }} # 해당 유저 접속
+          script: | # 실행 할 코드
+            sudo docker pull ${{ secrets.DOCKER_REPOSITORY_URL }}:dev
+            sudo docker stop ${{ secrets.DOCKER_DEV_CONTAINER_NAME }} || true
+            sudo docker run -d --name ${{ secrets.DOCKER_DEV_CONTAINER_NAME }} -p 8090:80 ${{ secrets.DOCKER_REPOSITORY_URL }}:dev
