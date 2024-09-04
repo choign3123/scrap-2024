@@ -7,7 +7,7 @@ on:
     branches: [ "develop" ]
 
 jobs:
-  build_and_deploy: # 빌드하고 배포하기
+  build_and_push_image: # 빌드하고 배포하기
     # if: github.event.pull_request.merged == true # PR이 머지되었을 때만 실행.
     
     runs-on: ubuntu-latest # 우분투 최신 버전에서 실행됨.
@@ -56,3 +56,28 @@ jobs:
       with:
         push: true
         tags: ${{ secrets.DOCKERHUB_USERNAME }}/scrap2024:dev
+
+  run_image_at_AWS:
+    needs: build_and_push_image
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_ACCESS_KEY_SECRET }}
+          aws-region: ap-northeast-2
+
+      - name: Deploy Docker Container to EC2 via SSM
+        run: |
+          aws ssm send-command \
+            --instance-ids "${{ secrets.EC2_INSTANCE_ID }}" \
+            --document-name "AWS-RunShellScript" \
+            --comment "Deploy Docker container to EC2" \
+            --parameters commands=[
+              "sudo docker pull ${{ secrets.DOCKER_REPOSITORY_URL }}:dev" \
+              ,"sudo docker stop ${{ DOCKER_DEV_CONTAINER_NAME }} || true" \
+              ,"sudo docker rm ${{ DOCKER_DEV_CONTAINER_NAME }} || true" \
+              ,"sudo docker run -d --name ${{ DOCKER_DEV_CONTAINER_NAME }} -p 8090:80 ${{ secrets.DOCKER_REPOSITORY_URL }}:dev"
+            ]
