@@ -72,7 +72,7 @@ jobs:
       - name: Deploy Docker Container to EC2 via SSM
         run: |
           aws ssm send-command  \
-            --region ap-northeast-2
+            --region ap-northeast-2 \
             --instance-ids ${{ secrets.EC2_INSTANCE_ID }} \
             --document-name "AWS-RunShellScript" \
             --comment "Deploy Docker container to EC2" \
