@@ -90,8 +90,8 @@ jobs:
 
       - name: Code Deploy
         run: aws deploy create-deployment \
-          --application-name scrap-github-app \
-          --deployment-config-name CodeDeployDefault.OneAtATime \
-          --deployment-group-name scrap-github-dev-group \
-          --description "Scrap deployment demo" \
-          --github-location repository=choign3123/scrap-2024,commitId=$GITHUB_SHA
+                --application-name scrap-github-app \
+                --deployment-config-name CodeDeployDefault.OneAtATime \
+                --deployment-group-name scrap-github-dev-group \
+                --description "Scrap deployment demo" \
+                --github-location repository=choign3123/scrap-2024,commitId=$GITHUB_SHA
