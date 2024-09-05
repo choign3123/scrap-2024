@@ -57,18 +57,14 @@ jobs:
         push: true
         tags: ${{ secrets.DOCKERHUB_USERNAME }}/scrap2024:dev
 
-  run_image_at_AWS:
-    needs: build_and_push_image
+  check_env_works:
     runs-on: ubuntu-latest
+    env:
+      DB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
 
     steps:
-      - name: ssh to ec2
-        uses: appleboy/ssh-action@master
-        with:
-          key: ${{ secrets.EC2_SSH_PRIVATE_KEY }} # 키페어 필요
-          host: ${{ secrets.EC2_HOST }} # ip
-          username: ${{ secrets.EC2_USER }} # 해당 유저 접속
-          script: | # 실행 할 코드
-            sudo docker pull ${{ secrets.DOCKER_REPOSITORY_URL }}:dev
-            sudo docker stop ${{ secrets.DOCKER_DEV_CONTAINER_NAME }} || true
-            sudo docker run -d --name ${{ secrets.DOCKER_DEV_CONTAINER_NAME }} -p 8090:80 ${{ secrets.DOCKER_REPOSITORY_URL }}:dev
+      - name: print test.txt
+        run: cat test.txt
+
+      - name: print test.sh
+        run: cat test.sh
