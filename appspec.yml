@@ -5,6 +5,6 @@ hooks:
   # During the AfterInstall deployment lifecycle event, run the commands
   #   in the script specified in "location".
   AfterInstall:
-    - location: ./scripts/dev-deploy.sh
+    - location: scripts/dev-deploy.sh
       timeout: 180
       runas: ec2-user
