@@ -2,9 +2,9 @@ version: 0.0
 os: linux # ububtu를 사용할 경우 linux로 설정
 
 hooks:
-  # During the ApplicationStart deployment lifecycle event, run the commands
+  # During the AfterInstall deployment lifecycle event, run the commands
   #   in the script specified in "location".
-  ApplicationStart:
+  AfterInstall:
     - location: ./scripts/dev-deploy.sh
       timeout: 180
       runas: ec2-user
