@@ -52,6 +52,7 @@ jobs:
     - name: Build and push # 이미지를 빌드하고, Docker Hub에 푸시하기.
       uses: docker/build-push-action@v6
       with:
+        context: .
         push: true
         tags: ${{ secrets.DOCKERHUB_USERNAME }}/scrap2024:dev
 
