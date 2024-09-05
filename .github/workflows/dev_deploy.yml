@@ -65,7 +65,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: print GITHUB_SHA
-        run: echo 'commit id=$GITHUB_SHA'
+        run: echo "commit id=${{ github.sha }}"
 
 
 #  deploy_to_AWS:
