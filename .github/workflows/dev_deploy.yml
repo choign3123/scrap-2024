@@ -73,25 +73,25 @@ jobs:
         run: echo "Commit ID=${{ github.event.pull_request.head.sha }}"
 
 
-#  deploy_to_AWS:
-#    needs: build_and_push_image
-#    runs-on: ubuntu-latest
-#
-#    steps:
-#      - name: Checkout
-#        uses: actions/checkout@v4
-#
-#      - name: Configure AWS credentials
-#        uses: aws-actions/configure-aws-credentials@v2
-#        with:
-#          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-#          aws-secret-access-key: ${{ secrets.AWS_ACCESS_KEY_SECRET }}
-#          aws-region: ap-northeast-2
-#
-#      - name: Code Deploy
-#        run: aws deploy create-deployment \
-#          --application-name scrap-github-app \
-#          --deployment-config-name CodeDeployDefault.OneAtATime \
-#          --deployment-group-name scrap-github-dev-group \
-#          --description "Scrap deployment demo" \
-#          --github-location repository=choign3123/scrap-2024,commitId=$GITHUB_SHA
+  deploy_to_AWS:
+    needs: build_and_push_image
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_ACCESS_KEY_SECRET }}
+          aws-region: ap-northeast-2
+
+      - name: Code Deploy
+        run: aws deploy create-deployment \
+          --application-name scrap-github-app \
+          --deployment-config-name CodeDeployDefault.OneAtATime \
+          --deployment-group-name scrap-github-dev-group \
+          --description "Scrap deployment demo" \
+          --github-location repository=choign3123/scrap-2024,commitId=$GITHUB_SHA
