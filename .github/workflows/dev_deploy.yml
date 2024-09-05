@@ -64,7 +64,7 @@ jobs:
 
     steps:
       - name: print test.txt
-        run: cat test.txt
+        run: cat ./test.txt
 
       - name: print test.sh
-        run: cat test.sh
+        run: cat ./test.sh
