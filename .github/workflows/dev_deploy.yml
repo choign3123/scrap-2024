@@ -63,8 +63,13 @@ jobs:
       DB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
 
     steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
       - name: print test.txt
         run: cat ./test.txt
+        shell: bash
 
       - name: print test.sh
         run: cat ./test.sh
+        shell: bash
