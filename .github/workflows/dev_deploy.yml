@@ -39,7 +39,7 @@ jobs:
       shell: bash
 
     - name: copy jar file
-      run: cp ./build/libs/*.jar ./
+      run: cp ./build/libs/*.jar ./app.jar
       shell: bash
 
     - name: Login to Docker Hub
