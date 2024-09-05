@@ -1,1 +1,0 @@
-echo $DB_USERNAME
