@@ -63,6 +63,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: print GITHUB_SHA
         run: echo "commit id=${{ github.sha }}"
