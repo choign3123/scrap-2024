@@ -12,4 +12,6 @@
 #-e EXPIRE_DAY_OF_REFRESH=EXPIRE_DAY_OF_REFRESH \
 #$DOCKER_REPOSITORY_URL:dev
 
+sudo chmod +x dev-deploy.sh
+
 echo "hello, world!"
