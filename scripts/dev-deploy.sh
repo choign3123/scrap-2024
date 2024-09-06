@@ -2,7 +2,7 @@ sudo docker pull $DOCKER_REPOSITORY_URL:dev
 
 if [ "$(docker ps -q -f name=$DOCKER_DEV_CONTAINER_NAME)" ]; then
   echo "Stopping container: $DOCKER_DEV_CONTAINER_NAME"
-  docker stop $DOCKER_DEV_CONTAINER_NAME
+  sudo docker stop $DOCKER_DEV_CONTAINER_NAME
 else
   echo "Container $DOCKER_DEV_CONTAINER_NAME is not running."
 fi
