@@ -1,3 +1,5 @@
+sudo chmod 666 /var/run/docker.sock
+
 sudo docker pull $DOCKER_REPOSITORY_URL:dev
 
 if [ "$(docker ps -q -f name=$DOCKER_DEV_CONTAINER_NAME)" ]; then
