@@ -8,17 +8,17 @@ spring:
         format_sql: true # sql show pretty
 
   redis:
-    host: ${DEV_REDIS_HOST}
-    port: ${DEV_REDIS_PORT}
+    host: ${/Dev/Redis/redis_host}
+    port: ${/Dev/Redis/redis_port}
 
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: ${DEV_DB_URL}
-    username: ${DEV_DB_USERNAME}
-    password: ${DEV_DB_PASSWORD}
+    url: ${/Dev/Mysql/db_url}
+    username: ${/Dev/Mysql/db_username}
+    password: ${/Dev/Mysql/db_password}
 
 jwt:
-  secret: ${JWT_SECRET}
+  secret: ${/Dev/Jwt/jwt_secret_key}
   expire:
-    access_hour: ${EXPIRE_HOUR_OF_ACCESS}
-    refresh_day: ${EXPIRE_DAY_OF_REFRESH}
+    access_hour: ${/Dev/Jwt/expire_hour_of_access}
+    refresh_day: ${/Dev/Jwt/expire_day_of_refresh}

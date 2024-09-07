@@ -1,23 +1,15 @@
-sudo chmod 666 /var/run/docker.sock
+# 환경변수 설정
 
-sudo docker pull $DOCKER_REPOSITORY_URL:dev
+sudo docker pull choign3123/scrap2024:dev
 
-if [ "$(docker ps -q -f name=$DOCKER_DEV_CONTAINER_NAME)" ]; then
-  echo "Stopping container: $DOCKER_DEV_CONTAINER_NAME"
-  sudo docker stop $DOCKER_DEV_CONTAINER_NAME
+if [ "$(docker ps -q -f name=scrap2024dev)" ]; then
+  echo "Stopping container: scrap2024dev"
+  sudo docker stop scrap2024dev
 else
-  echo "Container $DOCKER_DEV_CONTAINER_NAME is not running."
+  echo "Container scrap2024dev is not running."
 fi
 
-sudo docker rm $DOCKER_DEV_CONTAINER_NAME
+sudo docker rm scrap2024dev
 
-sudo docker run --name $DOCKER_DEV_CONTAINER_NAME \
--e DEV_REDIS_HOST=$DEV_REDIS_HOST \
--e DEV_REDIS_PORT=$DEV_REDIS_PORT \
--e DEV_DB_URL=$DEV_DB_URL \
--e DEV_DB_USERNAME=$DEV_DB_USERNAME \
--e DEV_DB_PASSWORD=$DEV_DB_PASSWORD \
--e JWT_SECRET=$JWT_SECRET \
--e EXPIRE_HOUR_OF_ACCESS=$EXPIRE_HOUR_OF_ACCESS \
--e EXPIRE_DAY_OF_REFRESH=$EXPIRE_DAY_OF_REFRESH \
-$DOCKER_REPOSITORY_URL:dev
+sudo docker run --name scrap2024dev \
+choign3123/scrap2024:dev
