@@ -1,7 +1,7 @@
 # openjdk 이미지를 베이스로 한다.
 FROM openjdk:17
 
-EXPOSE 8090/tcp
+EXPOSE 8080/tcp
 
 COPY ./build/libs/*.jar ./app.jar
 

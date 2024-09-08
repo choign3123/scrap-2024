@@ -18,4 +18,5 @@ sudo docker run --name scrap2024dev \
 -e JWT_SECRET=$JWT_SECRET \
 -e EXPIRE_HOUR_OF_ACCESS=$EXPIRE_HOUR_OF_ACCESS \
 -e EXPIRE_DAY_OF_REFRESH=$EXPIRE_DAY_OF_REFRESH \
+-d -it -p 8080:8080 \
 choign3123/scrap2024:dev
