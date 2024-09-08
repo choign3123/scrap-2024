@@ -7,4 +7,10 @@ else
 fi
 
 # remove docker container
-sudo docker rm scrap2024dev
+if [ "$(docker ps -a -q -f name=scrap2024dev)" ]; then
+    echo "컨테이너가 존재합니다. 삭제 중..."
+    sudo docker rm -f scrap2024dev
+    echo "컨테이너가 삭제되었습니다."
+else
+    echo "컨테이너가 존재하지 않습니다."
+fi
