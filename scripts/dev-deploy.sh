@@ -9,7 +9,8 @@ export EXPIRE_DAY_OF_REFRESH=$(aws ssm get-parameters --names /Dev/Jwt/expire_da
 export REDIS_HOST=$(aws ssm get-parameters --names /Dev/Redis/redis_host --with-decryption --query Parameters[0].Value)
 export REDIS_PORT=$(aws ssm get-parameters --names /Dev/Redis/redis_port --with-decryption --query Parameters[0].Value)
 
-echo "test env print: $DEV_DB_USERNAME"
+echo "test env print at next line:"
+echo $DEV_DB_USERNAME
 printenv
 
 exit 1;
