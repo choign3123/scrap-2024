@@ -5,6 +5,12 @@ hooks:
   # During the AfterInstall deployment lifecycle event, run the commands
   #   in the script specified in "location".
   AfterInstall:
+    - location: scrips/insert-dev-environment.sh
+      timeout: 60
+      runas: ubuntu
+    - location: scrips/handle-existing-docker-container.sh
+      timeout: 60
+      runas: ubuntu
     - location: scripts/dev-deploy.sh
       timeout: 180
       runas: ubuntu
