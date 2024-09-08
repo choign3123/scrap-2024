@@ -11,6 +11,8 @@ export REDIS_PORT=$(aws ssm get-parameters --names /Dev/Redis/redis_port --with-
 
 echo "test env print: $DEV_DB_USERNAME"
 
+exit 1;
+
 #sudo docker run --name scrap2024dev \
 #-e DEV_REDIS_HOST=$DEV_REDIS_HOST \
 #-e DEV_REDIS_PORT=$DEV_REDIS_PORT \
