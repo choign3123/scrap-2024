@@ -10,11 +10,11 @@ export REDIS_HOST=$(aws ssm get-parameters --names /Dev/Redis/redis_host --with-
 export REDIS_PORT=$(aws ssm get-parameters --names /Dev/Redis/redis_port --with-decryption --query Parameters[0].Value)
 
 sudo docker run --name scrap2024dev \
--e DEV_REDIS_HOST=$DEV_REDIS_HOST \
--e DEV_REDIS_PORT=$DEV_REDIS_PORT \
--e DEV_DB_URL=$DEV_DB_URL \
--e DEV_DB_USERNAME=$DEV_DB_USERNAME \
--e DEV_DB_PASSWORD=$DEV_DB_PASSWORD \
+-e REDIS_HOST=$REDIS_HOST \
+-e REDIS_PORT=$REDIS_PORT \
+-e DB_URL=$DB_URL \
+-e DB_USERNAME=$DB_USERNAME \
+-e DB_PASSWORD=$DB_PASSWORD \
 -e JWT_SECRET=$JWT_SECRET \
 -e EXPIRE_HOUR_OF_ACCESS=$EXPIRE_HOUR_OF_ACCESS \
 -e EXPIRE_DAY_OF_REFRESH=$EXPIRE_DAY_OF_REFRESH \
