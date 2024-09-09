@@ -1,7 +1,10 @@
+server:
+  port: ${BASE_PORT}
+
 spring:
   jpa:
     hibernate:
-      ddl-auto: none
+      ddl-auto: update
     properties:
       hibernate:
         show_sql: true # sql show
@@ -13,7 +16,7 @@ spring:
 
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: ${DB_URL}
+    url: ${DB_URL_2}
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
 

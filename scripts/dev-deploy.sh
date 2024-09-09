@@ -8,6 +8,8 @@ export EXPIRE_HOUR_OF_ACCESS=$(aws ssm get-parameters --names /Dev/Jwt/expire_ho
 export EXPIRE_DAY_OF_REFRESH=$(aws ssm get-parameters --names /Dev/Jwt/expire_day_of_refresh --with-decryption --query Parameters[0].Value --output text)
 export REDIS_HOST=$(aws ssm get-parameters --names /Dev/Redis/redis_host --with-decryption --query Parameters[0].Value --output text)
 export REDIS_PORT=$(aws ssm get-parameters --names /Dev/Redis/redis_port --with-decryption --query Parameters[0].Value --output text)
+export BASE_PORT=$(aws ssm get-parameters --names /Dev/port --with-decryption --query Parameters[0].Value --output text)
+
 
 sudo docker run --name scrap2024dev \
 -e REDIS_HOST=$REDIS_HOST \
@@ -18,5 +20,7 @@ sudo docker run --name scrap2024dev \
 -e JWT_SECRET=$JWT_SECRET \
 -e EXPIRE_HOUR_OF_ACCESS=$EXPIRE_HOUR_OF_ACCESS \
 -e EXPIRE_DAY_OF_REFRESH=$EXPIRE_DAY_OF_REFRESH \
--d -it -p 8080:8080 \
-choign3123/scrap2024:dev
+-e BASE_PORT=$BASE_PORT \
+-d -it -p $BASE_PORT:$BASE_PORT \
+choign3123/scrap2024:dev \
+--spring.profiles.active=dev
