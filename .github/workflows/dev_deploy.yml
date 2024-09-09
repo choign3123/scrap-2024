@@ -77,7 +77,7 @@ jobs:
     needs: build_and_push_image
     runs-on: ubuntu-latest
     env:
-      DEPLOY_SCRIPT_PATH: scripts/dev-deploy.sh
+      ENVIRONMENT: dev
 
     steps:
       - name: Checkout
