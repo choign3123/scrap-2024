@@ -1,5 +1,8 @@
 sudo docker pull choign3123/scrap2024:dev
 
+echo "test print env:"
+echo $DB_URL
+
 sudo docker run --name scrap2024dev \
 -e REDIS_HOST=$REDIS_HOST \
 -e REDIS_PORT=$REDIS_PORT \
