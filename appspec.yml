@@ -8,6 +8,6 @@ hooks:
     - location: scripts/handle-existing-docker-container.sh
       timeout: 60
       runas: ubuntu
-    - location: scripts/select-deploy-env.sh
+    - location: scripts/docker-deploy.sh
       timeout: 180
       runas: ubuntu
