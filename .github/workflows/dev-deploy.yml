@@ -1,15 +1,12 @@
-name: Devolpe project build and deploy
+name: Build & Deploy Dev Project (push)
 
 on:
-  pull_request:
-    branches: [ "develop" ] # develop브랜치의 PR에 대해서 trigger됨.
   push:
     branches: [ "develop" ]
 
 jobs:
+  # 빌드 및 도커 이미지 생성&push
   build_and_push_image: # 빌드하고 배포하기
-    # if: github.event.pull_request.merged == true # PR이 머지되었을 때만 실행.
-    
     runs-on: ubuntu-latest # 우분투 최신 버전에서 실행됨.
     permissions:
       contents: read # 내용 읽기만 가능함.
@@ -57,22 +54,7 @@ jobs:
         tags: ${{ secrets.DOCKERHUB_USERNAME }}/scrap2024:dev
 
 
-  check_commit_id:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: print GITHUB_SHA
-        run: echo "commit id=${{ github.sha }}"
-
-      - name: get last commit id of PR
-        run: echo "Commit ID=${{ github.event.pull_request.head.sha }}"
-
-
+  # AWS CodeDeploy 사용하여 배포
   deploy_to_AWS:
     needs: build_and_push_image
     runs-on: ubuntu-latest
@@ -96,3 +78,20 @@ jobs:
           --deployment-group-name scrap-github-dev-group \
           --description "Scrap deployment demo" \
           --github-location repository=choign3123/scrap-2024,commitId=$GITHUB_SHA
+          
+
+  # commit id 확인
+  check_commit_id:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: print GITHUB_SHA
+        run: echo "commit id=${{ github.sha }}"
+
+      - name: get last commit id of PR
+        run: echo "Commit ID=${{ github.event.pull_request.head.sha }}"
