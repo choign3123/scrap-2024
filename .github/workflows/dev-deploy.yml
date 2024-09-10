@@ -1,10 +1,9 @@
-name: Build & Deploy Dev Project (push)
+name: Build & Deploy Dev Project
 
 on:
   push:
-    branches: [ "develop" ]
-  workflow_call:
-
+    branches:
+      - develop
 
 jobs:
   # 빌드 및 도커 이미지 생성&push
