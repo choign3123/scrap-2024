@@ -8,15 +8,12 @@ import com.example.scrap.entity.MemberLog;
 import com.example.scrap.entity.enums.SnsType;
 import com.example.scrap.jwt.dto.Token;
 import com.example.scrap.jwt.dto.TokenType;
-import com.example.scrap.web.member.IMemberQueryService;
 import com.example.scrap.web.member.dto.MemberDTO;
 import io.jsonwebtoken.Jwts;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.util.ReflectionTestUtils;
@@ -24,7 +21,6 @@ import org.springframework.test.util.ReflectionTestUtils;
 import java.util.Date;
 
 import static org.assertj.core.api.Assertions.*;
-import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class TokenProviderImplTest {
@@ -32,12 +28,12 @@ public class TokenProviderImplTest {
     @Spy
     private TokenProviderImpl tokenProvider;
 
-    private final String jwtSecretKey = System.getenv("JWT_SECRET");
-    private final int expireHourOfAccessToken = Integer.parseInt(System.getenv("EXPIRE_HOUR_OF_ACCESS"));
-    private final int expireDayOfRefreshToken = Integer.parseInt(System.getenv("EXPIRE_DAY_OF_REFRESH"));
+    private final String jwtSecretKey = "ForTestJwtSecretKey12345";
+    private final int expireHourOfAccessToken = 10;
+    private final int expireDayOfRefreshToken = 20;
 
     @BeforeEach
-    @DisplayName("tokenProvider 환경 변수 주입")
+    @DisplayName("tokenProvider의 변수 주입")
     public void setupEnvironmentVariable() {
         ReflectionTestUtils.setField(tokenProvider, "jwtSecretKey", jwtSecretKey);
         ReflectionTestUtils.setField(tokenProvider, "expireHourOfAccessToken", expireHourOfAccessToken);
