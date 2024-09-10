@@ -1,0 +1,11 @@
+name: Build & Deploy Dev Project (PR merged)
+
+on:
+  pull_request:
+    branches: [ "develop" ] # develop브랜치의 PR에 대해서 trigger됨.
+    types: [closed]
+
+jobs:
+  call_dev-deploy-workflow: # 빌드하고 배포하기
+    if: github.event.pull_request.merged == true # PR이 머지되었을 때만 실행.
+    uses: ./.github/workflows/dev-deploy.yml

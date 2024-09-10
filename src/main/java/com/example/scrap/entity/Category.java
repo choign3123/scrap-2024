@@ -35,7 +35,7 @@ public class Category extends BaseEntity implements Comparable<Category>{
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    @ColumnDefault("ACTIVE")
+    @ColumnDefault("'ACTIVE'")
     private CategoryStatus status;
 
     private LocalDateTime deletedAt;
