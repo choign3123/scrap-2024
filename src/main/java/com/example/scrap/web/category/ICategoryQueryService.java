@@ -15,14 +15,20 @@ public interface ICategoryQueryService {
      */
     public List<Category> getCategoryWholeList(MemberDTO memberDTO);
 
-
+    /**
+     * 카테고리 찾기
+     *
+     * @throws BaseException 해당하는 카테고리가 존재하지 않는 경우
+     * @throws BaseException 삭제된 카테고리인 경우
+     */
     public Category findCategory(Long categoryId);
 
     /**
-     * id로 카테고리 조회하기
+     * 카테고리 찾기
      *
+     * @throws BaseException 해당하는 카테고리가 존재하지 않는 경우
      * @throws BaseException 삭제된 카테고리인 경우
-     * @throws BaseException id로 찾은 카테고리의 멤버가 매개변수 멤버와 일치하지 않는 경우
+     * @throws BaseException 찾은 카테고리의 멤버가 매개변수 멤버와 일치하지 않는 경우
      */
     public Category findCategory(Long categoryId, Member member);
 }

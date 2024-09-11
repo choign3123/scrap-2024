@@ -1,7 +1,6 @@
 package com.example.scrap.validation.annotaion;
 
 import com.example.scrap.validation.validator.ExistCategoriesValidator;
-import com.example.scrap.validation.validator.ExistCategoryValidator;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;

@@ -2,7 +2,6 @@ package com.example.scrap.validation.validator;
 
 import com.example.scrap.entity.Category;
 import com.example.scrap.validation.annotaion.ExistCategories;
-import com.example.scrap.validation.annotaion.ExistCategory;
 import com.example.scrap.web.category.CategoryRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

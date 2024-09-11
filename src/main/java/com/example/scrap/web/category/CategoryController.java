@@ -5,7 +5,6 @@ import com.example.scrap.base.response.ResponseDTO;
 import com.example.scrap.converter.CategoryConverter;
 import com.example.scrap.entity.Category;
 import com.example.scrap.jwt.ITokenProvider;
-import com.example.scrap.validation.annotaion.ExistCategory;
 import com.example.scrap.web.category.dto.CategoryRequest;
 import com.example.scrap.web.category.dto.CategoryResponse;
 import com.example.scrap.web.member.dto.MemberDTO;
@@ -81,7 +80,7 @@ public class CategoryController {
      * [API-9] 카테고리 삭제
      */
     @DeleteMapping("/{category-id}")
-    public ResponseEntity<ResponseDTO> categoryRemove(@RequestHeader("Authorization") String token, @PathVariable("category-id") @ExistCategory Long categoryId){
+    public ResponseEntity<ResponseDTO> categoryRemove(@RequestHeader("Authorization") String token, @PathVariable("category-id") Long categoryId){
 
         MemberDTO memberDTO = tokenProvider.parseAccessToMemberDTO(token);
 
@@ -94,7 +93,7 @@ public class CategoryController {
      * [API-10] 카테고리명 수정
      */
     @PatchMapping("/{category-id}/title")
-    public ResponseEntity<ResponseDTO> categoryTitleModify(@RequestHeader("Authorization") String token, @PathVariable("category-id") @ExistCategory Long categoryId,
+    public ResponseEntity<ResponseDTO> categoryTitleModify(@RequestHeader("Authorization") String token, @PathVariable("category-id") Long categoryId,
                                            @RequestBody @Valid CategoryRequest.UpdateCategoryTitleDTO request){
 
         MemberDTO memberDTO = tokenProvider.parseAccessToMemberDTO(token);

@@ -75,7 +75,25 @@ public class CategoryQueryServiceImplTest {
                 .isEqualTo(category.getId());
     }
 
-    @DisplayName("[에서] 카테고리 찾기 / 삭제된 카테고리 찾음")
+    @DisplayName("[에러] 카테고리 찾기 / 존재하지 않는 카테고리")
+    @Test
+    public void errorFindCategoryById_notFound(){
+        //** given
+        Long categoryId = 99L;
+        when(categoryRepository.findById(categoryId)).thenReturn(Optional.empty());
+
+        //** when
+        Throwable throwable = catchThrowable(() -> {
+            categoryQueryService.findCategory(categoryId);
+        });
+
+        //** then
+        assertThat(throwable)
+                .isInstanceOf(BaseException.class)
+                .hasMessageContaining(ErrorCode.CATEGORY_NOT_FOUND.getCode());
+    }
+
+    @DisplayName("[에러] 카테고리 찾기 / 삭제된 카테고리 찾음")
     @Test
     public void errorFindCategoryById_foundDeletedCategory(){
         //** given
