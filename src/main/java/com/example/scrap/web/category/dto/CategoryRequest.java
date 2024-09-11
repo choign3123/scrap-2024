@@ -1,12 +1,12 @@
 package com.example.scrap.web.category.dto;
 
-import com.example.scrap.validation.annotaion.ExistCategories;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
 import java.util.List;
 
 public class CategoryRequest {
@@ -40,7 +40,7 @@ public class CategoryRequest {
     @NoArgsConstructor
     public static class UpdateCategorySequenceDTO{
 
-        @ExistCategories
+        @NotEmpty
         @JsonProperty("categories")
         private List<Long> categoryList;
     }

@@ -41,7 +41,7 @@ public class ScrapController {
      * [API-24] 스크랩 생성
      */
     @PostMapping("/{category-id}")
-    public ResponseEntity<ResponseDTO> scrapSave(@RequestHeader("Authorization") String token, @PathVariable("category-id") @ExistCategory Long categoryId,
+    public ResponseEntity<ResponseDTO> scrapSave(@RequestHeader("Authorization") String token, @PathVariable("category-id") Long categoryId,
                                                  @RequestBody @Validated ScrapRequest.CreateScrapDTO request){
 
         MemberDTO memberDTO = tokenProvider.parseAccessToMemberDTO(token);
@@ -58,7 +58,7 @@ public class ScrapController {
      */
     @GetMapping()
     public ResponseEntity<ResponseDTO> scrapListByCategory(@RequestHeader("Authorization") String token,
-                                           @RequestParam("category") @ExistCategory Long categoryId,
+                                           @RequestParam("category") Long categoryId,
                                            @RequestParam(name = "sort", defaultValue = "SCRAP_DATE") @EnumValid(enumC = Sorts.class) String sort,
                                            @RequestParam(name = "direction", defaultValue = "ASC") @EnumValid(enumC = Direction.class) String direction,
                                            @RequestParam(name = "page", defaultValue = "0") @PagingPage int page,
@@ -112,7 +112,7 @@ public class ScrapController {
      * [API-12] 스크랩 세부 조회
      */
     @GetMapping("/{scrap-id}")
-    public ResponseEntity<ResponseDTO> scrapDetails(@RequestHeader("Authorization") String token, @PathVariable("scrap-id") @ExistAvailableScrap Long scrapId){
+    public ResponseEntity<ResponseDTO> scrapDetails(@RequestHeader("Authorization") String token, @PathVariable("scrap-id") Long scrapId){
         MemberDTO memberDTO = tokenProvider.parseAccessToMemberDTO(token);
 
         Scrap scrap = scrapQueryService.getScrapDetails(memberDTO, scrapId);
@@ -130,7 +130,7 @@ public class ScrapController {
                                           @RequestParam(name = "sort", defaultValue = "SCRAP_DATE") @EnumValid(enumC = Sorts.class) String sorts,
                                           @RequestParam(name = "direction", defaultValue = "ASC") @EnumValid(enumC = Direction.class) String direction,
                                           @RequestParam(name = "range") @EnumValid(enumC = QueryRange.class) String queryRangeStr,
-                                          @RequestParam(name = "category", required = false) @ExistCategory(required = false) Long categoryId,
+                                          @RequestParam(name = "category", required = false) Long categoryId,
                                           @RequestParam("q") @NotBlank String query){
 
         MemberDTO memberDTO = tokenProvider.parseAccessToMemberDTO(token);
@@ -158,7 +158,7 @@ public class ScrapController {
     @GetMapping("/share")
     public ResponseEntity<ResponseDTO> allScrapShare(@RequestHeader("Authorization") String token,
                                      @RequestParam(name = "range") @EnumValid(enumC = QueryRange.class) String queryRangeStr,
-                                     @RequestParam(name = "category", required = false) @ExistCategory(required = false) Long categoryId){
+                                     @RequestParam(name = "category", required = false) Long categoryId){
 
         MemberDTO memberDTO = tokenProvider.parseAccessToMemberDTO(token);
 
@@ -177,7 +177,7 @@ public class ScrapController {
      * [API-16] 스크랩 즐겨찾기 (단건)
      */
     @PatchMapping("{scrap-id}/favorite")
-    public ResponseEntity<ResponseDTO> scrapFavoriteToggle(@RequestHeader("Authorization") String token, @PathVariable("scrap-id") @ExistAvailableScrap Long scrapId){
+    public ResponseEntity<ResponseDTO> scrapFavoriteToggle(@RequestHeader("Authorization") String token, @PathVariable("scrap-id") Long scrapId){
 
         MemberDTO memberDTO = tokenProvider.parseAccessToMemberDTO(token);
 
@@ -195,7 +195,7 @@ public class ScrapController {
     public ResponseEntity<ResponseDTO> scrapFavoriteListToggle(@RequestHeader("Authorization") String token,
                                                @RequestParam(name = "all", defaultValue = "false", required = false) boolean isAllFavorite,
                                                @RequestParam(name = "range", required = false) @EnumValid(enumC = QueryRange.class, required = false) String queryRangeStr,
-                                               @RequestParam(name = "category", required = false) @ExistCategory(required = false) Long categoryId,
+                                               @RequestParam(name = "category", required = false) Long categoryId,
                                                @RequestBody @Validated ScrapRequest.ToggleScrapFavoriteListDTO request){
 
         MemberDTO memberDTO = tokenProvider.parseAccessToMemberDTO(token);
@@ -220,7 +220,7 @@ public class ScrapController {
      * [API-15] 스크랩 이동하기 (단건)
      */
     @PatchMapping("/{scrap-id}/move")
-    public ResponseEntity<ResponseDTO> categoryOfScrapMove(@RequestHeader("Authorization") String token, @PathVariable("scrap-id") @ExistAvailableScrap Long scrapId,
+    public ResponseEntity<ResponseDTO> categoryOfScrapMove(@RequestHeader("Authorization") String token, @PathVariable("scrap-id") Long scrapId,
                                            @RequestBody @Validated ScrapRequest.MoveCategoryOfScrapDTO request){
 
         MemberDTO memberDTO = tokenProvider.parseAccessToMemberDTO(token);
@@ -239,7 +239,7 @@ public class ScrapController {
     public ResponseEntity<ResponseDTO> categoryOfScrapsMove(@RequestHeader("Authorization") String token, @RequestBody @Validated ScrapRequest.MoveCategoryOfScrapsDTO request,
                                             @RequestParam(name = "all", defaultValue = "false", required = false) boolean isAllMove,
                                             @RequestParam(name = "range", required = false) @EnumValid(enumC = QueryRange.class, required = false) String queryRangeStr,
-                                            @RequestParam(name = "category", required = false) @ExistCategory(required = false) Long categoryId){
+                                            @RequestParam(name = "category", required = false) Long categoryId){
 
         MemberDTO memberDTO = tokenProvider.parseAccessToMemberDTO(token);
 
@@ -263,7 +263,7 @@ public class ScrapController {
      * [API-14] 스크랩의 메모 수정
      */
     @PatchMapping("/{scrap-id}/memo")
-    public ResponseEntity<ResponseDTO> scrapMemoModify(@RequestHeader("Authorization") String token, @PathVariable("scrap-id") @ExistAvailableScrap Long scrapId,
+    public ResponseEntity<ResponseDTO> scrapMemoModify(@RequestHeader("Authorization") String token, @PathVariable("scrap-id") Long scrapId,
                                        @RequestBody @Validated ScrapRequest.UpdateScrapMemoDTO request){
 
         MemberDTO memberDTO = tokenProvider.parseAccessToMemberDTO(token);
@@ -279,7 +279,7 @@ public class ScrapController {
      * [API-13] 스크랩 삭제 (단건)
      */
     @PatchMapping("/{scrap-id}/trash")
-    public ResponseEntity<ResponseDTO> scrapRemove(@RequestHeader("Authorization") String token, @PathVariable("scrap-id") @ExistAvailableScrap Long scrapId){
+    public ResponseEntity<ResponseDTO> scrapRemove(@RequestHeader("Authorization") String token, @PathVariable("scrap-id") Long scrapId){
 
         MemberDTO memberDTO = tokenProvider.parseAccessToMemberDTO(token);
 
@@ -296,7 +296,7 @@ public class ScrapController {
     public ResponseEntity<ResponseDTO> scrapListRemove(@RequestHeader("Authorization") String token, @RequestBody @Validated ScrapRequest.DeleteScrapListDTO request,
                                        @RequestParam(name = "all", defaultValue = "false", required = false) boolean isAllDelete,
                                        @RequestParam(name = "range", required = false) @EnumValid(enumC = QueryRange.class, required = false) String queryRangeStr,
-                                       @RequestParam(name = "category", required = false) @ExistCategory(required = false) Long categoryId){
+                                       @RequestParam(name = "category", required = false) Long categoryId){
 
         MemberDTO memberDTO = tokenProvider.parseAccessToMemberDTO(token);
 

@@ -128,9 +128,9 @@ public class ScrapQueryServiceImplTest {
                 .hasMessageContaining(ErrorCode.SCRAP_MEMBER_NOT_MATCH.getMessage());
     }
 
-    @DisplayName("ID로 스크랩 조회")
+    @DisplayName("스크랩 찾기")
     @Test
-    public void findScrapById(){
+    public void _findScrap(){
         //** given
         // 멤버 설정
         Member member = setupMember();
@@ -156,7 +156,81 @@ public class ScrapQueryServiceImplTest {
                 .isEqualTo(scrap.getMember());
     }
 
-    // TODO: createSpecByQueryRange(), findAllByRequest()에 대한 테스트 코드 작성
+    @DisplayName("[에러] 스크랩 찾기 / 해당하는 스크랩이 존재하지 않음")
+    @Test
+    public void _errorFindScrap_notFoundScrap(){
+        //** given
+        Long scrapId = 999L;
+
+        when(scrapRepository.findById(scrapId)).thenReturn(Optional.empty());
+
+        //** when
+        Throwable throwable = catchThrowable(() -> {
+            scrapQueryService.findScrap(scrapId);
+        });
+
+        //** then
+        assertThat(throwable)
+                .isInstanceOf(BaseException.class)
+                .hasMessageContaining(ErrorCode.SCRAP_NOT_FOUND.getCode());
+    }
+
+    @DisplayName("스크랩 목록 찾기")
+    @Test
+    public void _findScrapList(){
+        //** given
+        // 멤버 설정
+        Member member = setupMember();
+
+        // 카테고리 설정
+        Category category = setupCategory(member, false);
+
+        // 스크랩 설정
+        List<Scrap> scrapList = setupScrapList(member, category, 5);
+        List<Long> scrapIdList = new ArrayList<>();
+        int i=0;
+        for(Scrap scrap : scrapList){
+            ReflectionTestUtils.setField(scrap, "id", 999L - i);
+            scrapIdList.add(scrap.getId());
+            i++;
+        }
+
+        when(scrapRepository.findAllById(scrapIdList)).thenReturn(scrapList);
+
+        //** when
+        List<Scrap> findScrapList = scrapQueryService.findScrapList(scrapIdList);
+
+        //** then
+        assertThat(findScrapList.size())
+                .isEqualTo(scrapIdList.size());
+    }
+
+    @DisplayName("[에러] 스크랩 목록 찾기 / 해당하는 스크랩이 존재하지 않음")
+    @Test
+    public void _errorFindScrapList_notFoundScrap(){
+        //** given
+        // 멤버 설정
+        Member member = setupMember();
+
+        // 카테고리 설정
+        Category category = setupCategory(member, false);
+
+        // 스크랩 설정
+        List<Scrap> scrapList = setupScrapList(member, category, 5);
+        List<Long> scrapIdList = List.of(1L ,2L ,3L ,4L ,5L ,6L);
+
+        when(scrapRepository.findAllById(scrapIdList)).thenReturn(scrapList);
+
+        //** when
+        Throwable throwable = catchThrowable(() -> {
+            scrapQueryService.findScrapList(scrapIdList);
+        });
+
+        //** then
+        assertThat(throwable)
+                .isInstanceOf(BaseException.class)
+                .hasMessageContaining(ErrorCode.SCRAP_NOT_FOUND.getCode());
+    }
 
     private Member setupMember(){
         return Member.builder()

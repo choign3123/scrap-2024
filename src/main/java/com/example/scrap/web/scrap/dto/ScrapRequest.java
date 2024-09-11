@@ -1,14 +1,12 @@
 package com.example.scrap.web.scrap.dto;
 
-import com.example.scrap.validation.annotaion.ExistAvailableScraps;
-import com.example.scrap.validation.annotaion.ExistCategory;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
@@ -56,7 +54,7 @@ public class ScrapRequest {
     @NoArgsConstructor
     public static class DeleteScrapListDTO {
 
-        @ExistAvailableScraps
+        @NotEmpty
         @JsonProperty("scraps")
         private List<Long> scrapIdList;
     }
@@ -69,7 +67,7 @@ public class ScrapRequest {
     @NoArgsConstructor
     public static class ToggleScrapFavoriteListDTO {
 
-        @ExistAvailableScraps
+        @NotEmpty
         @JsonProperty("scraps")
         private List<Long> scrapIdList;
     }
@@ -82,7 +80,6 @@ public class ScrapRequest {
     @NoArgsConstructor
     public static class MoveCategoryOfScrapDTO {
 
-        @ExistCategory
         @JsonProperty("moveCategory")
         private Long moveCategoryId;
     }
@@ -95,11 +92,11 @@ public class ScrapRequest {
     @NoArgsConstructor
     public static class MoveCategoryOfScrapsDTO {
 
-        @ExistAvailableScraps
+        @NotEmpty
         @JsonProperty("scraps")
         private List<Long> scrapIdList;
 
-        @ExistCategory
+        @NotNull
         @JsonProperty("moveCategory")
         private Long moveCategoryId;
     }

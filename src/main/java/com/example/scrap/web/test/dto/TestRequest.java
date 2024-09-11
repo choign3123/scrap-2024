@@ -1,10 +1,10 @@
 package com.example.scrap.web.test.dto;
 
-import com.example.scrap.validation.annotaion.ExistCategory;
 import lombok.Getter;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 @Getter
 public class TestRequest {
@@ -15,6 +15,6 @@ public class TestRequest {
     @Min(0)
     private int age;
 
-    @ExistCategory
+    @NotNull
     private Long categoryId;
 }
