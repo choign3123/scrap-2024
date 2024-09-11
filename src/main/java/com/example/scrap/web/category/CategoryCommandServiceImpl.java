@@ -131,7 +131,7 @@ public class CategoryCommandServiceImpl implements ICategoryCommandService {
         List<Category> categoryList = categoryRepository.findAllByMemberAndStatus(member, CategoryStatus.ACTIVE);
 
         // 모든 카테고리에 대해 요청했는지 확인
-        boolean isRequestCategoryNotAll = request.getCategoryList().size() != categoryList.size();
+        boolean isRequestCategoryNotAll = request.getCategoryIdList().size() != categoryList.size();
         if(isRequestCategoryNotAll){
             throw new BaseException(ErrorCode.REQUEST_CATEGORY_COUNT_NOT_ALL);
         }
@@ -139,7 +139,7 @@ public class CategoryCommandServiceImpl implements ICategoryCommandService {
         // 순서가 변경된 카테고리 id에 차례대로 sequence 순서대로 부여
         Map<Long, Integer> changeSequenceMap = new HashMap<>();
         int newSequence = 1;
-        for(Long categoryId : request.getCategoryList()){
+        for(Long categoryId : request.getCategoryIdList()){
             changeSequenceMap.put(categoryId, newSequence);
             newSequence++;
         }

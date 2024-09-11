@@ -114,7 +114,7 @@ public class CategoryController {
         MemberDTO memberDTO = tokenProvider.parseAccessToMemberDTO(token);
 
         // 중복된 카테고리 있는지 확인
-        boolean includeDuplicateCategory = (request.getCategoryList().size() != request.getCategoryList().stream().distinct().count());
+        boolean includeDuplicateCategory = (request.getCategoryIdList().size() != request.getCategoryIdList().stream().distinct().count());
         if(includeDuplicateCategory){
             throw new ValidationException("categories", "중복된 카테고리를 포함하고 있습니다.");
         }
