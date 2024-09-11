@@ -128,9 +128,9 @@ public class ScrapQueryServiceImplTest {
                 .hasMessageContaining(ErrorCode.SCRAP_MEMBER_NOT_MATCH.getMessage());
     }
 
-    @DisplayName("ID로 스크랩 조회")
+    @DisplayName("스크랩 찾기")
     @Test
-    public void findScrapById(){
+    public void _findScrap(){
         //** given
         // 멤버 설정
         Member member = setupMember();
@@ -154,6 +154,25 @@ public class ScrapQueryServiceImplTest {
                 .isEqualTo(scrap.getCategory());
         assertThat(findScrap.getMember())
                 .isEqualTo(scrap.getMember());
+    }
+
+    @DisplayName("[에러] 스크랩 찾기 / 해당하는 스크랩이 존재하지 않음")
+    @Test
+    public void _errorFindScrap_notFoundScrap(){
+        //** given
+        Long scrapId = 999L;
+
+        when(scrapRepository.findById(scrapId)).thenReturn(Optional.empty());
+
+        //** when
+        Throwable throwable = catchThrowable(() -> {
+            scrapQueryService.findScrap(scrapId);
+        });
+
+        //** then
+        assertThat(throwable)
+                .isInstanceOf(BaseException.class)
+                .hasMessageContaining(ErrorCode.SCRAP_NOT_FOUND.getCode());
     }
 
     // TODO: createSpecByQueryRange(), findAllByRequest()에 대한 테스트 코드 작성

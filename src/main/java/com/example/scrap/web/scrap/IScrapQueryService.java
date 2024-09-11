@@ -41,6 +41,8 @@ public interface IScrapQueryService {
 
     /**
      * 스크랩 찾기
+     *
+     * @throws BaseException 해당하는 스크랩이 존재하지 않을 경우
      */
     public Scrap findScrap(Long scrapId);
 

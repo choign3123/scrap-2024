@@ -110,9 +110,13 @@ public class ScrapQueryServiceImpl implements IScrapQueryService {
 
     /**
      * 스크랩 찾기
+     *
+     * @throws BaseException 해당하는 스크랩이 존재하지 않을 경우
      */
+    @Override
     public Scrap findScrap(Long scrapId){
-        return scrapRepository.findById(scrapId).get();
+        return scrapRepository.findById(scrapId)
+                .orElseThrow(() -> new BaseException(ErrorCode.SCRAP_NOT_FOUND));
     }
 
     /**
