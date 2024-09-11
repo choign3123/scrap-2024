@@ -1,6 +1,5 @@
 package com.example.scrap.web.category.dto;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -41,7 +40,6 @@ public class CategoryRequest {
     public static class UpdateCategorySequenceDTO{
 
         @NotEmpty
-        @JsonProperty("categories")
-        private List<Long> categoryList;
+        private List<Long> categoryIdList;
     }
 }

@@ -1,6 +1,5 @@
 package com.example.scrap.web.scrap.dto;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -55,7 +54,6 @@ public class ScrapRequest {
     public static class DeleteScrapListDTO {
 
         @NotEmpty
-        @JsonProperty("scraps")
         private List<Long> scrapIdList;
     }
 
@@ -68,7 +66,6 @@ public class ScrapRequest {
     public static class ToggleScrapFavoriteListDTO {
 
         @NotEmpty
-        @JsonProperty("scraps")
         private List<Long> scrapIdList;
     }
 
@@ -80,7 +77,6 @@ public class ScrapRequest {
     @NoArgsConstructor
     public static class MoveCategoryOfScrapDTO {
 
-        @JsonProperty("moveCategory")
         private Long moveCategoryId;
     }
 
@@ -93,11 +89,9 @@ public class ScrapRequest {
     public static class MoveCategoryOfScrapsDTO {
 
         @NotEmpty
-        @JsonProperty("scraps")
         private List<Long> scrapIdList;
 
         @NotNull
-        @JsonProperty("moveCategory")
         private Long moveCategoryId;
     }
 }

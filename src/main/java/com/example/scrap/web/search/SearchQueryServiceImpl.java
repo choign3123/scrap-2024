@@ -43,8 +43,8 @@ public class SearchQueryServiceImpl implements ISearchQueryService {
         spec = spec.and(specSearchScope);
 
         // 카테고리 범위 지정
-        if(!(request.getCategoryIdList() == null || request.getCategoryIdList().isEmpty())){
-            spec = spec.and(ScrapSpecification.inCategory(request.getCategoryIdList()));
+        if(!(request.getCategoryScope() == null || request.getCategoryScope().isEmpty())){
+            spec = spec.and(ScrapSpecification.inCategory(request.getCategoryScope()));
         }
 
         // 시작 날짜 ~ 종료 날짜 지정
