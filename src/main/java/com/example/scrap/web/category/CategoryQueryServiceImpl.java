@@ -68,4 +68,23 @@ public class CategoryQueryServiceImpl implements ICategoryQueryService {
 
         return category;
     }
+
+    @Override
+    public List<Category> findCategoryList(List<Long> categoryIdList) {
+        List<Category> categoryList = categoryRepository.findAllById(categoryIdList);
+
+        if(categoryIdList.size() != categoryList.size()){
+            throw new BaseException(ErrorCode.CATEGORY_NOT_FOUND);
+        }
+
+        for(Category category : categoryList){
+            if(category.getStatus().equals(CategoryStatus.DELETED)){
+                throw new BaseException(ErrorCode.DELETED_CATEGORY);
+            }
+        }
+
+        return categoryList;
+    }
+
+
 }

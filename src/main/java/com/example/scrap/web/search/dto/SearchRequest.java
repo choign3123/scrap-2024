@@ -1,7 +1,6 @@
 package com.example.scrap.web.search.dto;
 
 import com.example.scrap.validation.annotaion.EnumsValid;
-import com.example.scrap.validation.annotaion.ExistCategories;
 import com.example.scrap.base.data.DefaultData;
 import com.example.scrap.base.enums.SearchScopeType;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -23,7 +22,6 @@ public class SearchRequest {
         @EnumsValid(enumC = SearchScopeType.class)
         private List<String> searchScope;
 
-        @ExistCategories(required = false)
         @JsonProperty(value = "categoryScope")
         private List<Long> categoryIdList;
 
