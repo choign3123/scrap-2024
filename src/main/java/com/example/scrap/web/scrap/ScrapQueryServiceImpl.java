@@ -120,6 +120,22 @@ public class ScrapQueryServiceImpl implements IScrapQueryService {
     }
 
     /**
+     * 스크랩 찾기
+     *
+     * @throws BaseException 리스트 중 존재하지 않는 스크랩이 있을 경우
+     */
+    @Override
+    public List<Scrap> findScrapList(List<Long> scrapIdList) {
+        List<Scrap> scrapList = scrapRepository.findAllById(scrapIdList);
+
+        if(scrapIdList.size() != scrapList.size()){
+            throw new BaseException(ErrorCode.SCRAP_NOT_FOUND);
+        }
+
+        return scrapList;
+    }
+
+    /**
      * QueryRange에 따른 Specification 추가
      */
     private Specification<Scrap> addQueryRangeSpec(Specification<Scrap> spec, QueryRange queryRange, @Nullable Category category){

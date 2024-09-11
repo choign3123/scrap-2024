@@ -46,5 +46,12 @@ public interface IScrapQueryService {
      */
     public Scrap findScrap(Long scrapId);
 
+    /**
+     * 스크랩 찾기
+     *
+     * @throws BaseException 리스트 중 존재하지 않는 스크랩이 있을 경우
+     */
+    List<Scrap> findScrapList(List<Long> scrapIdList);
+
     // TODO: 스크랩 조회시 member 일치 여부도 함께 확인하는 메소드 추가하기
 }
