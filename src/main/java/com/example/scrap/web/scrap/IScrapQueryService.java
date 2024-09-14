@@ -35,11 +35,6 @@ public interface IScrapQueryService {
     public List<Scrap> findScrapByTitle(MemberDTO memberDTO, QueryRange queryRange, Long categoryId, String query, Sort sort);
 
     /**
-     * 스크랩 전체 공유하기
-     */
-    public List<Scrap> shareAllScrap(MemberDTO memberDTO, QueryRange queryRange, Long categoryId);
-
-    /**
      * 스크랩 찾기
      *
      * @throws BaseException 해당하는 스크랩이 존재하지 않을 경우

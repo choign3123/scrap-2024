@@ -84,27 +84,13 @@ public class ScrapCommandServiceImpl implements IScrapCommandService {
      *
      * @throws BaseException 카테고리의 멤버와 요청멤버가 일치하지 않을 경우
      */
-    public List<Scrap> toggleScrapFavoriteList(MemberDTO memberDTO,
-                                               boolean isAllFavorite, QueryRange queryRange, Long categoryId,
-                                               ScrapRequest.ToggleScrapFavoriteListDTO request){
+    public List<Scrap> toggleScrapFavoriteList(MemberDTO memberDTO, ScrapRequest.ToggleScrapFavoriteListDTO request){
 
         Member member = memberQueryService.findMember(memberDTO);
 
-        // 동적인 쿼리 생성
-        Specification<Scrap> spec = Specification.where(ScrapSpecification.equalMember(member));
-        if(isAllFavorite){ // 전체 즐겨찾기 하기
-            Category category = null;
-
-            if(queryRange.equals(QueryRange.CATEGORY)){
-                category = categoryQueryService.findCategory(categoryId, member);
-            }
-
-            spec = addQueryRangeSpec(spec, queryRange, category);
-        }
-        else{ // 요청된 스크랩에 대해서만 즐겨찾기 하기
-            spec = spec.and(ScrapSpecification.inScrap(request.getScrapIdList()));
-        }
-
+        // 요청된 스크랩 조회하기
+        Specification<Scrap> spec = Specification.where(ScrapSpecification.equalMember(member))
+                .and(ScrapSpecification.inScrap(request.getScrapIdList()));
 
         List<Scrap> scrapList = scrapRepository.findAll(spec);
 
@@ -151,27 +137,18 @@ public class ScrapCommandServiceImpl implements IScrapCommandService {
      * 스크랩 이동하기 (목록)
      * @throws BaseException 카테고리의 멤버와 요청멤버가 일치하지 않을 경우
      */
-    public List<Scrap> moveCategoryOfScraps(MemberDTO memberDTO, ScrapRequest.MoveCategoryOfScrapsDTO request,
-                                            boolean isAllMove, QueryRange queryRange, Long categoryId){
+    public List<Scrap> moveCategoryOfScraps(MemberDTO memberDTO, ScrapRequest.MoveCategoryOfScrapsDTO request){
 
         Member member = memberQueryService.findMember(memberDTO);
         Category moveCategory = categoryQueryService.findCategory(request.getMoveCategoryId(), member);
 
-        // 동적인 쿼리 생성
-        Specification<Scrap> spec = Specification.where(ScrapSpecification.equalMember(member));
-        if(isAllMove){ // 전체 스크랩 이동하기
-            Category category = null;
-
-            if(queryRange.equals(QueryRange.CATEGORY)){
-                category = categoryQueryService.findCategory(categoryId, member);
-            }
-            spec = addQueryRangeSpec(spec, queryRange, category);
-        }
-        else{ // 요청된 스크랩에 대해서만 이동하기
-            spec = spec.and(ScrapSpecification.inScrap(request.getScrapIdList()));
-        }
+        // 요청된 스크랩 조회하기
+        Specification<Scrap> spec = Specification.where(ScrapSpecification.equalMember(member))
+                .and(ScrapSpecification.inScrap(request.getScrapIdList()));
 
         List<Scrap> scrapList = scrapRepository.findAll(spec);
+        // TODO: 요청된 스크랩이 모두 조회되었는지 확인하기
+
         for(Scrap scrap : scrapList){
             scrap.moveCategory(moveCategory);
         }
@@ -211,23 +188,12 @@ public class ScrapCommandServiceImpl implements IScrapCommandService {
      * 스크랩 휴지통에 버리기(목록)
      * @throws BaseException 카테고리의 멤버와 요청멤버가 일치하지 않을 경우
      */
-    public List<TrashScrap> throwScrapListIntoTrash(MemberDTO memberDTO, boolean isAllDelete, QueryRange queryRange, Long categoryId, ScrapRequest.DeleteScrapListDTO request){
+    public List<TrashScrap> throwScrapListIntoTrash(MemberDTO memberDTO, ScrapRequest.DeleteScrapListDTO request){
         Member member = memberQueryService.findMember(memberDTO);
 
-        // 동적인 쿼리 생성
-        Specification<Scrap> spec = Specification.where(ScrapSpecification.equalMember(member));
-        if(isAllDelete){ // 전체 휴지통에 버리기
-            Category category = null;
-
-            if(queryRange.equals(QueryRange.CATEGORY)){
-                category = categoryQueryService.findCategory(categoryId, member);
-            }
-
-            spec = addQueryRangeSpec(spec, queryRange, category);
-        }
-        else{ // 요청된 스크랩에 대해서만 휴지통에 버리기
-            spec = spec.and(ScrapSpecification.inScrap(request.getScrapIdList()));
-        }
+        // 요청된 스크랩 조회하기
+        Specification<Scrap> spec = Specification.where(ScrapSpecification.equalMember(member))
+                .and(ScrapSpecification.inScrap(request.getScrapIdList()));
 
         List<Scrap> scrapList = scrapRepository.findAll(spec);
 
