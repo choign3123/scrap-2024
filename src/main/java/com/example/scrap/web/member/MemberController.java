@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.*;
 public class MemberController {
 
     private final IMemberCommandService memberCommandService;
-    private final ITokenProvider tokenProvider;
+    private final ITokenProvider tokenProvider; // TODO: query랑 command랑 메소드 분리 필요.
 
     /**
      * [POST] /oauth/naver/login
@@ -56,7 +56,7 @@ public class MemberController {
     @PostMapping("/token")
     public ResponseEntity<ResponseDTO> tokenReissue(@RequestParam("refresh_token") String refreshToken){
 
-        Token token = memberCommandService.reissueToken(refreshToken);
+        Token token = memberCommandService.reissueToken(refreshToken); // TODO: 여기서 token을 memberDTO로 변환해가야할 것 같음.
         MemberResponse.ReissueTokenDTO response = MemberConverter.toReissueTokenDTO(token);
 
         return ResponseEntity.ok(new ResponseDTO(response));
@@ -79,6 +79,7 @@ public class MemberController {
      * [PATCH] /signout
      * [API-5] 회원탈퇴
      */
+    // TODO: patch -> delete로 변경하기
     @PatchMapping("/signout")
     public ResponseEntity<ResponseDTO> signOut(@RequestHeader("Authorization") String token){
         MemberDTO memberDTO = tokenProvider.parseAccessToMemberDTO(token);
