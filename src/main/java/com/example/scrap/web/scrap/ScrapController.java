@@ -152,27 +152,6 @@ public class ScrapController {
     }
 
     /**
-     * [GET] /scraps/share
-     * [API-31] 스크랩 전체 공유하기
-     */
-    @GetMapping("/share")
-    public ResponseEntity<ResponseDTO> allScrapShare(@RequestHeader("Authorization") String token,
-                                     @RequestParam(name = "range") @EnumValid(enumC = QueryRange.class) String queryRangeStr,
-                                     @RequestParam(name = "category", required = false) Long categoryId){
-
-        MemberDTO memberDTO = tokenProvider.parseAccessToMemberDTO(token);
-
-        QueryRange queryRange = checkQueryRangeMissing(queryRangeStr);
-
-        checkCategoryMissing(categoryId, queryRange);
-
-        List<Scrap> scrapList = scrapQueryService.shareAllScrap(memberDTO, queryRange, categoryId);
-        ScrapResponse.ShareAllScrapDTO response = ScrapConverter.toShareAllScrap(scrapList);
-
-        return ResponseEntity.ok(new ResponseDTO(response));
-    }
-
-    /**
      * [PATCH] /scraps/{scrap-id}/favorite
      * [API-16] 스크랩 즐겨찾기 (단건)
      */
@@ -193,23 +172,11 @@ public class ScrapController {
      */
     @PatchMapping("/favorite")
     public ResponseEntity<ResponseDTO> scrapFavoriteListToggle(@RequestHeader("Authorization") String token,
-                                               @RequestParam(name = "all", defaultValue = "false", required = false) boolean isAllFavorite,
-                                               @RequestParam(name = "range", required = false) @EnumValid(enumC = QueryRange.class, required = false) String queryRangeStr,
-                                               @RequestParam(name = "category", required = false) Long categoryId,
                                                @RequestBody @Validated ScrapRequest.ToggleScrapFavoriteListDTO request){
 
         MemberDTO memberDTO = tokenProvider.parseAccessToMemberDTO(token);
 
-        QueryRange queryRange = null;
-        if(isAllFavorite){
-            // 프레스 선택 타입 누락 확인
-            queryRange = checkQueryRangeMissing(queryRangeStr);
-
-            // 카테고리 누락 확인
-            checkCategoryMissing(categoryId, queryRange);
-        }
-
-        List<Scrap> scrapList = scrapCommandService.toggleScrapFavoriteList(memberDTO, isAllFavorite, queryRange, categoryId, request);
+        List<Scrap> scrapList = scrapCommandService.toggleScrapFavoriteList(memberDTO, request);
         ScrapResponse.ToggleScrapFavoriteListDTO response = ScrapConverter.toToggleScrapFavoriteList(scrapList);
 
         return ResponseEntity.ok(new ResponseDTO(response));
@@ -236,23 +203,13 @@ public class ScrapController {
      * [API-19] 스크랩 이동하기 (목록)
      */
     @PatchMapping("/move")
-    public ResponseEntity<ResponseDTO> categoryOfScrapsMove(@RequestHeader("Authorization") String token, @RequestBody @Validated ScrapRequest.MoveCategoryOfScrapsDTO request,
-                                            @RequestParam(name = "all", defaultValue = "false", required = false) boolean isAllMove,
-                                            @RequestParam(name = "range", required = false) @EnumValid(enumC = QueryRange.class, required = false) String queryRangeStr,
+    public ResponseEntity<ResponseDTO> categoryOfScrapsMove(@RequestHeader("Authorization") String token,
+                                            @RequestBody @Validated ScrapRequest.MoveCategoryOfScrapsDTO request,
                                             @RequestParam(name = "category", required = false) Long categoryId){
 
         MemberDTO memberDTO = tokenProvider.parseAccessToMemberDTO(token);
 
-        QueryRange queryRange = null;
-        if(isAllMove){
-            // 프레스 선택 타입 누락 확인
-            queryRange = checkQueryRangeMissing(queryRangeStr);
-
-            // 카테고리 누락 확인
-            checkCategoryMissing(categoryId, queryRange);
-        }
-
-        List<Scrap> scrapList = scrapCommandService.moveCategoryOfScraps(memberDTO, request, isAllMove, queryRange, categoryId);
+        List<Scrap> scrapList = scrapCommandService.moveCategoryOfScraps(memberDTO, request);
         ScrapResponse.MoveCategoryOfScrapListDTO response = ScrapConverter.toMoveCategoryOfScraps(scrapList);
 
         return ResponseEntity.ok(new ResponseDTO(response));
@@ -293,24 +250,12 @@ public class ScrapController {
      * [API-18] 스크랩 삭제 (목록)
      */
     @PatchMapping("/trash")
-    public ResponseEntity<ResponseDTO> scrapListRemove(@RequestHeader("Authorization") String token, @RequestBody @Validated ScrapRequest.DeleteScrapListDTO request,
-                                       @RequestParam(name = "all", defaultValue = "false", required = false) boolean isAllDelete,
-                                       @RequestParam(name = "range", required = false) @EnumValid(enumC = QueryRange.class, required = false) String queryRangeStr,
-                                       @RequestParam(name = "category", required = false) Long categoryId){
+    public ResponseEntity<ResponseDTO> scrapListRemove(@RequestHeader("Authorization") String token,
+                                                       @RequestBody @Validated ScrapRequest.DeleteScrapListDTO request){
 
         MemberDTO memberDTO = tokenProvider.parseAccessToMemberDTO(token);
 
-        // string -> enum
-        QueryRange queryRange = null;
-        if(isAllDelete){
-            // 프레스 선택 타입 누락
-            queryRange = checkQueryRangeMissing(queryRangeStr);
-
-            // 카테고리 누락
-            checkCategoryMissing(categoryId, queryRange);
-        }
-
-        scrapCommandService.throwScrapListIntoTrash(memberDTO, isAllDelete, queryRange, categoryId, request);
+        scrapCommandService.throwScrapListIntoTrash(memberDTO, request);
 
         return ResponseEntity.ok(new ResponseDTO<Void>());
     }

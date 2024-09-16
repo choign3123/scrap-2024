@@ -90,25 +90,6 @@ public class ScrapQueryServiceImpl implements IScrapQueryService {
     }
 
     /**
-     * 스크랩 전체 공유하기
-     */
-    public List<Scrap> shareAllScrap(MemberDTO memberDTO, QueryRange queryRange, Long categoryId){
-        Member member = memberQueryService.findMember(memberDTO);
-        Category category = null;
-
-        // 카테고리를 대상으로 조회가 필요한 경우
-        if(queryRange.equals(QueryRange.CATEGORY)){
-            category = categoryQueryService.findCategory(categoryId, member);
-        }
-
-        // 동적인 쿼리 생성
-        Specification<Scrap> spec = Specification.where(ScrapSpecification.equalMember(member));
-        spec = addQueryRangeSpec(spec, queryRange, category);
-
-        return scrapRepository.findAll(spec);
-    }
-
-    /**
      * 스크랩 찾기
      *
      * @throws BaseException 해당하는 스크랩이 존재하지 않을 경우

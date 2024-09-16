@@ -24,9 +24,7 @@ public interface IScrapCommandService {
     /**
      * 스크랩 즐겨찾기(목록)
      */
-    public List<Scrap> toggleScrapFavoriteList(MemberDTO memberDTO,
-                                               boolean isAllFavorite, QueryRange queryRange, Long categoryId,
-                                               ScrapRequest.ToggleScrapFavoriteListDTO request);
+    public List<Scrap> toggleScrapFavoriteList(MemberDTO memberDTO, ScrapRequest.ToggleScrapFavoriteListDTO request);
 
     /**
      * 스크랩 이동하기 (단건)
@@ -36,8 +34,7 @@ public interface IScrapCommandService {
     /**
      * 스크랩 이동하기 (목록)
      */
-    public List<Scrap> moveCategoryOfScraps(MemberDTO memberDTO, ScrapRequest.MoveCategoryOfScrapsDTO request,
-                                            boolean isAllMove, QueryRange queryRange, Long categoryId);
+    public List<Scrap> moveCategoryOfScraps(MemberDTO memberDTO, ScrapRequest.MoveCategoryOfScrapsDTO request);
 
     /**
      * 스크랩의 메모 수정
@@ -52,7 +49,7 @@ public interface IScrapCommandService {
     /**
      * 스크랩 휴지통에 버리기(목록)
      */
-    public List<TrashScrap> throwScrapListIntoTrash(MemberDTO memberDTO, boolean isAllDelete, QueryRange queryRange, Long categoryId, ScrapRequest.DeleteScrapListDTO request);
+    public List<TrashScrap> throwScrapListIntoTrash(MemberDTO memberDTO, ScrapRequest.DeleteScrapListDTO request);
 
     /**
      * 스크랩 휴지통에 버리기
