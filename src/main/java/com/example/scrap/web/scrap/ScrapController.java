@@ -1,13 +1,11 @@
 package com.example.scrap.web.scrap;
 
-import com.example.scrap.base.exception.ValidationException;
 import com.example.scrap.base.response.ResponseDTO;
 import com.example.scrap.converter.ScrapConverter;
 import com.example.scrap.entity.Scrap;
 import com.example.scrap.jwt.ITokenProvider;
 import com.example.scrap.validation.annotaion.*;
 import com.example.scrap.base.data.DefaultData;
-import com.example.scrap.base.enums.QueryRange;
 import com.example.scrap.base.enums.Sorts;
 import com.example.scrap.web.member.dto.MemberDTO;
 import com.example.scrap.web.scrap.dto.ScrapRequest;
@@ -122,31 +120,52 @@ public class ScrapController {
     }
 
     /**
-     * [GET] /scraps/search/title
-     * [API-20] 스크랩 제목으로 검색
+     * [GET] /scraps/search/{category-id}
+     * [API-20] 스크랩 검색 (특정 카테고리에서)
      */
-    @GetMapping("/search/title")
-    public ResponseEntity<ResponseDTO> scrapSearchByTitle(@RequestHeader("Authorization") String token,
-                                          @RequestParam(name = "sort", defaultValue = "SCRAP_DATE") @EnumValid(enumC = Sorts.class) String sorts,
-                                          @RequestParam(name = "direction", defaultValue = "ASC") @EnumValid(enumC = Direction.class) String direction,
-                                          @RequestParam(name = "range") @EnumValid(enumC = QueryRange.class) String queryRangeStr,
-                                          @RequestParam(name = "category", required = false) Long categoryId,
-                                          @RequestParam("q") @NotBlank String query){
+    @GetMapping("/search/{category-id}")
+    public ResponseEntity<ResponseDTO> scrapSearchAtParticularCategory(@RequestHeader("Authorization") String token,
+                                                          @PathVariable(name = "category-id") Long categoryId,
+                                                          @RequestParam(name = "sort", defaultValue = "SCRAP_DATE") @EnumValid(enumC = Sorts.class) String sorts,
+                                                          @RequestParam(name = "direction", defaultValue = "ASC") @EnumValid(enumC = Direction.class) String direction,
+                                                          @RequestParam("q") @NotBlank String query){
 
         MemberDTO memberDTO = tokenProvider.parseAccessToMemberDTO(token);
 
         // string -> enum 변경
         Sorts sortsEnum = Sorts.valueOf(sorts.toUpperCase());
         Direction directionEnum = Direction.valueOf(direction.toUpperCase());
+
         // 정렬
-        Sort sortWay = Sort.by(directionEnum, sortsEnum.getName());
+        Sort sort = Sort.by(directionEnum, sortsEnum.getName());
 
-        QueryRange queryRange = checkQueryRangeMissing(queryRangeStr);
+        List<Scrap> scrapList = scrapQueryService.findScrapAtParticularCategory(memberDTO, categoryId, sort, query);
+        ScrapResponse.FindScrapAtParticularCategoryDTO response = ScrapConverter.toFindScrapAtParticularCategory(scrapList);
 
-        checkCategoryMissing(categoryId, queryRange);
+        return ResponseEntity.ok(new ResponseDTO(response));
+    }
 
-        List<Scrap> scrapList = scrapQueryService.findScrapByTitle(memberDTO, queryRange, categoryId, query, sortWay);
-        ScrapResponse.FindScrapByTitleDTO response = ScrapConverter.toFindScrapByTitle(scrapList);
+    /**
+     * [GET] /scraps/search/favorite
+     * [API-36] 스크랩 검색 (즐겨찾기됨에서)
+     */
+    @GetMapping("/search/favorite")
+    public ResponseEntity<ResponseDTO> scrapSearchAtFavorite(@RequestHeader("Authorization") String token,
+                                                                       @RequestParam(name = "sort", defaultValue = "SCRAP_DATE") @EnumValid(enumC = Sorts.class) String sorts,
+                                                                       @RequestParam(name = "direction", defaultValue = "ASC") @EnumValid(enumC = Direction.class) String direction,
+                                                                       @RequestParam("q") @NotBlank String query){
+
+        MemberDTO memberDTO = tokenProvider.parseAccessToMemberDTO(token);
+
+        // string -> enum 변경
+        Sorts sortsEnum = Sorts.valueOf(sorts.toUpperCase());
+        Direction directionEnum = Direction.valueOf(direction.toUpperCase());
+
+        // 정렬
+        Sort sort = Sort.by(directionEnum, sortsEnum.getName());
+
+        List<Scrap> scrapList = scrapQueryService.findScrapAtFavorite(memberDTO, sort, query);
+        ScrapResponse.FindScrapAtFavoriteDTO response = ScrapConverter.toFindScrapAtFavorite(scrapList);
 
         return ResponseEntity.ok(new ResponseDTO(response));
     }
@@ -258,31 +277,5 @@ public class ScrapController {
         scrapCommandService.throwScrapListIntoTrash(memberDTO, request);
 
         return ResponseEntity.ok(new ResponseDTO<Void>());
-    }
-
-    /**
-     * 프레스 선택 타입 누락 확인
-     */
-    private QueryRange checkQueryRangeMissing(String queryRangeStr){
-        boolean queryRangeMissing = (queryRangeStr == null);
-        if(queryRangeMissing){
-            throw new ValidationException("range", "전체 선택일 시, 필수 입력입니다.");
-        }
-
-        return QueryRange.valueOf(queryRangeStr.toUpperCase());
-    }
-
-    /**
-     * 카테고리 누락 확인
-     * @return if category missing throw ValidationException, else return true
-     * @throws ValidationException
-     */
-    private boolean checkCategoryMissing(Long categoryId, QueryRange queryRange){
-        boolean categoryIdMissing = (queryRange == QueryRange.CATEGORY) && (categoryId == null);
-        if(categoryIdMissing){
-            throw new ValidationException("category", "CATEGORY 타입일 시, 필수 입력입니다.");
-        }
-
-        return true;
     }
 }

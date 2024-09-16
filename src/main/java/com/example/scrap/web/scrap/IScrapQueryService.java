@@ -1,10 +1,7 @@
 package com.example.scrap.web.scrap;
 
 import com.example.scrap.base.exception.BaseException;
-import com.example.scrap.base.exception.ValidationException;
-import com.example.scrap.entity.Member;
 import com.example.scrap.entity.Scrap;
-import com.example.scrap.base.enums.QueryRange;
 import com.example.scrap.web.member.dto.MemberDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -29,10 +26,16 @@ public interface IScrapQueryService {
      */
     public Scrap getScrapDetails(MemberDTO memberDTO, Long scrapId);
 
+
     /**
-     * 스크랩 제목으로 검색 - 카테고리별
+     * 스크랩 검색 (특정 카테고리에서)
      */
-    public List<Scrap> findScrapByTitle(MemberDTO memberDTO, QueryRange queryRange, Long categoryId, String query, Sort sort);
+    List<Scrap> findScrapAtParticularCategory(MemberDTO memberDTO, Long categoryId, Sort sort, String query);
+
+    /**
+     * 스크랩 검색 (즐겨찾기됨에서)
+     */
+    List<Scrap> findScrapAtFavorite(MemberDTO memberDTO, Sort sort, String query);
 
     /**
      * 스크랩 찾기
