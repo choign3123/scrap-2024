@@ -1,7 +1,6 @@
 package com.example.scrap.web.scrap;
 
 import com.example.scrap.entity.Scrap;
-import com.example.scrap.base.enums.QueryRange;
 import com.example.scrap.entity.TrashScrap;
 import com.example.scrap.web.member.dto.MemberDTO;
 import com.example.scrap.web.scrap.dto.ScrapRequest;

@@ -2,7 +2,6 @@ package com.example.scrap.scrap;
 
 import com.example.scrap.base.code.ErrorCode;
 import com.example.scrap.base.data.PolicyData;
-import com.example.scrap.base.enums.QueryRange;
 import com.example.scrap.base.exception.BaseException;
 import com.example.scrap.entity.Category;
 import com.example.scrap.entity.Member;

@@ -86,11 +86,35 @@ public class ScrapResponse {
     }
 
     /**
-     * 스크랩 제목으로 검색 - 카테고리별
+     * 스크랩 검색 (특정 카테고리에서)
      */
     @Builder
     @Getter
-    public static class FindScrapByTitleDTO {
+    public static class FindScrapAtParticularCategoryDTO {
+
+        @JsonProperty("scraps")
+        private List<ScrapDTO> scrapDTOList;
+
+        private int total;
+
+        @Builder
+        @Getter
+        public static class ScrapDTO {
+            private Long scrapId;
+            private String title;
+            private String scrapURL;
+            private String imageURL;
+            private Boolean isFavorite;
+            private LocalDate scrapDate;
+        }
+    }
+
+    /**
+     * 스크랩 검색 (즐겨찾기됨에서)
+     */
+    @Builder
+    @Getter
+    public static class FindScrapAtFavoriteDTO {
 
         @JsonProperty("scraps")
         private List<ScrapDTO> scrapDTOList;

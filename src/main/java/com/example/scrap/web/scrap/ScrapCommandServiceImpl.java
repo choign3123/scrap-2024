@@ -7,7 +7,6 @@ import com.example.scrap.converter.ScrapConverter;
 import com.example.scrap.entity.Category;
 import com.example.scrap.entity.Member;
 import com.example.scrap.entity.Scrap;
-import com.example.scrap.base.enums.QueryRange;
 import com.example.scrap.entity.TrashScrap;
 import com.example.scrap.specification.ScrapSpecification;
 import com.example.scrap.web.category.ICategoryQueryService;
@@ -17,7 +16,6 @@ import com.example.scrap.web.scrap.dto.ScrapRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -225,21 +223,5 @@ public class ScrapCommandServiceImpl implements IScrapCommandService {
         Member member = memberQueryService.findMember(memberDTO);
 
         scrapRepository.deleteAllByMember(member);
-    }
-
-    /**
-     * QueryRange에 따른 Specification 추가
-     */
-    private Specification<Scrap> addQueryRangeSpec(Specification<Scrap> spec, QueryRange queryRange, @Nullable Category category){
-        switch (queryRange){
-            case CATEGORY -> { // 카테고리에서 검색
-                spec = spec.and(ScrapSpecification.equalCategory(category));
-            }
-            case FAVORITE -> { // 즐겨찾기에서 검색
-                spec = spec.and(ScrapSpecification.isFavorite());
-            }
-        }
-
-        return spec;
     }
 }

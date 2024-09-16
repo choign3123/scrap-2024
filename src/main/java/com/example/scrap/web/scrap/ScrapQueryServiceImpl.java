@@ -2,12 +2,10 @@ package com.example.scrap.web.scrap;
 
 import com.example.scrap.base.code.ErrorCode;
 import com.example.scrap.base.exception.BaseException;
-import com.example.scrap.base.exception.ValidationException;
 import com.example.scrap.entity.Category;
 import com.example.scrap.entity.Member;
 import com.example.scrap.entity.Scrap;
 import com.example.scrap.specification.ScrapSpecification;
-import com.example.scrap.base.enums.QueryRange;
 import com.example.scrap.web.category.ICategoryQueryService;
 import com.example.scrap.web.member.IMemberQueryService;
 import com.example.scrap.web.member.dto.MemberDTO;
@@ -17,11 +15,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -69,22 +65,40 @@ public class ScrapQueryServiceImpl implements IScrapQueryService {
     }
 
     /**
-     * 스크랩 제목으로 검색
-     * @param query 제목
+     * 스크랩 검색 (특정 카테고리에서)
      */
-    public List<Scrap> findScrapByTitle(MemberDTO memberDTO, QueryRange queryRange, Long categoryId, String query, Sort sort){
+    public List<Scrap> findScrapAtParticularCategory(MemberDTO memberDTO, Long categoryId, Sort sort, String query){
         Member member = memberQueryService.findMember(memberDTO);
-        Category category = null;
+        Category category = categoryQueryService.findCategory(categoryId, member);
 
-        // 카테고리를 대상으로 조회가 필요한 경우
-        if(queryRange.equals(QueryRange.CATEGORY)){
-            category = categoryQueryService.findCategory(categoryId, member);
-        }
+        // 검색 범위 지정 (제목, 본문내용, 메모)
+        Specification<Scrap> inquiryRange = Specification.where(ScrapSpecification.containingTitle(query))
+                .or(ScrapSpecification.containingDescription(query))
+                .or(ScrapSpecification.containingMemo(query));
 
-        // 동적인 쿼리 생성
+        // 쿼리 생성
         Specification<Scrap> spec = Specification.where(ScrapSpecification.equalMember(member))
-                .and(ScrapSpecification.containingTitle(query)); // 제목 조건
-        spec = addQueryRangeSpec(spec, queryRange, category);
+                .and(ScrapSpecification.equalCategory(category))
+                .and(inquiryRange);
+
+        return scrapRepository.findAll(spec, sort);
+    }
+
+    /**
+     * 스크랩 검색 (즐겨찾기됨에서)
+     */
+    public List<Scrap> findScrapAtFavorite(MemberDTO memberDTO, Sort sort, String query){
+        Member member = memberQueryService.findMember(memberDTO);
+
+        // 검색 범위 지정 (제목, 본문내용, 메모)
+        Specification<Scrap> inquiryRange = Specification.where(ScrapSpecification.containingTitle(query))
+                .or(ScrapSpecification.containingDescription(query))
+                .or(ScrapSpecification.containingMemo(query));
+
+        // 쿼리 생성
+        Specification<Scrap> spec = Specification.where(ScrapSpecification.equalMember(member))
+                .and(ScrapSpecification.isFavorite())
+                .and(inquiryRange);
 
         return scrapRepository.findAll(spec, sort);
     }
@@ -114,21 +128,5 @@ public class ScrapQueryServiceImpl implements IScrapQueryService {
         }
 
         return scrapList;
-    }
-
-    /**
-     * QueryRange에 따른 Specification 추가
-     */
-    private Specification<Scrap> addQueryRangeSpec(Specification<Scrap> spec, QueryRange queryRange, @Nullable Category category){
-        switch (queryRange){
-            case CATEGORY -> { // 카테고리에서 검색
-                spec = spec.and(ScrapSpecification.equalCategory(category));
-            }
-            case FAVORITE -> { // 즐겨찾기에서 검색
-                spec = spec.and(ScrapSpecification.isFavorite());
-            }
-        }
-
-        return spec;
     }
 }

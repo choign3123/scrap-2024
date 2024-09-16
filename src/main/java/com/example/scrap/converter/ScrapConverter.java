@@ -92,10 +92,10 @@ public class ScrapConverter {
                 .build();
     }
 
-    public static ScrapResponse.FindScrapByTitleDTO toFindScrapByTitle(List<Scrap> scrapList){
-        List<ScrapResponse.FindScrapByTitleDTO.ScrapDTO> scrapDTOList = scrapList.stream()
+    public static ScrapResponse.FindScrapAtParticularCategoryDTO toFindScrapAtParticularCategory(List<Scrap> scrapList){
+        List<ScrapResponse.FindScrapAtParticularCategoryDTO.ScrapDTO> scrapDTOList = scrapList.stream()
                 .map( scrap -> {
-                    return ScrapResponse.FindScrapByTitleDTO.ScrapDTO.builder()
+                    return ScrapResponse.FindScrapAtParticularCategoryDTO.ScrapDTO.builder()
                             .scrapId(scrap.getId())
                             .title(scrap.getTitle())
                             .scrapURL(scrap.getScrapURL())
@@ -106,7 +106,27 @@ public class ScrapConverter {
                 })
                 .toList();
 
-        return ScrapResponse.FindScrapByTitleDTO.builder()
+        return ScrapResponse.FindScrapAtParticularCategoryDTO.builder()
+                .scrapDTOList(scrapDTOList)
+                .total(scrapList.size())
+                .build();
+    }
+
+    public static ScrapResponse.FindScrapAtFavoriteDTO toFindScrapAtFavorite(List<Scrap> scrapList){
+        List<ScrapResponse.FindScrapAtFavoriteDTO.ScrapDTO> scrapDTOList = scrapList.stream()
+                .map( scrap -> {
+                    return ScrapResponse.FindScrapAtFavoriteDTO.ScrapDTO.builder()
+                            .scrapId(scrap.getId())
+                            .title(scrap.getTitle())
+                            .scrapURL(scrap.getScrapURL())
+                            .imageURL(scrap.getImageURL())
+                            .isFavorite(scrap.getIsFavorite())
+                            .scrapDate(scrap.getCreatedAt().toLocalDate())
+                            .build();
+                })
+                .toList();
+
+        return ScrapResponse.FindScrapAtFavoriteDTO.builder()
                 .scrapDTOList(scrapDTOList)
                 .total(scrapList.size())
                 .build();

@@ -1,6 +1,7 @@
 package com.example.scrap.scrap;
 
 import com.example.scrap.base.code.ErrorCode;
+import com.example.scrap.base.enums.Sorts;
 import com.example.scrap.base.exception.BaseException;
 import com.example.scrap.entity.Category;
 import com.example.scrap.entity.Member;
@@ -17,6 +18,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.ArrayList;
@@ -25,7 +28,8 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
-import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -126,6 +130,68 @@ public class ScrapQueryServiceImplTest {
         assertThat(throwable)
                 .isInstanceOf(BaseException.class)
                 .hasMessageContaining(ErrorCode.SCRAP_MEMBER_NOT_MATCH.getMessage());
+    }
+
+    @DisplayName("스크랩 검색 (특정 카테고리에서)")
+    @Test
+    public void findScrapAtParticularCategory(){
+        //** given
+        Member member = setupMember();
+        MemberDTO memberDTO = setupMemberDTO(member);
+
+        // 카테고리 설정
+        Category category = setupCategory(member, false);
+        ReflectionTestUtils.setField(category, "id", 99L);
+
+        // 스크랩 설정
+        List<Scrap> scrapList = setupScrapList(member, category, 3);
+
+        // 정렬 설정
+        Sort sort = Sort.by(Sort.Direction.ASC, Sorts.SCRAP_DATE.getName());
+
+        // 검색 키워드 설정
+        String q = "참새";
+
+        when(memberQueryService.findMember(memberDTO)).thenReturn(member);
+        when(categoryQueryService.findCategory(category.getId(), member)).thenReturn(category);
+        when(scrapRepository.findAll(isA(Specification.class), eq(sort))).thenReturn(scrapList);
+
+        //** when
+        List<Scrap> findScrapList = scrapQueryService.findScrapAtParticularCategory(memberDTO, category.getId(), sort, q);
+
+        //** then
+        assertThat(findScrapList.size())
+                .isEqualTo(scrapList.size());
+    }
+
+    @DisplayName("스크랩 검색 (즐겨찾기됨에서)")
+    @Test
+    public void findScrapAtFavorite(){
+        //** given
+        Member member = setupMember();
+        MemberDTO memberDTO = setupMemberDTO(member);
+
+        // 카테고리 설정
+        Category category = setupCategory(member, false);
+
+        // 스크랩 설정
+        List<Scrap> scrapList = setupScrapList(member, category, 3);
+
+        // 정렬 설정
+        Sort sort = Sort.by(Sort.Direction.ASC, Sorts.SCRAP_DATE.getName());
+
+        // 검색 키워드 설정
+        String q = "참새";
+
+        when(memberQueryService.findMember(memberDTO)).thenReturn(member);
+        when(scrapRepository.findAll(isA(Specification.class), eq(sort))).thenReturn(scrapList);
+
+        //** when
+        List<Scrap> findScrapList = scrapQueryService.findScrapAtParticularCategory(memberDTO, category.getId(), sort, q);
+
+        //** then
+        assertThat(findScrapList.size())
+                .isEqualTo(scrapList.size());
     }
 
     @DisplayName("스크랩 찾기")

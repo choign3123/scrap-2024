@@ -34,6 +34,14 @@ public class ScrapSpecification {
         return (root, query, criteriaBuilder) -> criteriaBuilder.like(root.get("title"), "%" + title + "%");
     }
 
+    public static Specification<Scrap> containingMemo(String memo){
+        return (root, query, criteriaBuilder) -> criteriaBuilder.like(root.get("memo"), "%" + memo + "%");
+    }
+
+    public static Specification<Scrap> containingDescription(String description){
+        return (root, query, criteriaBuilder) -> criteriaBuilder.like(root.get("description"), "%" + description + "%");
+    }
+
     public static Specification<Scrap> isFavorite(){
         return (root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("isFavorite"), true);
     }
