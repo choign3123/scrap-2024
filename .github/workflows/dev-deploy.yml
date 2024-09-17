@@ -11,6 +11,8 @@ jobs:
     runs-on: ubuntu-latest # 우분투 최신 버전에서 실행됨.
     permissions:
       contents: read # 내용 읽기만 가능함.
+    env:
+      BASE_PORT: 8088
 
     steps:
     - name: Checkout

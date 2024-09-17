@@ -3,6 +3,8 @@ package com.example.scrap.web.search.dto;
 import com.example.scrap.validation.annotaion.EnumsValid;
 import com.example.scrap.base.data.DefaultData;
 import com.example.scrap.base.enums.SearchScopeType;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -15,6 +17,8 @@ public class SearchRequest {
      * 스크랩 검색하기 DTO
      */
     @Getter
+    @Builder
+    @AllArgsConstructor
     @NoArgsConstructor
     public static class FindScrapDTO {
 
@@ -23,6 +27,7 @@ public class SearchRequest {
 
         private List<Long> categoryScope;
 
+        // TODO: JsonProperty default로 설정하기
         private LocalDate startDate;
 
         private LocalDate endDate;

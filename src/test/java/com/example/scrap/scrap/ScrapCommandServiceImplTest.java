@@ -479,7 +479,7 @@ public class ScrapCommandServiceImplTest {
         when(scrapRepository.findAll(isA(Specification.class))).thenReturn(scrapList);
 
         //** when
-        scrapCommandService.moveCategoryOfScraps(memberDTO, requestDTO);
+        scrapCommandService.moveCategoryOfScrapList(memberDTO, requestDTO);
 
         //** then
         for(Scrap scrap : scrapList){

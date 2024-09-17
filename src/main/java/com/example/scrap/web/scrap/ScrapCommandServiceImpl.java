@@ -135,7 +135,7 @@ public class ScrapCommandServiceImpl implements IScrapCommandService {
      * 스크랩 이동하기 (목록)
      * @throws BaseException 카테고리의 멤버와 요청멤버가 일치하지 않을 경우
      */
-    public List<Scrap> moveCategoryOfScraps(MemberDTO memberDTO, ScrapRequest.MoveCategoryOfScrapsDTO request){
+    public List<Scrap> moveCategoryOfScrapList(MemberDTO memberDTO, ScrapRequest.MoveCategoryOfScrapsDTO request){
 
         Member member = memberQueryService.findMember(memberDTO);
         Category moveCategory = categoryQueryService.findCategory(request.getMoveCategoryId(), member);

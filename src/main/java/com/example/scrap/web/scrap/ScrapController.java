@@ -39,7 +39,8 @@ public class ScrapController {
      * [API-24] 스크랩 생성
      */
     @PostMapping("/{category-id}")
-    public ResponseEntity<ResponseDTO> scrapSave(@RequestHeader("Authorization") String token, @PathVariable("category-id") Long categoryId,
+    public ResponseEntity<ResponseDTO> scrapSave(@RequestHeader("Authorization") String token,
+                                                 @PathVariable("category-id") Long categoryId,
                                                  @RequestBody @Validated ScrapRequest.CreateScrapDTO request){
 
         MemberDTO memberDTO = tokenProvider.parseAccessToMemberDTO(token);
@@ -110,7 +111,8 @@ public class ScrapController {
      * [API-12] 스크랩 세부 조회
      */
     @GetMapping("/{scrap-id}")
-    public ResponseEntity<ResponseDTO> scrapDetails(@RequestHeader("Authorization") String token, @PathVariable("scrap-id") Long scrapId){
+    public ResponseEntity<ResponseDTO> scrapDetails(@RequestHeader("Authorization") String token,
+                                                    @PathVariable("scrap-id") Long scrapId){
         MemberDTO memberDTO = tokenProvider.parseAccessToMemberDTO(token);
 
         Scrap scrap = scrapQueryService.getScrapDetails(memberDTO, scrapId);
@@ -175,7 +177,8 @@ public class ScrapController {
      * [API-16] 스크랩 즐겨찾기 (단건)
      */
     @PatchMapping("{scrap-id}/favorite")
-    public ResponseEntity<ResponseDTO> scrapFavoriteToggle(@RequestHeader("Authorization") String token, @PathVariable("scrap-id") Long scrapId){
+    public ResponseEntity<ResponseDTO> scrapFavoriteToggle(@RequestHeader("Authorization") String token,
+                                                           @PathVariable("scrap-id") Long scrapId){
 
         MemberDTO memberDTO = tokenProvider.parseAccessToMemberDTO(token);
 
@@ -206,8 +209,9 @@ public class ScrapController {
      * [API-15] 스크랩 이동하기 (단건)
      */
     @PatchMapping("/{scrap-id}/move")
-    public ResponseEntity<ResponseDTO> categoryOfScrapMove(@RequestHeader("Authorization") String token, @PathVariable("scrap-id") Long scrapId,
-                                           @RequestBody @Validated ScrapRequest.MoveCategoryOfScrapDTO request){
+    public ResponseEntity<ResponseDTO> categoryOfScrapMove(@RequestHeader("Authorization") String token,
+                                                    @PathVariable("scrap-id") Long scrapId,
+                                                    @RequestBody @Validated ScrapRequest.MoveCategoryOfScrapDTO request){
 
         MemberDTO memberDTO = tokenProvider.parseAccessToMemberDTO(token);
 
@@ -222,14 +226,13 @@ public class ScrapController {
      * [API-19] 스크랩 이동하기 (목록)
      */
     @PatchMapping("/move")
-    public ResponseEntity<ResponseDTO> categoryOfScrapsMove(@RequestHeader("Authorization") String token,
-                                            @RequestBody @Validated ScrapRequest.MoveCategoryOfScrapsDTO request,
-                                            @RequestParam(name = "category", required = false) Long categoryId){
+    public ResponseEntity<ResponseDTO> categoryOfScrapListMove(@RequestHeader("Authorization") String token,
+                                            @RequestBody @Validated ScrapRequest.MoveCategoryOfScrapsDTO request){
 
         MemberDTO memberDTO = tokenProvider.parseAccessToMemberDTO(token);
 
-        List<Scrap> scrapList = scrapCommandService.moveCategoryOfScraps(memberDTO, request);
-        ScrapResponse.MoveCategoryOfScrapListDTO response = ScrapConverter.toMoveCategoryOfScraps(scrapList);
+        List<Scrap> scrapList = scrapCommandService.moveCategoryOfScrapList(memberDTO, request);
+        ScrapResponse.MoveCategoryOfScrapListDTO response = ScrapConverter.toMoveCategoryOfScrapList(scrapList);
 
         return ResponseEntity.ok(new ResponseDTO(response));
     }
@@ -239,7 +242,8 @@ public class ScrapController {
      * [API-14] 스크랩의 메모 수정
      */
     @PatchMapping("/{scrap-id}/memo")
-    public ResponseEntity<ResponseDTO> scrapMemoModify(@RequestHeader("Authorization") String token, @PathVariable("scrap-id") Long scrapId,
+    public ResponseEntity<ResponseDTO> scrapMemoModify(@RequestHeader("Authorization") String token,
+                                       @PathVariable("scrap-id") Long scrapId,
                                        @RequestBody @Validated ScrapRequest.UpdateScrapMemoDTO request){
 
         MemberDTO memberDTO = tokenProvider.parseAccessToMemberDTO(token);
@@ -255,7 +259,8 @@ public class ScrapController {
      * [API-13] 스크랩 삭제 (단건)
      */
     @PatchMapping("/{scrap-id}/trash")
-    public ResponseEntity<ResponseDTO> scrapRemove(@RequestHeader("Authorization") String token, @PathVariable("scrap-id") Long scrapId){
+    public ResponseEntity<ResponseDTO> scrapRemove(@RequestHeader("Authorization") String token,
+                                                   @PathVariable("scrap-id") Long scrapId){
 
         MemberDTO memberDTO = tokenProvider.parseAccessToMemberDTO(token);
 

@@ -173,7 +173,7 @@ public class ScrapConverter {
                 .build();
     }
 
-    public static ScrapResponse.MoveCategoryOfScrapListDTO toMoveCategoryOfScraps(List<Scrap> scrapList){
+    public static ScrapResponse.MoveCategoryOfScrapListDTO toMoveCategoryOfScrapList(List<Scrap> scrapList){
 
         List<ScrapResponse.MoveCategoryOfScrapListDTO.ScrapDTO> scrapDTOList = scrapList.stream()
                 .map(scrap -> {

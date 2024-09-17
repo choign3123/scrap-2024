@@ -93,8 +93,9 @@ public class CategoryController {
      * [API-10] 카테고리명 수정
      */
     @PatchMapping("/{category-id}/title")
-    public ResponseEntity<ResponseDTO> categoryTitleModify(@RequestHeader("Authorization") String token, @PathVariable("category-id") Long categoryId,
-                                           @RequestBody @Valid CategoryRequest.UpdateCategoryTitleDTO request){
+    public ResponseEntity<ResponseDTO> categoryTitleModify(@RequestHeader("Authorization") String token,
+                                                           @PathVariable("category-id") Long categoryId,
+                                                           @RequestBody @Valid CategoryRequest.UpdateCategoryTitleDTO request){
 
         MemberDTO memberDTO = tokenProvider.parseAccessToMemberDTO(token);
 

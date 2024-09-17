@@ -1,6 +1,7 @@
 package com.example.scrap.web.scrap.dto;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -15,7 +16,7 @@ public class ScrapRequest {
      * 스크랩 생성
      */
     @Getter
-//    @Builder
+    @Builder
     @AllArgsConstructor
     @NoArgsConstructor
     public static class CreateScrapDTO {
@@ -77,6 +78,7 @@ public class ScrapRequest {
     @NoArgsConstructor
     public static class MoveCategoryOfScrapDTO {
 
+        @NotNull
         private Long moveCategoryId;
     }
 
