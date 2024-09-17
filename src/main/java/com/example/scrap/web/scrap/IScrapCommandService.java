@@ -33,7 +33,7 @@ public interface IScrapCommandService {
     /**
      * 스크랩 이동하기 (목록)
      */
-    public List<Scrap> moveCategoryOfScraps(MemberDTO memberDTO, ScrapRequest.MoveCategoryOfScrapsDTO request);
+    public List<Scrap> moveCategoryOfScrapList(MemberDTO memberDTO, ScrapRequest.MoveCategoryOfScrapsDTO request);
 
     /**
      * 스크랩의 메모 수정

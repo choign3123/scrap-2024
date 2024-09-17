@@ -22,6 +22,8 @@ public class ScrapResponse {
         private String imageURL;
         private Boolean isFavorite;
         private LocalDate scrapDate;
+
+        // TODO: memo, description도 추가하기!
     }
 
     /**
