@@ -10,6 +10,8 @@ import com.example.scrap.jwt.dto.Token;
 import com.example.scrap.web.member.dto.MemberResponse;
 import com.example.scrap.web.member.dto.MemberDTO;
 import com.example.scrap.web.oauth.dto.OauthResponse;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -43,6 +45,7 @@ public class MemberController {
      * [GET] /token
      * [API-28] 토큰 유효성 검사
      */
+    @Operation(security = { @SecurityRequirement(name = "bearer-key") })
     @GetMapping("/token/me")
     public ResponseEntity<ResponseDTO> tokenValidate(@RequestHeader("Authorization") String token){
 
@@ -66,6 +69,7 @@ public class MemberController {
      * [PATCH] /logout
      * [API-26] 로그아웃
      */
+    @Operation(security = { @SecurityRequirement(name = "bearer-key") })
     @PatchMapping("/logout")
     public ResponseEntity<ResponseDTO> logout(@RequestHeader("Authorization") String token){
         MemberDTO memberDTO = tokenProvider.parseAccessToMemberDTO(token);
@@ -80,6 +84,7 @@ public class MemberController {
      * [API-5] 회원탈퇴
      */
     // TODO: patch -> delete로 변경하기
+    @Operation(security = { @SecurityRequirement(name = "bearer-key") })
     @PatchMapping("/signout")
     public ResponseEntity<ResponseDTO> signOut(@RequestHeader("Authorization") String token){
         MemberDTO memberDTO = tokenProvider.parseAccessToMemberDTO(token);

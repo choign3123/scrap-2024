@@ -8,6 +8,8 @@ import com.example.scrap.jwt.ITokenProvider;
 import com.example.scrap.web.category.dto.CategoryRequest;
 import com.example.scrap.web.category.dto.CategoryResponse;
 import com.example.scrap.web.member.dto.MemberDTO;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -32,6 +34,7 @@ public class CategoryController {
      * [POST] /categories
      * [API-7] 카테고리 생성
      */
+    @Operation(security = { @SecurityRequirement(name = "bearer-key") })
     @PostMapping()
     public ResponseEntity<ResponseDTO> categorySave(@RequestHeader("Authorization") String token, @RequestBody @Valid CategoryRequest.CreateCategoryDTO request){
 
@@ -48,6 +51,7 @@ public class CategoryController {
      * [GET] /categories
      * [API-6] 카테고리 전체 조회
      */
+    @Operation(security = { @SecurityRequirement(name = "bearer-key") })
     @GetMapping()
     public ResponseEntity<ResponseDTO> categoryWholeList(@RequestHeader("Authorization") String token){
 
@@ -64,6 +68,7 @@ public class CategoryController {
      * [GET] /categories/selection
      * [API-30] 카테고리 선택용 조회
      */
+    @Operation(security = { @SecurityRequirement(name = "bearer-key") })
     @GetMapping("/selection")
     public ResponseEntity<ResponseDTO> categoryListForSelection(@RequestHeader("Authorization") String token){
 
@@ -79,6 +84,7 @@ public class CategoryController {
      * [DELETE] /categories/{category-id}?allow_delete_category=
      * [API-9] 카테고리 삭제
      */
+    @Operation(security = { @SecurityRequirement(name = "bearer-key") })
     @DeleteMapping("/{category-id}")
     public ResponseEntity<ResponseDTO> categoryRemove(@RequestHeader("Authorization") String token, @PathVariable("category-id") Long categoryId){
 
@@ -92,6 +98,7 @@ public class CategoryController {
     /** [PATCH] /categories/{category-id}/title
      * [API-10] 카테고리명 수정
      */
+    @Operation(security = { @SecurityRequirement(name = "bearer-key") })
     @PatchMapping("/{category-id}/title")
     public ResponseEntity<ResponseDTO> categoryTitleModify(@RequestHeader("Authorization") String token,
                                                            @PathVariable("category-id") Long categoryId,
@@ -109,6 +116,7 @@ public class CategoryController {
      * [PATCH] /categories/sequence
      * [API-8] 카테고리 순서 변경
      */
+    @Operation(security = { @SecurityRequirement(name = "bearer-key") })
     @PatchMapping("/sequence")
     public ResponseEntity<ResponseDTO> categorySequenceModify(@RequestHeader("Authorization") String token, @RequestBody @Validated CategoryRequest.UpdateCategorySequenceDTO request){
 

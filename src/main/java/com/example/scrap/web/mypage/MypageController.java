@@ -4,6 +4,8 @@ import com.example.scrap.base.response.ResponseDTO;
 import com.example.scrap.jwt.ITokenProvider;
 import com.example.scrap.web.member.dto.MemberDTO;
 import com.example.scrap.web.mypage.dto.MypageResponse;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,7 +26,8 @@ public class MypageController {
      * [API-23] 마이페이지 조회
      */
     @GetMapping
-    public ResponseEntity<ResponseDTO> mypage(@RequestHeader("Authorization") String token){
+    @Operation(security = { @SecurityRequirement(name = "bearer-key") })
+    public ResponseEntity<ResponseDTO> mypage(@RequestHeader(value = "Authorization") String token){
         MemberDTO memberDTO = tokenProvider.parseAccessToMemberDTO(token);
 
         MypageResponse.MypageDTO response = mypageService.mypage(memberDTO);

@@ -13,6 +13,8 @@ import com.example.scrap.base.enums.Sorts;
 import com.example.scrap.web.member.dto.MemberDTO;
 import com.example.scrap.web.search.dto.SearchRequest;
 import com.example.scrap.web.search.dto.SearchResponse;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -38,6 +40,7 @@ public class SearchController {
      * [POST] /search
      * [API-22] 스크랩 검색하기
      */
+    @Operation(security = { @SecurityRequirement(name = "bearer-key") })
     @PostMapping
     public ResponseEntity<ResponseDTO> scrapSearch(@RequestHeader("Authorization") String token,
                                                    @RequestBody @Validated SearchRequest.FindScrapDTO request,
