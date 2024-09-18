@@ -11,6 +11,7 @@ import com.example.scrap.web.member.dto.MemberDTO;
 import com.example.scrap.web.scrap.dto.ScrapRequest;
 import com.example.scrap.web.scrap.dto.ScrapResponse;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -44,7 +45,8 @@ public class ScrapController {
      */
     @Operation(
             summary = "[API-24] 스크랩 생성",
-            security = { @SecurityRequirement(name = "bearer-key") }
+            security = { @SecurityRequirement(name = "bearer-key") },
+            parameters = {@Parameter(name = "Authorization", example = "오른쪽 맨위 Authorize를 사용시, 여기엔 아무값이나 입력하세요")}
     )
     @PostMapping("/{category-id}")
     public ResponseEntity<ResponseDTO<ScrapResponse.CreateScrapDTO>>
@@ -66,7 +68,8 @@ public class ScrapController {
      */
     @Operation(
             summary = "[API-11] 스크랩 전체 조회-카테고리별",
-            security = { @SecurityRequirement(name = "bearer-key") }
+            security = { @SecurityRequirement(name = "bearer-key") },
+            parameters = {@Parameter(name = "Authorization", example = "오른쪽 맨위 Authorize를 사용시, 여기엔 아무값이나 입력하세요")}
     )
     @GetMapping()
     public ResponseEntity<ResponseDTO<ScrapResponse.GetScrapListByCategoryDTO>>
@@ -100,7 +103,8 @@ public class ScrapController {
      */
     @Operation(
             summary = "[API-21] 즐겨찾기된 스크랩 조회",
-            security = { @SecurityRequirement(name = "bearer-key") }
+            security = { @SecurityRequirement(name = "bearer-key") },
+            parameters = {@Parameter(name = "Authorization", example = "오른쪽 맨위 Authorize를 사용시, 여기엔 아무값이나 입력하세요")}
     )
     @GetMapping("/favorite")
     public ResponseEntity<ResponseDTO<ScrapResponse.GetFavoriteScrapListDTO>>
@@ -131,7 +135,8 @@ public class ScrapController {
      */
     @Operation(
             summary = "[API-12] 스크랩 세부 조회",
-            security = { @SecurityRequirement(name = "bearer-key") }
+            security = { @SecurityRequirement(name = "bearer-key") },
+            parameters = {@Parameter(name = "Authorization", example = "오른쪽 맨위 Authorize를 사용시, 여기엔 아무값이나 입력하세요")}
     )
     @GetMapping("/{scrap-id}")
     public ResponseEntity<ResponseDTO<ScrapResponse.GetScrapDetailsDTO>>
@@ -152,7 +157,8 @@ public class ScrapController {
      */
     @Operation(
             summary = "[API-20] 스크랩 검색 (특정 카테고리에서)",
-            security = { @SecurityRequirement(name = "bearer-key") }
+            security = { @SecurityRequirement(name = "bearer-key") },
+            parameters = {@Parameter(name = "Authorization", example = "오른쪽 맨위 Authorize를 사용시, 여기엔 아무값이나 입력하세요")}
     )
     @GetMapping("/search/{category-id}")
     public ResponseEntity<ResponseDTO<ScrapResponse.FindScrapAtParticularCategoryDTO>>
@@ -183,7 +189,8 @@ public class ScrapController {
      */
     @Operation(
             summary = "[API-36] 스크랩 검색 (즐겨찾기됨에서)",
-            security = { @SecurityRequirement(name = "bearer-key") }
+            security = { @SecurityRequirement(name = "bearer-key") },
+            parameters = {@Parameter(name = "Authorization", example = "오른쪽 맨위 Authorize를 사용시, 여기엔 아무값이나 입력하세요")}
     )
     @GetMapping("/search/favorite")
     public ResponseEntity<ResponseDTO<ScrapResponse.FindScrapAtFavoriteDTO>>
@@ -213,7 +220,8 @@ public class ScrapController {
      */
     @Operation(
             summary = "[API-16] 스크랩 즐겨찾기 (단건)",
-            security = { @SecurityRequirement(name = "bearer-key") }
+            security = { @SecurityRequirement(name = "bearer-key") },
+            parameters = {@Parameter(name = "Authorization", example = "오른쪽 맨위 Authorize를 사용시, 여기엔 아무값이나 입력하세요")}
     )
     @PatchMapping("{scrap-id}/favorite")
     public ResponseEntity<ResponseDTO<ScrapResponse.ToggleScrapFavoriteDTO>>
@@ -234,7 +242,8 @@ public class ScrapController {
      */
     @Operation(
             summary = "[API-17] 스크랩 즐겨찾기 (목록)",
-            security = { @SecurityRequirement(name = "bearer-key") }
+            security = { @SecurityRequirement(name = "bearer-key") },
+            parameters = {@Parameter(name = "Authorization", example = "오른쪽 맨위 Authorize를 사용시, 여기엔 아무값이나 입력하세요")}
     )
     @PatchMapping("/favorite")
     public ResponseEntity<ResponseDTO<ScrapResponse.ToggleScrapFavoriteListDTO>>
@@ -255,7 +264,8 @@ public class ScrapController {
      */
     @Operation(
             summary = "[API-15] 스크랩 이동하기 (단건)",
-            security = { @SecurityRequirement(name = "bearer-key") }
+            security = { @SecurityRequirement(name = "bearer-key") },
+            parameters = {@Parameter(name = "Authorization", example = "오른쪽 맨위 Authorize를 사용시, 여기엔 아무값이나 입력하세요")}
     )
     @PatchMapping("/{scrap-id}/move")
     public ResponseEntity<ResponseDTO<ScrapResponse.MoveCategoryOfScrapDTO>>
@@ -277,7 +287,8 @@ public class ScrapController {
      */
     @Operation(
             summary = "[API-19] 스크랩 이동하기 (목록)",
-            security = { @SecurityRequirement(name = "bearer-key") }
+            security = { @SecurityRequirement(name = "bearer-key") },
+            parameters = {@Parameter(name = "Authorization", example = "오른쪽 맨위 Authorize를 사용시, 여기엔 아무값이나 입력하세요")}
     )
     @PatchMapping("/move")
     public ResponseEntity<ResponseDTO<ScrapResponse.MoveCategoryOfScrapListDTO>>
@@ -298,7 +309,8 @@ public class ScrapController {
      */
     @Operation(
             summary = "[API-14] 스크랩의 메모 수정",
-            security = { @SecurityRequirement(name = "bearer-key") }
+            security = { @SecurityRequirement(name = "bearer-key") },
+            parameters = {@Parameter(name = "Authorization", example = "오른쪽 맨위 Authorize를 사용시, 여기엔 아무값이나 입력하세요")}
     )
     @PatchMapping("/{scrap-id}/memo")
     public ResponseEntity<ResponseDTO<ScrapResponse.UpdateScrapMemoDTO>>
@@ -320,7 +332,8 @@ public class ScrapController {
      */
     @Operation(
             summary = "[API-13] 스크랩 삭제 (단건)",
-            security = { @SecurityRequirement(name = "bearer-key") }
+            security = { @SecurityRequirement(name = "bearer-key") },
+            parameters = {@Parameter(name = "Authorization", example = "오른쪽 맨위 Authorize를 사용시, 여기엔 아무값이나 입력하세요")}
     )
     @PatchMapping("/{scrap-id}/trash")
     public ResponseEntity<ResponseDTO<Void>> scrapRemove(@RequestHeader("Authorization") String token,
@@ -339,11 +352,12 @@ public class ScrapController {
      */
     @Operation(
             summary = "[API-18] 스크랩 삭제 (목록)",
-            security = { @SecurityRequirement(name = "bearer-key") }
+            security = { @SecurityRequirement(name = "bearer-key") },
+            parameters = {@Parameter(name = "Authorization", example = "오른쪽 맨위 Authorize를 사용시, 여기엔 아무값이나 입력하세요")}
     )
     @PatchMapping("/trash")
     public ResponseEntity<ResponseDTO<Void>> scrapListRemove(@RequestHeader("Authorization") String token,
-                                                       @RequestBody @Validated ScrapRequest.DeleteScrapListDTO request){
+                                                             @RequestBody @Validated ScrapRequest.DeleteScrapListDTO request){
 
         MemberDTO memberDTO = tokenProvider.parseAccessToMemberDTO(token);
 

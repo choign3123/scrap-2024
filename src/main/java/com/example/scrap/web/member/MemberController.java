@@ -11,6 +11,7 @@ import com.example.scrap.web.member.dto.MemberResponse;
 import com.example.scrap.web.member.dto.MemberDTO;
 import com.example.scrap.web.oauth.dto.OauthResponse;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -51,12 +52,13 @@ public class MemberController {
      */
     @Operation(
             summary = "[API-28] 토큰 유효성 검사",
-            security = { @SecurityRequirement(name = "bearer-key") }
+            security = { @SecurityRequirement(name = "bearer-key") },
+            parameters = {@Parameter(name = "Authorization", example = "오른쪽 맨위 Authorize를 사용시, 여기엔 아무값이나 입력하세요")}
     )
     @GetMapping("/token/me")
     public ResponseEntity<ResponseDTO<Void>> tokenValidate(@RequestHeader("Authorization") String token){
 
-        return ResponseEntity.ok(new ResponseDTO<Void>(SuccessCode.TOKEN_VALID));
+        return ResponseEntity.ok(new ResponseDTO<>(SuccessCode.TOKEN_VALID));
     }
 
     /**
@@ -82,7 +84,8 @@ public class MemberController {
      */
     @Operation(
             summary = "[API-26] 로그아웃",
-            security = { @SecurityRequirement(name = "bearer-key") }
+            security = { @SecurityRequirement(name = "bearer-key") },
+            parameters = {@Parameter(name = "Authorization", example = "오른쪽 맨위 Authorize를 사용시, 여기엔 아무값이나 입력하세요")}
     )
     @PatchMapping("/logout")
     public ResponseEntity<ResponseDTO<Void>> logout(@RequestHeader("Authorization") String token){
@@ -100,7 +103,8 @@ public class MemberController {
     // TODO: patch -> delete로 변경하기
     @Operation(
             summary = "[API-5] 회원탈퇴",
-            security = { @SecurityRequirement(name = "bearer-key") }
+            security = { @SecurityRequirement(name = "bearer-key") },
+            parameters = {@Parameter(name = "Authorization", example = "오른쪽 맨위 Authorize를 사용시, 여기엔 아무값이나 입력하세요")}
     )
     @PatchMapping("/signout")
     public ResponseEntity<ResponseDTO<Void>> signOut(@RequestHeader("Authorization") String token){

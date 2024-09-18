@@ -9,6 +9,7 @@ import com.example.scrap.web.category.dto.CategoryRequest;
 import com.example.scrap.web.category.dto.CategoryResponse;
 import com.example.scrap.web.member.dto.MemberDTO;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -38,11 +39,13 @@ public class CategoryController {
      */
     @Operation(
             summary = "[API-7] 카테고리 생성",
-            security = { @SecurityRequirement(name = "bearer-key") }
+            security = { @SecurityRequirement(name = "bearer-key") },
+            parameters = {@Parameter(name = "Authorization", example = "오른쪽 맨위 Authorize를 사용시, 여기엔 아무값이나 입력하세요")}
     )
     @PostMapping()
     public ResponseEntity<ResponseDTO<CategoryResponse.CreateCategoryDTO>>
-    categorySave(@RequestHeader("Authorization") String token, @RequestBody @Valid CategoryRequest.CreateCategoryDTO request){
+    categorySave(@RequestHeader("Authorization") String token,
+                 @RequestBody @Valid CategoryRequest.CreateCategoryDTO request){
 
         MemberDTO memberDTO = tokenProvider.parseAccessToMemberDTO(token);
 
@@ -59,7 +62,8 @@ public class CategoryController {
      */
     @Operation(
             summary = "[API-6] 카테고리 전체 조회",
-            security = { @SecurityRequirement(name = "bearer-key") }
+            security = { @SecurityRequirement(name = "bearer-key") },
+            parameters = {@Parameter(name = "Authorization", example = "오른쪽 맨위 Authorize를 사용시, 여기엔 아무값이나 입력하세요")}
     )
     @GetMapping()
     public ResponseEntity<ResponseDTO<CategoryResponse.GetCategoryListDTO>>
@@ -80,7 +84,8 @@ public class CategoryController {
      */
     @Operation(
             summary = "[API-30] 카테고리 선택용 조회",
-            security = { @SecurityRequirement(name = "bearer-key") }
+            security = { @SecurityRequirement(name = "bearer-key") },
+            parameters = {@Parameter(name = "Authorization", example = "오른쪽 맨위 Authorize를 사용시, 여기엔 아무값이나 입력하세요")}
     )
     @GetMapping("/selection")
     public ResponseEntity<ResponseDTO<CategoryResponse.GetCategoryListForSelectionDTO>>
@@ -100,10 +105,12 @@ public class CategoryController {
      */
     @Operation(
             summary = "[API-9] 카테고리 삭제",
-            security = { @SecurityRequirement(name = "bearer-key") }
+            security = { @SecurityRequirement(name = "bearer-key") },
+            parameters = {@Parameter(name = "Authorization", example = "오른쪽 맨위 Authorize를 사용시, 여기엔 아무값이나 입력하세요")}
     )
     @DeleteMapping("/{category-id}")
-    public ResponseEntity<ResponseDTO<Void>> categoryRemove(@RequestHeader("Authorization") String token, @PathVariable("category-id") Long categoryId){
+    public ResponseEntity<ResponseDTO<Void>> categoryRemove(@RequestHeader("Authorization") String token,
+                                                            @PathVariable("category-id") Long categoryId){
 
         MemberDTO memberDTO = tokenProvider.parseAccessToMemberDTO(token);
 
@@ -117,7 +124,8 @@ public class CategoryController {
      */
     @Operation(
             summary = "[API-10] 카테고리명 수정",
-            security = { @SecurityRequirement(name = "bearer-key") }
+            security = { @SecurityRequirement(name = "bearer-key") },
+            parameters = {@Parameter(name = "Authorization", example = "오른쪽 맨위 Authorize를 사용시, 여기엔 아무값이나 입력하세요")}
     )
     @PatchMapping("/{category-id}/title")
     public ResponseEntity<ResponseDTO<CategoryResponse.UpdateCategoryTitleDTO>>
@@ -139,7 +147,8 @@ public class CategoryController {
      */
     @Operation(
             summary = "[API-8] 카테고리 순서 변경",
-            security = { @SecurityRequirement(name = "bearer-key") }
+            security = { @SecurityRequirement(name = "bearer-key") },
+            parameters = {@Parameter(name = "Authorization", example = "오른쪽 맨위 Authorize를 사용시, 여기엔 아무값이나 입력하세요")}
     )
     @PatchMapping("/sequence")
     public ResponseEntity<ResponseDTO<CategoryResponse.UpdateCategorySequenceDTO>>

@@ -5,6 +5,7 @@ import com.example.scrap.jwt.ITokenProvider;
 import com.example.scrap.web.member.dto.MemberDTO;
 import com.example.scrap.web.mypage.dto.MypageResponse;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -29,7 +30,8 @@ public class MypageController {
      */
     @Operation(
             summary = "[API-23] 마이페이지 조회",
-            security = { @SecurityRequirement(name = "bearer-key") }
+            security = { @SecurityRequirement(name = "bearer-key") },
+            parameters = {@Parameter(name = "Authorization", example = "오른쪽 맨위 Authorize를 사용시, 여기엔 아무값이나 입력하세요")}
     )
     @GetMapping
     public ResponseEntity<ResponseDTO<MypageResponse.MypageDTO>> mypage(@RequestHeader(value = "Authorization") String token){
@@ -37,6 +39,6 @@ public class MypageController {
 
         MypageResponse.MypageDTO response = mypageService.mypage(memberDTO);
 
-        return ResponseEntity.ok(new ResponseDTO(response));
+        return ResponseEntity.ok(new ResponseDTO<>(response));
     }
 }
