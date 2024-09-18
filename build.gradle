@@ -33,6 +33,7 @@ dependencies {
 	implementation 'io.jsonwebtoken:jjwt:0.9.1'
 	implementation 'org.springframework.boot:spring-boot-starter-data-redis' // redis
 	implementation 'com.google.code.gson:gson:2.7'
+	implementation 'org.springdoc:springdoc-openapi-ui:1.8.0' // swagger
 }
 
 tasks.named('test') {
