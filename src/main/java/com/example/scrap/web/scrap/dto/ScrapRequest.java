@@ -1,5 +1,6 @@
 package com.example.scrap.web.scrap.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -20,16 +21,21 @@ public class ScrapRequest {
     @AllArgsConstructor
     @NoArgsConstructor
     public static class CreateScrapDTO {
+        @Schema(example = "https://www.youtube.com/watch?v=gKD8GzCcFwk")
         @NotBlank
         private String scrapURL;
 
+        @Schema(example = "https://i.ytimg.com/vi/gKD8GzCcFwk/maxresdefault.jpg")
         private String imageURL;
 
+        @Schema(example = "포동포동 겨울참새는 아주 귀엽습니다  (밀착 관찰)")
         @NotBlank
         private String title;
 
+        @Schema(example = "귀여운 참새")
         private String description;
 
+        @Schema(example = "너무 귀여운 겨울 참새")
         private String memo;
 
         private Boolean isFavorite;
