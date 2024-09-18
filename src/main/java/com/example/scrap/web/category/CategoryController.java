@@ -36,7 +36,10 @@ public class CategoryController {
      * [POST] /categories
      * [API-7] 카테고리 생성
      */
-    @Operation(security = { @SecurityRequirement(name = "bearer-key") })
+    @Operation(
+            summary = "[API-7] 카테고리 생성",
+            security = { @SecurityRequirement(name = "bearer-key") }
+    )
     @PostMapping()
     public ResponseEntity<ResponseDTO<CategoryResponse.CreateCategoryDTO>>
     categorySave(@RequestHeader("Authorization") String token, @RequestBody @Valid CategoryRequest.CreateCategoryDTO request){
@@ -54,7 +57,10 @@ public class CategoryController {
      * [GET] /categories
      * [API-6] 카테고리 전체 조회
      */
-    @Operation(security = { @SecurityRequirement(name = "bearer-key") })
+    @Operation(
+            summary = "[API-6] 카테고리 전체 조회",
+            security = { @SecurityRequirement(name = "bearer-key") }
+    )
     @GetMapping()
     public ResponseEntity<ResponseDTO<CategoryResponse.GetCategoryListDTO>>
     categoryWholeList(@RequestHeader("Authorization") String token){
@@ -72,7 +78,10 @@ public class CategoryController {
      * [GET] /categories/selection
      * [API-30] 카테고리 선택용 조회
      */
-    @Operation(security = { @SecurityRequirement(name = "bearer-key") })
+    @Operation(
+            summary = "[API-30] 카테고리 선택용 조회",
+            security = { @SecurityRequirement(name = "bearer-key") }
+    )
     @GetMapping("/selection")
     public ResponseEntity<ResponseDTO<CategoryResponse.GetCategoryListForSelectionDTO>>
     categoryListForSelection(@RequestHeader("Authorization") String token){
@@ -89,7 +98,10 @@ public class CategoryController {
      * [DELETE] /categories/{category-id}?allow_delete_category=
      * [API-9] 카테고리 삭제
      */
-    @Operation(security = { @SecurityRequirement(name = "bearer-key") })
+    @Operation(
+            summary = "[API-9] 카테고리 삭제",
+            security = { @SecurityRequirement(name = "bearer-key") }
+    )
     @DeleteMapping("/{category-id}")
     public ResponseEntity<ResponseDTO<Void>> categoryRemove(@RequestHeader("Authorization") String token, @PathVariable("category-id") Long categoryId){
 
@@ -103,7 +115,10 @@ public class CategoryController {
     /** [PATCH] /categories/{category-id}/title
      * [API-10] 카테고리명 수정
      */
-    @Operation(security = { @SecurityRequirement(name = "bearer-key") })
+    @Operation(
+            summary = "[API-10] 카테고리명 수정",
+            security = { @SecurityRequirement(name = "bearer-key") }
+    )
     @PatchMapping("/{category-id}/title")
     public ResponseEntity<ResponseDTO<CategoryResponse.UpdateCategoryTitleDTO>>
     categoryTitleModify(@RequestHeader("Authorization") String token,
@@ -122,7 +137,10 @@ public class CategoryController {
      * [PATCH] /categories/sequence
      * [API-8] 카테고리 순서 변경
      */
-    @Operation(security = { @SecurityRequirement(name = "bearer-key") })
+    @Operation(
+            summary = "[API-8] 카테고리 순서 변경",
+            security = { @SecurityRequirement(name = "bearer-key") }
+    )
     @PatchMapping("/sequence")
     public ResponseEntity<ResponseDTO<CategoryResponse.UpdateCategorySequenceDTO>>
     categorySequenceModify(@RequestHeader("Authorization") String token,
@@ -133,6 +151,7 @@ public class CategoryController {
         // 중복된 카테고리 있는지 확인
         boolean includeDuplicateCategory = (request.getCategoryIdList().size() != request.getCategoryIdList().stream().distinct().count());
         if(includeDuplicateCategory){
+            // TODO: categoryids -> categoryIdList로 변경하기
             throw new ValidationException("categories", "중복된 카테고리를 포함하고 있습니다.");
         }
 

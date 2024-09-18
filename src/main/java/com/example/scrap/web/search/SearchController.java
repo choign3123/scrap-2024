@@ -42,7 +42,10 @@ public class SearchController {
      * [POST] /search
      * [API-22] 스크랩 검색하기
      */
-    @Operation(security = { @SecurityRequirement(name = "bearer-key") })
+    @Operation(
+            summary = "[API-22] 스크랩 검색하기",
+            security = {@SecurityRequirement(name = "bearer-key") }
+    )
     @PostMapping
     public ResponseEntity<ResponseDTO<SearchResponse.FindScrapDTO>>
     scrapSearch(@RequestHeader("Authorization") String token,

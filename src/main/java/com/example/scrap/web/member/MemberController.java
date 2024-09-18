@@ -31,6 +31,9 @@ public class MemberController {
      * [POST] /oauth/naver/login
      * [API-33] 네이버 로그인(회원가입)
      */
+    @Operation(
+            summary = "[API-33] 네이버 로그인(회원가입)"
+    )
     @PostMapping("/oauth/login/naver")
     public ResponseEntity<ResponseDTO<OauthResponse.TokenDTO>>
     naverLoginOrSignup(@RequestHeader("Authorization") String authorization){
@@ -46,7 +49,10 @@ public class MemberController {
      * [GET] /token
      * [API-28] 토큰 유효성 검사
      */
-    @Operation(security = { @SecurityRequirement(name = "bearer-key") })
+    @Operation(
+            summary = "[API-28] 토큰 유효성 검사",
+            security = { @SecurityRequirement(name = "bearer-key") }
+    )
     @GetMapping("/token/me")
     public ResponseEntity<ResponseDTO<Void>> tokenValidate(@RequestHeader("Authorization") String token){
 
@@ -57,6 +63,9 @@ public class MemberController {
      * [POST] /token
      * [API-34] 토큰 재발급
      */
+    @Operation(
+            summary = "[API-34] 토큰 재발급"
+    )
     @PostMapping("/token")
     public ResponseEntity<ResponseDTO<MemberResponse.ReissueTokenDTO>>
     tokenReissue(@RequestParam("refresh_token") String refreshToken){
@@ -71,7 +80,10 @@ public class MemberController {
      * [PATCH] /logout
      * [API-26] 로그아웃
      */
-    @Operation(security = { @SecurityRequirement(name = "bearer-key") })
+    @Operation(
+            summary = "[API-26] 로그아웃",
+            security = { @SecurityRequirement(name = "bearer-key") }
+    )
     @PatchMapping("/logout")
     public ResponseEntity<ResponseDTO<Void>> logout(@RequestHeader("Authorization") String token){
         MemberDTO memberDTO = tokenProvider.parseAccessToMemberDTO(token);
@@ -86,7 +98,10 @@ public class MemberController {
      * [API-5] 회원탈퇴
      */
     // TODO: patch -> delete로 변경하기
-    @Operation(security = { @SecurityRequirement(name = "bearer-key") })
+    @Operation(
+            summary = "[API-5] 회원탈퇴",
+            security = { @SecurityRequirement(name = "bearer-key") }
+    )
     @PatchMapping("/signout")
     public ResponseEntity<ResponseDTO<Void>> signOut(@RequestHeader("Authorization") String token){
         MemberDTO memberDTO = tokenProvider.parseAccessToMemberDTO(token);

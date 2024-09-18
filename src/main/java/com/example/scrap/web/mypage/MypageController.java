@@ -27,8 +27,11 @@ public class MypageController {
      * [GET] /mypage
      * [API-23] 마이페이지 조회
      */
+    @Operation(
+            summary = "[API-23] 마이페이지 조회",
+            security = { @SecurityRequirement(name = "bearer-key") }
+    )
     @GetMapping
-    @Operation(security = { @SecurityRequirement(name = "bearer-key") })
     public ResponseEntity<ResponseDTO<MypageResponse.MypageDTO>> mypage(@RequestHeader(value = "Authorization") String token){
         MemberDTO memberDTO = tokenProvider.parseAccessToMemberDTO(token);
 

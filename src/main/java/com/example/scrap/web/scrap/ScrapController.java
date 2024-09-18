@@ -42,7 +42,10 @@ public class ScrapController {
      * [POST] /scraps/{category-id}
      * [API-24] 스크랩 생성
      */
-    @Operation(security = { @SecurityRequirement(name = "bearer-key") })
+    @Operation(
+            summary = "[API-24] 스크랩 생성",
+            security = { @SecurityRequirement(name = "bearer-key") }
+    )
     @PostMapping("/{category-id}")
     public ResponseEntity<ResponseDTO<ScrapResponse.CreateScrapDTO>>
     scrapSave(@RequestHeader("Authorization") String token,
@@ -61,7 +64,10 @@ public class ScrapController {
      * [GET] /scraps?category=&sort=&direction=&page=&size
      * [API-11] 스크랩 전체 조회-카테고리별
      */
-    @Operation(security = { @SecurityRequirement(name = "bearer-key") })
+    @Operation(
+            summary = "[API-11] 스크랩 전체 조회-카테고리별",
+            security = { @SecurityRequirement(name = "bearer-key") }
+    )
     @GetMapping()
     public ResponseEntity<ResponseDTO<ScrapResponse.GetScrapListByCategoryDTO>>
     scrapListByCategory(@RequestHeader("Authorization") String token,
@@ -92,7 +98,10 @@ public class ScrapController {
      * [GET] /scraps/favorite
      * [API-21] 즐겨찾기된 스크랩 조회
      */
-    @Operation(security = { @SecurityRequirement(name = "bearer-key") })
+    @Operation(
+            summary = "[API-21] 즐겨찾기된 스크랩 조회",
+            security = { @SecurityRequirement(name = "bearer-key") }
+    )
     @GetMapping("/favorite")
     public ResponseEntity<ResponseDTO<ScrapResponse.GetFavoriteScrapListDTO>>
     favoriteScrapList(@RequestHeader("Authorization") String token,
@@ -120,7 +129,10 @@ public class ScrapController {
      * [GET] /scraps/{scrap-id}
      * [API-12] 스크랩 세부 조회
      */
-    @Operation(security = { @SecurityRequirement(name = "bearer-key") })
+    @Operation(
+            summary = "[API-12] 스크랩 세부 조회",
+            security = { @SecurityRequirement(name = "bearer-key") }
+    )
     @GetMapping("/{scrap-id}")
     public ResponseEntity<ResponseDTO<ScrapResponse.GetScrapDetailsDTO>>
     scrapDetails(@RequestHeader("Authorization") String token,
@@ -138,7 +150,10 @@ public class ScrapController {
      * [GET] /scraps/search/{category-id}
      * [API-20] 스크랩 검색 (특정 카테고리에서)
      */
-    @Operation(security = { @SecurityRequirement(name = "bearer-key") })
+    @Operation(
+            summary = "[API-20] 스크랩 검색 (특정 카테고리에서)",
+            security = { @SecurityRequirement(name = "bearer-key") }
+    )
     @GetMapping("/search/{category-id}")
     public ResponseEntity<ResponseDTO<ScrapResponse.FindScrapAtParticularCategoryDTO>>
     scrapSearchAtParticularCategory(@RequestHeader("Authorization") String token,
@@ -166,7 +181,10 @@ public class ScrapController {
      * [GET] /scraps/search/favorite
      * [API-36] 스크랩 검색 (즐겨찾기됨에서)
      */
-    @Operation(security = { @SecurityRequirement(name = "bearer-key") })
+    @Operation(
+            summary = "[API-36] 스크랩 검색 (즐겨찾기됨에서)",
+            security = { @SecurityRequirement(name = "bearer-key") }
+    )
     @GetMapping("/search/favorite")
     public ResponseEntity<ResponseDTO<ScrapResponse.FindScrapAtFavoriteDTO>>
     scrapSearchAtFavorite(@RequestHeader("Authorization") String token,
@@ -193,7 +211,10 @@ public class ScrapController {
      * [PATCH] /scraps/{scrap-id}/favorite
      * [API-16] 스크랩 즐겨찾기 (단건)
      */
-    @Operation(security = { @SecurityRequirement(name = "bearer-key") })
+    @Operation(
+            summary = "[API-16] 스크랩 즐겨찾기 (단건)",
+            security = { @SecurityRequirement(name = "bearer-key") }
+    )
     @PatchMapping("{scrap-id}/favorite")
     public ResponseEntity<ResponseDTO<ScrapResponse.ToggleScrapFavoriteDTO>>
     scrapFavoriteToggle(@RequestHeader("Authorization") String token,
@@ -211,7 +232,10 @@ public class ScrapController {
      * [PATCH] /scraps/favorite
      * [API-17] 스크랩 즐겨찾기 (목록)
      */
-    @Operation(security = { @SecurityRequirement(name = "bearer-key") })
+    @Operation(
+            summary = "[API-17] 스크랩 즐겨찾기 (목록)",
+            security = { @SecurityRequirement(name = "bearer-key") }
+    )
     @PatchMapping("/favorite")
     public ResponseEntity<ResponseDTO<ScrapResponse.ToggleScrapFavoriteListDTO>>
     scrapFavoriteListToggle(@RequestHeader("Authorization") String token,
@@ -229,7 +253,10 @@ public class ScrapController {
      * [PATCH] /scraps/{scrap-id}/move
      * [API-15] 스크랩 이동하기 (단건)
      */
-    @Operation(security = { @SecurityRequirement(name = "bearer-key") })
+    @Operation(
+            summary = "[API-15] 스크랩 이동하기 (단건)",
+            security = { @SecurityRequirement(name = "bearer-key") }
+    )
     @PatchMapping("/{scrap-id}/move")
     public ResponseEntity<ResponseDTO<ScrapResponse.MoveCategoryOfScrapDTO>>
     categoryOfScrapMove(@RequestHeader("Authorization") String token,
@@ -248,7 +275,10 @@ public class ScrapController {
      * [PATCH] /scraps/move
      * [API-19] 스크랩 이동하기 (목록)
      */
-    @Operation(security = { @SecurityRequirement(name = "bearer-key") })
+    @Operation(
+            summary = "[API-19] 스크랩 이동하기 (목록)",
+            security = { @SecurityRequirement(name = "bearer-key") }
+    )
     @PatchMapping("/move")
     public ResponseEntity<ResponseDTO<ScrapResponse.MoveCategoryOfScrapListDTO>>
     categoryOfScrapListMove(@RequestHeader("Authorization") String token,
@@ -266,7 +296,10 @@ public class ScrapController {
      * [PATCH] /scraps/{scrap-id}/memo
      * [API-14] 스크랩의 메모 수정
      */
-    @Operation(security = { @SecurityRequirement(name = "bearer-key") })
+    @Operation(
+            summary = "[API-14] 스크랩의 메모 수정",
+            security = { @SecurityRequirement(name = "bearer-key") }
+    )
     @PatchMapping("/{scrap-id}/memo")
     public ResponseEntity<ResponseDTO<ScrapResponse.UpdateScrapMemoDTO>>
     scrapMemoModify(@RequestHeader("Authorization") String token,
@@ -285,7 +318,10 @@ public class ScrapController {
      * [PATCH] /scraps/{scrap-id}/trash
      * [API-13] 스크랩 삭제 (단건)
      */
-    @Operation(security = { @SecurityRequirement(name = "bearer-key") })
+    @Operation(
+            summary = "[API-13] 스크랩 삭제 (단건)",
+            security = { @SecurityRequirement(name = "bearer-key") }
+    )
     @PatchMapping("/{scrap-id}/trash")
     public ResponseEntity<ResponseDTO<Void>> scrapRemove(@RequestHeader("Authorization") String token,
                                                    @PathVariable("scrap-id") Long scrapId){
@@ -301,7 +337,10 @@ public class ScrapController {
      * [PATCH] /scraps/trash
      * [API-18] 스크랩 삭제 (목록)
      */
-    @Operation(security = { @SecurityRequirement(name = "bearer-key") })
+    @Operation(
+            summary = "[API-18] 스크랩 삭제 (목록)",
+            security = { @SecurityRequirement(name = "bearer-key") }
+    )
     @PatchMapping("/trash")
     public ResponseEntity<ResponseDTO<Void>> scrapListRemove(@RequestHeader("Authorization") String token,
                                                        @RequestBody @Validated ScrapRequest.DeleteScrapListDTO request){
