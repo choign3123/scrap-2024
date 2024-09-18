@@ -29,7 +29,7 @@ public class MypageController {
      */
     @GetMapping
     @Operation(security = { @SecurityRequirement(name = "bearer-key") })
-    public ResponseEntity<ResponseDTO> mypage(@RequestHeader(value = "Authorization") String token){
+    public ResponseEntity<ResponseDTO<MypageResponse.MypageDTO>> mypage(@RequestHeader(value = "Authorization") String token){
         MemberDTO memberDTO = tokenProvider.parseAccessToMemberDTO(token);
 
         MypageResponse.MypageDTO response = mypageService.mypage(memberDTO);

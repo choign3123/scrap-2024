@@ -38,7 +38,8 @@ public class CategoryController {
      */
     @Operation(security = { @SecurityRequirement(name = "bearer-key") })
     @PostMapping()
-    public ResponseEntity<ResponseDTO> categorySave(@RequestHeader("Authorization") String token, @RequestBody @Valid CategoryRequest.CreateCategoryDTO request){
+    public ResponseEntity<ResponseDTO<CategoryResponse.CreateCategoryDTO>>
+    categorySave(@RequestHeader("Authorization") String token, @RequestBody @Valid CategoryRequest.CreateCategoryDTO request){
 
         MemberDTO memberDTO = tokenProvider.parseAccessToMemberDTO(token);
 
@@ -46,7 +47,7 @@ public class CategoryController {
 
         CategoryResponse.CreateCategoryDTO response = CategoryConverter.toCreateCategoryDTO(newCategory);
 
-        return ResponseEntity.ok(new ResponseDTO(response));
+        return ResponseEntity.ok(new ResponseDTO<>(response));
     }
 
     /**
@@ -55,14 +56,15 @@ public class CategoryController {
      */
     @Operation(security = { @SecurityRequirement(name = "bearer-key") })
     @GetMapping()
-    public ResponseEntity<ResponseDTO> categoryWholeList(@RequestHeader("Authorization") String token){
+    public ResponseEntity<ResponseDTO<CategoryResponse.GetCategoryListDTO>>
+    categoryWholeList(@RequestHeader("Authorization") String token){
 
         MemberDTO memberDTO = tokenProvider.parseAccessToMemberDTO(token);
 
         List<Category> categoryList = categoryQueryService.getCategoryWholeList(memberDTO);
         CategoryResponse.GetCategoryListDTO response = CategoryConverter.toGetCategoryListDTO(categoryList);
 
-        return ResponseEntity.ok(new ResponseDTO(response));
+        return ResponseEntity.ok(new ResponseDTO<>(response));
     }
 
 
@@ -72,14 +74,15 @@ public class CategoryController {
      */
     @Operation(security = { @SecurityRequirement(name = "bearer-key") })
     @GetMapping("/selection")
-    public ResponseEntity<ResponseDTO> categoryListForSelection(@RequestHeader("Authorization") String token){
+    public ResponseEntity<ResponseDTO<CategoryResponse.GetCategoryListForSelectionDTO>>
+    categoryListForSelection(@RequestHeader("Authorization") String token){
 
         MemberDTO memberDTO = tokenProvider.parseAccessToMemberDTO(token);
 
         List<Category> categoryList = categoryQueryService.getCategoryWholeList(memberDTO);
         CategoryResponse.GetCategoryListForSelectionDTO response = CategoryConverter.toGetCategoryListForSelectionDTO(categoryList);
 
-        return ResponseEntity.ok(new ResponseDTO(response));
+        return ResponseEntity.ok(new ResponseDTO<>(response));
     }
 
     /**
@@ -88,13 +91,13 @@ public class CategoryController {
      */
     @Operation(security = { @SecurityRequirement(name = "bearer-key") })
     @DeleteMapping("/{category-id}")
-    public ResponseEntity<ResponseDTO> categoryRemove(@RequestHeader("Authorization") String token, @PathVariable("category-id") Long categoryId){
+    public ResponseEntity<ResponseDTO<Void>> categoryRemove(@RequestHeader("Authorization") String token, @PathVariable("category-id") Long categoryId){
 
         MemberDTO memberDTO = tokenProvider.parseAccessToMemberDTO(token);
 
         categoryCommandService.deleteCategory(memberDTO, categoryId);
 
-        return ResponseEntity.ok(new ResponseDTO());
+        return ResponseEntity.ok(new ResponseDTO<>());
     }
 
     /** [PATCH] /categories/{category-id}/title
@@ -102,16 +105,17 @@ public class CategoryController {
      */
     @Operation(security = { @SecurityRequirement(name = "bearer-key") })
     @PatchMapping("/{category-id}/title")
-    public ResponseEntity<ResponseDTO> categoryTitleModify(@RequestHeader("Authorization") String token,
-                                                           @PathVariable("category-id") Long categoryId,
-                                                           @RequestBody @Valid CategoryRequest.UpdateCategoryTitleDTO request){
+    public ResponseEntity<ResponseDTO<CategoryResponse.UpdateCategoryTitleDTO>>
+    categoryTitleModify(@RequestHeader("Authorization") String token,
+                        @PathVariable("category-id") Long categoryId,
+                        @RequestBody @Valid CategoryRequest.UpdateCategoryTitleDTO request){
 
         MemberDTO memberDTO = tokenProvider.parseAccessToMemberDTO(token);
 
         Category category = categoryCommandService.updateCategoryTitle(memberDTO, categoryId, request);
         CategoryResponse.UpdateCategoryTitleDTO response = CategoryConverter.toUpdateCategoryTitleDTO(category);
 
-        return ResponseEntity.ok(new ResponseDTO(response));
+        return ResponseEntity.ok(new ResponseDTO<>(response));
     }
 
     /**
@@ -120,7 +124,9 @@ public class CategoryController {
      */
     @Operation(security = { @SecurityRequirement(name = "bearer-key") })
     @PatchMapping("/sequence")
-    public ResponseEntity<ResponseDTO> categorySequenceModify(@RequestHeader("Authorization") String token, @RequestBody @Validated CategoryRequest.UpdateCategorySequenceDTO request){
+    public ResponseEntity<ResponseDTO<CategoryResponse.UpdateCategorySequenceDTO>>
+    categorySequenceModify(@RequestHeader("Authorization") String token,
+                          @RequestBody @Validated CategoryRequest.UpdateCategorySequenceDTO request){
 
         MemberDTO memberDTO = tokenProvider.parseAccessToMemberDTO(token);
 
@@ -133,7 +139,7 @@ public class CategoryController {
         List<Category> categoryList = categoryCommandService.updateCategorySequence(memberDTO, request);
         CategoryResponse.UpdateCategorySequenceDTO response = CategoryConverter.toUpdateCategorySequenceDTO(categoryList);
 
-        return ResponseEntity.ok(new ResponseDTO(response));
+        return ResponseEntity.ok(new ResponseDTO<>(response));
     }
 
 }

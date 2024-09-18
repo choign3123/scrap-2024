@@ -30,11 +30,10 @@ public class MemberController {
     /**
      * [POST] /oauth/naver/login
      * [API-33] 네이버 로그인(회원가입)
-     * @param authorization
-     * @return
      */
     @PostMapping("/oauth/login/naver")
-    public ResponseEntity<ResponseDTO> naverLoginOrSignup(@RequestHeader("Authorization") String authorization){
+    public ResponseEntity<ResponseDTO<OauthResponse.TokenDTO>>
+    naverLoginOrSignup(@RequestHeader("Authorization") String authorization){
 
         Token token = memberCommandService.login(authorization);
 
@@ -49,7 +48,7 @@ public class MemberController {
      */
     @Operation(security = { @SecurityRequirement(name = "bearer-key") })
     @GetMapping("/token/me")
-    public ResponseEntity<ResponseDTO> tokenValidate(@RequestHeader("Authorization") String token){
+    public ResponseEntity<ResponseDTO<Void>> tokenValidate(@RequestHeader("Authorization") String token){
 
         return ResponseEntity.ok(new ResponseDTO<Void>(SuccessCode.TOKEN_VALID));
     }
@@ -59,12 +58,13 @@ public class MemberController {
      * [API-34] 토큰 재발급
      */
     @PostMapping("/token")
-    public ResponseEntity<ResponseDTO> tokenReissue(@RequestParam("refresh_token") String refreshToken){
+    public ResponseEntity<ResponseDTO<MemberResponse.ReissueTokenDTO>>
+    tokenReissue(@RequestParam("refresh_token") String refreshToken){
 
         Token token = memberCommandService.reissueToken(refreshToken); // TODO: 여기서 token을 memberDTO로 변환해가야할 것 같음.
         MemberResponse.ReissueTokenDTO response = MemberConverter.toReissueTokenDTO(token);
 
-        return ResponseEntity.ok(new ResponseDTO(response));
+        return ResponseEntity.ok(new ResponseDTO<>(response));
     }
 
     /**
@@ -73,12 +73,12 @@ public class MemberController {
      */
     @Operation(security = { @SecurityRequirement(name = "bearer-key") })
     @PatchMapping("/logout")
-    public ResponseEntity<ResponseDTO> logout(@RequestHeader("Authorization") String token){
+    public ResponseEntity<ResponseDTO<Void>> logout(@RequestHeader("Authorization") String token){
         MemberDTO memberDTO = tokenProvider.parseAccessToMemberDTO(token);
 
         memberCommandService.logout(memberDTO, token);
 
-        return ResponseEntity.ok(new ResponseDTO<Void>());
+        return ResponseEntity.ok(new ResponseDTO<>());
     }
 
     /**
@@ -88,11 +88,11 @@ public class MemberController {
     // TODO: patch -> delete로 변경하기
     @Operation(security = { @SecurityRequirement(name = "bearer-key") })
     @PatchMapping("/signout")
-    public ResponseEntity<ResponseDTO> signOut(@RequestHeader("Authorization") String token){
+    public ResponseEntity<ResponseDTO<Void>> signOut(@RequestHeader("Authorization") String token){
         MemberDTO memberDTO = tokenProvider.parseAccessToMemberDTO(token);
 
         memberCommandService.signOut(memberDTO);
 
-        return ResponseEntity.ok(new ResponseDTO<Void>());
+        return ResponseEntity.ok(new ResponseDTO<>());
     }
 }

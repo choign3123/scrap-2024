@@ -44,16 +44,17 @@ public class ScrapController {
      */
     @Operation(security = { @SecurityRequirement(name = "bearer-key") })
     @PostMapping("/{category-id}")
-    public ResponseEntity<ResponseDTO> scrapSave(@RequestHeader("Authorization") String token,
-                                                 @PathVariable("category-id") Long categoryId,
-                                                 @RequestBody @Validated ScrapRequest.CreateScrapDTO request){
+    public ResponseEntity<ResponseDTO<ScrapResponse.CreateScrapDTO>>
+    scrapSave(@RequestHeader("Authorization") String token,
+              @PathVariable("category-id") Long categoryId,
+              @RequestBody @Validated ScrapRequest.CreateScrapDTO request){
 
         MemberDTO memberDTO = tokenProvider.parseAccessToMemberDTO(token);
 
         Scrap newScrap = scrapCommandService.createScrap(memberDTO, categoryId, request);
         ScrapResponse.CreateScrapDTO response = ScrapConverter.toCreateScrapDTO(newScrap);
 
-        return ResponseEntity.ok(new ResponseDTO(response));
+        return ResponseEntity.ok(new ResponseDTO<>(response));
     }
 
     /**
@@ -62,12 +63,13 @@ public class ScrapController {
      */
     @Operation(security = { @SecurityRequirement(name = "bearer-key") })
     @GetMapping()
-    public ResponseEntity<ResponseDTO> scrapListByCategory(@RequestHeader("Authorization") String token,
-                                           @RequestParam("category") Long categoryId,
-                                           @RequestParam(name = "sort", defaultValue = "SCRAP_DATE") @EnumValid(enumC = Sorts.class) String sort,
-                                           @RequestParam(name = "direction", defaultValue = "ASC") @EnumValid(enumC = Direction.class) String direction,
-                                           @RequestParam(name = "page", defaultValue = "0") @PagingPage int page,
-                                           @RequestParam(name = "size", defaultValue = DefaultData.PAGING_SIZE) @PagingSize int size){
+    public ResponseEntity<ResponseDTO<ScrapResponse.GetScrapListByCategoryDTO>>
+    scrapListByCategory(@RequestHeader("Authorization") String token,
+                        @RequestParam("category") Long categoryId,
+                        @RequestParam(name = "sort", defaultValue = "SCRAP_DATE") @EnumValid(enumC = Sorts.class) String sort,
+                        @RequestParam(name = "direction", defaultValue = "ASC") @EnumValid(enumC = Direction.class) String direction,
+                        @RequestParam(name = "page", defaultValue = "0") @PagingPage int page,
+                        @RequestParam(name = "size", defaultValue = DefaultData.PAGING_SIZE) @PagingSize int size){
 
         MemberDTO memberDTO = tokenProvider.parseAccessToMemberDTO(token);
 
@@ -83,7 +85,7 @@ public class ScrapController {
         Page<Scrap> scrapPage = scrapQueryService.getScrapListByCategory(memberDTO, categoryId, pageRequest);
         ScrapResponse.GetScrapListByCategoryDTO response = ScrapConverter.toGetScrapListByCategory(scrapPage);
 
-        return ResponseEntity.ok(new ResponseDTO(response));
+        return ResponseEntity.ok(new ResponseDTO<>(response));
     }
 
     /**
@@ -92,11 +94,12 @@ public class ScrapController {
      */
     @Operation(security = { @SecurityRequirement(name = "bearer-key") })
     @GetMapping("/favorite")
-    public ResponseEntity<ResponseDTO> favoriteScrapList(@RequestHeader("Authorization") String token,
-                                         @RequestParam(name = "sort", defaultValue = "SCRAP_DATE") @EnumValid(enumC = Sorts.class) String sort,
-                                         @RequestParam(name = "direction", defaultValue = "ASC") @EnumValid(enumC = Direction.class) String direction,
-                                         @RequestParam(name = "page", defaultValue = "0") @PagingPage int page,
-                                         @RequestParam(name = "size", defaultValue = DefaultData.PAGING_SIZE) @PagingSize int size){
+    public ResponseEntity<ResponseDTO<ScrapResponse.GetFavoriteScrapListDTO>>
+    favoriteScrapList(@RequestHeader("Authorization") String token,
+                      @RequestParam(name = "sort", defaultValue = "SCRAP_DATE") @EnumValid(enumC = Sorts.class) String sort,
+                      @RequestParam(name = "direction", defaultValue = "ASC") @EnumValid(enumC = Direction.class) String direction,
+                      @RequestParam(name = "page", defaultValue = "0") @PagingPage int page,
+                      @RequestParam(name = "size", defaultValue = DefaultData.PAGING_SIZE) @PagingSize int size){
 
         MemberDTO memberDTO = tokenProvider.parseAccessToMemberDTO(token);
 
@@ -109,7 +112,7 @@ public class ScrapController {
         Page<Scrap> scrapPage = scrapQueryService.getFavoriteScrapList(memberDTO, pageRequest);
         ScrapResponse.GetFavoriteScrapListDTO response = ScrapConverter.toGetFavoriteScrapList(scrapPage);
 
-        return ResponseEntity.ok(new ResponseDTO(response));
+        return ResponseEntity.ok(new ResponseDTO<>(response));
 
     }
 
@@ -119,14 +122,16 @@ public class ScrapController {
      */
     @Operation(security = { @SecurityRequirement(name = "bearer-key") })
     @GetMapping("/{scrap-id}")
-    public ResponseEntity<ResponseDTO> scrapDetails(@RequestHeader("Authorization") String token,
-                                                    @PathVariable("scrap-id") Long scrapId){
+    public ResponseEntity<ResponseDTO<ScrapResponse.GetScrapDetailsDTO>>
+    scrapDetails(@RequestHeader("Authorization") String token,
+                 @PathVariable("scrap-id") Long scrapId){
+
         MemberDTO memberDTO = tokenProvider.parseAccessToMemberDTO(token);
 
         Scrap scrap = scrapQueryService.getScrapDetails(memberDTO, scrapId);
         ScrapResponse.GetScrapDetailsDTO response = ScrapConverter.toGetScrapDetails(scrap);
 
-        return ResponseEntity.ok(new ResponseDTO(response));
+        return ResponseEntity.ok(new ResponseDTO<>(response));
     }
 
     /**
@@ -135,11 +140,12 @@ public class ScrapController {
      */
     @Operation(security = { @SecurityRequirement(name = "bearer-key") })
     @GetMapping("/search/{category-id}")
-    public ResponseEntity<ResponseDTO> scrapSearchAtParticularCategory(@RequestHeader("Authorization") String token,
-                                                          @PathVariable(name = "category-id") Long categoryId,
-                                                          @RequestParam(name = "sort", defaultValue = "SCRAP_DATE") @EnumValid(enumC = Sorts.class) String sorts,
-                                                          @RequestParam(name = "direction", defaultValue = "ASC") @EnumValid(enumC = Direction.class) String direction,
-                                                          @RequestParam("q") @NotBlank String query){
+    public ResponseEntity<ResponseDTO<ScrapResponse.FindScrapAtParticularCategoryDTO>>
+    scrapSearchAtParticularCategory(@RequestHeader("Authorization") String token,
+                                    @PathVariable(name = "category-id") Long categoryId,
+                                    @RequestParam(name = "sort", defaultValue = "SCRAP_DATE") @EnumValid(enumC = Sorts.class) String sorts,
+                                    @RequestParam(name = "direction", defaultValue = "ASC") @EnumValid(enumC = Direction.class) String direction,
+                                    @RequestParam("q") @NotBlank String query){
 
         MemberDTO memberDTO = tokenProvider.parseAccessToMemberDTO(token);
 
@@ -153,7 +159,7 @@ public class ScrapController {
         List<Scrap> scrapList = scrapQueryService.findScrapAtParticularCategory(memberDTO, categoryId, sort, query);
         ScrapResponse.FindScrapAtParticularCategoryDTO response = ScrapConverter.toFindScrapAtParticularCategory(scrapList);
 
-        return ResponseEntity.ok(new ResponseDTO(response));
+        return ResponseEntity.ok(new ResponseDTO<>(response));
     }
 
     /**
@@ -162,10 +168,11 @@ public class ScrapController {
      */
     @Operation(security = { @SecurityRequirement(name = "bearer-key") })
     @GetMapping("/search/favorite")
-    public ResponseEntity<ResponseDTO> scrapSearchAtFavorite(@RequestHeader("Authorization") String token,
-                                                                       @RequestParam(name = "sort", defaultValue = "SCRAP_DATE") @EnumValid(enumC = Sorts.class) String sorts,
-                                                                       @RequestParam(name = "direction", defaultValue = "ASC") @EnumValid(enumC = Direction.class) String direction,
-                                                                       @RequestParam("q") @NotBlank String query){
+    public ResponseEntity<ResponseDTO<ScrapResponse.FindScrapAtFavoriteDTO>>
+    scrapSearchAtFavorite(@RequestHeader("Authorization") String token,
+                          @RequestParam(name = "sort", defaultValue = "SCRAP_DATE") @EnumValid(enumC = Sorts.class) String sorts,
+                          @RequestParam(name = "direction", defaultValue = "ASC") @EnumValid(enumC = Direction.class) String direction,
+                          @RequestParam("q") @NotBlank String query){
 
         MemberDTO memberDTO = tokenProvider.parseAccessToMemberDTO(token);
 
@@ -179,7 +186,7 @@ public class ScrapController {
         List<Scrap> scrapList = scrapQueryService.findScrapAtFavorite(memberDTO, sort, query);
         ScrapResponse.FindScrapAtFavoriteDTO response = ScrapConverter.toFindScrapAtFavorite(scrapList);
 
-        return ResponseEntity.ok(new ResponseDTO(response));
+        return ResponseEntity.ok(new ResponseDTO<>(response));
     }
 
     /**
@@ -188,15 +195,16 @@ public class ScrapController {
      */
     @Operation(security = { @SecurityRequirement(name = "bearer-key") })
     @PatchMapping("{scrap-id}/favorite")
-    public ResponseEntity<ResponseDTO> scrapFavoriteToggle(@RequestHeader("Authorization") String token,
-                                                           @PathVariable("scrap-id") Long scrapId){
+    public ResponseEntity<ResponseDTO<ScrapResponse.ToggleScrapFavoriteDTO>>
+    scrapFavoriteToggle(@RequestHeader("Authorization") String token,
+                        @PathVariable("scrap-id") Long scrapId){
 
         MemberDTO memberDTO = tokenProvider.parseAccessToMemberDTO(token);
 
         Scrap scrap = scrapCommandService.toggleScrapFavorite(memberDTO, scrapId);
         ScrapResponse.ToggleScrapFavoriteDTO response = ScrapConverter.toToggleScrapFavorite(scrap);
 
-        return ResponseEntity.ok(new ResponseDTO(response));
+        return ResponseEntity.ok(new ResponseDTO<>(response));
     }
 
     /**
@@ -205,15 +213,16 @@ public class ScrapController {
      */
     @Operation(security = { @SecurityRequirement(name = "bearer-key") })
     @PatchMapping("/favorite")
-    public ResponseEntity<ResponseDTO> scrapFavoriteListToggle(@RequestHeader("Authorization") String token,
-                                               @RequestBody @Validated ScrapRequest.ToggleScrapFavoriteListDTO request){
+    public ResponseEntity<ResponseDTO<ScrapResponse.ToggleScrapFavoriteListDTO>>
+    scrapFavoriteListToggle(@RequestHeader("Authorization") String token,
+                            @RequestBody @Validated ScrapRequest.ToggleScrapFavoriteListDTO request){
 
         MemberDTO memberDTO = tokenProvider.parseAccessToMemberDTO(token);
 
         List<Scrap> scrapList = scrapCommandService.toggleScrapFavoriteList(memberDTO, request);
         ScrapResponse.ToggleScrapFavoriteListDTO response = ScrapConverter.toToggleScrapFavoriteList(scrapList);
 
-        return ResponseEntity.ok(new ResponseDTO(response));
+        return ResponseEntity.ok(new ResponseDTO<>(response));
     }
 
     /**
@@ -222,16 +231,17 @@ public class ScrapController {
      */
     @Operation(security = { @SecurityRequirement(name = "bearer-key") })
     @PatchMapping("/{scrap-id}/move")
-    public ResponseEntity<ResponseDTO> categoryOfScrapMove(@RequestHeader("Authorization") String token,
-                                                    @PathVariable("scrap-id") Long scrapId,
-                                                    @RequestBody @Validated ScrapRequest.MoveCategoryOfScrapDTO request){
+    public ResponseEntity<ResponseDTO<ScrapResponse.MoveCategoryOfScrapDTO>>
+    categoryOfScrapMove(@RequestHeader("Authorization") String token,
+                        @PathVariable("scrap-id") Long scrapId,
+                        @RequestBody @Validated ScrapRequest.MoveCategoryOfScrapDTO request){
 
         MemberDTO memberDTO = tokenProvider.parseAccessToMemberDTO(token);
 
         Scrap scrap = scrapCommandService.moveCategoryOfScrap(memberDTO, scrapId, request);
         ScrapResponse.MoveCategoryOfScrapDTO response = ScrapConverter.toMoveCategoryOfScrap(scrap);
 
-        return ResponseEntity.ok(new ResponseDTO(response));
+        return ResponseEntity.ok(new ResponseDTO<>(response));
     }
 
     /**
@@ -240,15 +250,16 @@ public class ScrapController {
      */
     @Operation(security = { @SecurityRequirement(name = "bearer-key") })
     @PatchMapping("/move")
-    public ResponseEntity<ResponseDTO> categoryOfScrapListMove(@RequestHeader("Authorization") String token,
-                                            @RequestBody @Validated ScrapRequest.MoveCategoryOfScrapsDTO request){
+    public ResponseEntity<ResponseDTO<ScrapResponse.MoveCategoryOfScrapListDTO>>
+    categoryOfScrapListMove(@RequestHeader("Authorization") String token,
+                            @RequestBody @Validated ScrapRequest.MoveCategoryOfScrapsDTO request){
 
         MemberDTO memberDTO = tokenProvider.parseAccessToMemberDTO(token);
 
         List<Scrap> scrapList = scrapCommandService.moveCategoryOfScrapList(memberDTO, request);
         ScrapResponse.MoveCategoryOfScrapListDTO response = ScrapConverter.toMoveCategoryOfScrapList(scrapList);
 
-        return ResponseEntity.ok(new ResponseDTO(response));
+        return ResponseEntity.ok(new ResponseDTO<>(response));
     }
 
     /**
@@ -257,16 +268,17 @@ public class ScrapController {
      */
     @Operation(security = { @SecurityRequirement(name = "bearer-key") })
     @PatchMapping("/{scrap-id}/memo")
-    public ResponseEntity<ResponseDTO> scrapMemoModify(@RequestHeader("Authorization") String token,
-                                       @PathVariable("scrap-id") Long scrapId,
-                                       @RequestBody @Validated ScrapRequest.UpdateScrapMemoDTO request){
+    public ResponseEntity<ResponseDTO<ScrapResponse.UpdateScrapMemoDTO>>
+    scrapMemoModify(@RequestHeader("Authorization") String token,
+                    @PathVariable("scrap-id") Long scrapId,
+                    @RequestBody @Validated ScrapRequest.UpdateScrapMemoDTO request){
 
         MemberDTO memberDTO = tokenProvider.parseAccessToMemberDTO(token);
 
         Scrap scrap = scrapCommandService.updateScrapMemo(memberDTO, scrapId, request);
         ScrapResponse.UpdateScrapMemoDTO response = ScrapConverter.toUpdateScrapMemo(scrap);
 
-        return ResponseEntity.ok(new ResponseDTO(response));
+        return ResponseEntity.ok(new ResponseDTO<>(response));
     }
 
     /**
@@ -275,14 +287,14 @@ public class ScrapController {
      */
     @Operation(security = { @SecurityRequirement(name = "bearer-key") })
     @PatchMapping("/{scrap-id}/trash")
-    public ResponseEntity<ResponseDTO> scrapRemove(@RequestHeader("Authorization") String token,
+    public ResponseEntity<ResponseDTO<Void>> scrapRemove(@RequestHeader("Authorization") String token,
                                                    @PathVariable("scrap-id") Long scrapId){
 
         MemberDTO memberDTO = tokenProvider.parseAccessToMemberDTO(token);
 
         scrapCommandService.throwScrapIntoTrash(memberDTO, scrapId);
 
-        return ResponseEntity.ok(new ResponseDTO<Void>());
+        return ResponseEntity.ok(new ResponseDTO<>());
     }
 
     /**
@@ -291,13 +303,13 @@ public class ScrapController {
      */
     @Operation(security = { @SecurityRequirement(name = "bearer-key") })
     @PatchMapping("/trash")
-    public ResponseEntity<ResponseDTO> scrapListRemove(@RequestHeader("Authorization") String token,
+    public ResponseEntity<ResponseDTO<Void>> scrapListRemove(@RequestHeader("Authorization") String token,
                                                        @RequestBody @Validated ScrapRequest.DeleteScrapListDTO request){
 
         MemberDTO memberDTO = tokenProvider.parseAccessToMemberDTO(token);
 
         scrapCommandService.throwScrapListIntoTrash(memberDTO, request);
 
-        return ResponseEntity.ok(new ResponseDTO<Void>());
+        return ResponseEntity.ok(new ResponseDTO<>());
     }
 }

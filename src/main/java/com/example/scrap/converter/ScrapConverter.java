@@ -190,6 +190,7 @@ public class ScrapConverter {
                 .build();
     }
 
+    // TODO: 삭제하기
     public static ScrapResponse.ShareAllScrapDTO toShareAllScrap(List<Scrap> scrapList){
 
         List<ScrapResponse.ShareAllScrapDTO.ScrapDTO> scrapDTOList = scrapList.stream()

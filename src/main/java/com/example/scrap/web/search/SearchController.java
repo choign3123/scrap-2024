@@ -44,13 +44,14 @@ public class SearchController {
      */
     @Operation(security = { @SecurityRequirement(name = "bearer-key") })
     @PostMapping
-    public ResponseEntity<ResponseDTO> scrapSearch(@RequestHeader("Authorization") String token,
-                                                   @RequestBody @Validated SearchRequest.FindScrapDTO request,
-                                                   @RequestParam(name = "sort", defaultValue = "SCRAP_DATE") @EnumValid(enumC = Sorts.class) String sort,
-                                                   @RequestParam(name = "direction", defaultValue = "ASC") @EnumValid(enumC = Sort.Direction.class) String direction,
-                                                   @RequestParam(name = "page", defaultValue = "0") @PagingPage int page,
-                                                   @RequestParam(name = "size", defaultValue = DefaultData.PAGING_SIZE) @PagingSize int size,
-                                                   @RequestParam(name = "q") @NotBlank String query){
+    public ResponseEntity<ResponseDTO<SearchResponse.FindScrapDTO>>
+    scrapSearch(@RequestHeader("Authorization") String token,
+                @RequestBody @Validated SearchRequest.FindScrapDTO request,
+                @RequestParam(name = "sort", defaultValue = "SCRAP_DATE") @EnumValid(enumC = Sorts.class) String sort,
+                @RequestParam(name = "direction", defaultValue = "ASC") @EnumValid(enumC = Sort.Direction.class) String direction,
+                @RequestParam(name = "page", defaultValue = "0") @PagingPage int page,
+                @RequestParam(name = "size", defaultValue = DefaultData.PAGING_SIZE) @PagingSize int size,
+                @RequestParam(name = "q") @NotBlank String query){
 
         /** 시작, 종료 날짜 검증 **/
         if(request.getStartDate() == null){
@@ -75,6 +76,6 @@ public class SearchController {
         Page<Scrap> scrapPage = searchService.findScrap(memberDTO, request, pageRequest, query);
         SearchResponse.FindScrapDTO response = SearchConverter.toFindScrapDTO(scrapPage);
 
-        return ResponseEntity.ok(new ResponseDTO(response));
+        return ResponseEntity.ok(new ResponseDTO<>(response));
     }
 }
