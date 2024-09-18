@@ -12,6 +12,7 @@ import com.example.scrap.web.scrap.dto.ScrapRequest;
 import com.example.scrap.web.scrap.dto.ScrapResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -30,6 +31,7 @@ import java.util.List;
 @Validated
 @RequiredArgsConstructor
 @Slf4j
+@Tag(name = "스크랩", description = "스크랩 관련 API")
 public class ScrapController {
 
     private final IScrapQueryService scrapQueryService;

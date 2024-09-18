@@ -31,6 +31,7 @@ public class AppConfig implements WebMvcConfigurer {
                 .excludePathPatterns("/token")
                 .excludePathPatterns("/health")
                 .excludePathPatterns("/v3/api-docs/**")
-                .excludePathPatterns("/swagger-ui/**");
+                .excludePathPatterns("/swagger-ui/**")
+                .excludePathPatterns("/swagger");
     }
 }

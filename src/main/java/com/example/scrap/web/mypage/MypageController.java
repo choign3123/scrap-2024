@@ -6,6 +6,7 @@ import com.example.scrap.web.member.dto.MemberDTO;
 import com.example.scrap.web.mypage.dto.MypageResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/mypage")
 @RequiredArgsConstructor
+@Tag(name = "마이페이지", description = "마이페이지 관련 API")
 public class MypageController {
 
     private final IMypageQueryService mypageService;

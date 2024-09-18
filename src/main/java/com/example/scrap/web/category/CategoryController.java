@@ -10,6 +10,7 @@ import com.example.scrap.web.category.dto.CategoryResponse;
 import com.example.scrap.web.member.dto.MemberDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -24,6 +25,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Slf4j
 @Validated
+@Tag(name = "카테고리", description = "카테고리 관련 API")
 public class CategoryController {
 
     private final ICategoryQueryService categoryQueryService;

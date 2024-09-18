@@ -15,6 +15,7 @@ import com.example.scrap.web.search.dto.SearchRequest;
 import com.example.scrap.web.search.dto.SearchResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -31,6 +32,7 @@ import javax.validation.constraints.NotBlank;
 @RequiredArgsConstructor
 @Validated
 @Slf4j
+@Tag(name = "검색", description = "검색탭 관련 API")
 public class SearchController {
 
     private final ISearchQueryService searchService;

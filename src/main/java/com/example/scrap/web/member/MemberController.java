@@ -12,6 +12,7 @@ import com.example.scrap.web.member.dto.MemberDTO;
 import com.example.scrap.web.oauth.dto.OauthResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequiredArgsConstructor
 @Slf4j
+@Tag(name = "사용자", description = "사용자 관련 API")
 public class MemberController {
 
     private final IMemberCommandService memberCommandService;
