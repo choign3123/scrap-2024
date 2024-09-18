@@ -29,6 +29,9 @@ public class AppConfig implements WebMvcConfigurer {
                 .excludePathPatterns("/oauth/login/**")
                 .excludePathPatterns("/oauth/naver/callback")
                 .excludePathPatterns("/token")
-                .excludePathPatterns("/health");
+                .excludePathPatterns("/health")
+                .excludePathPatterns("/v3/api-docs/**")
+                .excludePathPatterns("/swagger-ui/**")
+                .excludePathPatterns("/swagger");
     }
 }

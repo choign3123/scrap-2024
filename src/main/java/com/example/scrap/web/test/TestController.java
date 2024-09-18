@@ -4,6 +4,7 @@ import com.example.scrap.base.code.ErrorCode;
 import com.example.scrap.base.exception.BaseException;
 import com.example.scrap.base.response.ResponseDTO;
 import com.example.scrap.web.test.dto.TestRequest;
+import io.swagger.v3.oas.annotations.Hidden;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,6 +14,7 @@ import javax.validation.Valid;
 @RestController
 @RequestMapping("/test")
 @Slf4j
+@Hidden
 public class TestController {
 
     @GetMapping("/ok")

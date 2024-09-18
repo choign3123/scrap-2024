@@ -25,3 +25,10 @@ jwt:
   expire:
     access_hour: ${EXPIRE_HOUR_OF_ACCESS}
     refresh_day: ${EXPIRE_DAY_OF_REFRESH}
+
+springdoc:
+  swagger-ui:
+    path: /swagger # swagger-ui 접근 경로에 대한 별칭. http://도메인:포트번호/{입력한 path}로 swagger-ui 접속 가능
+    operations-sorter: method # method 순으로 정렬
+  default-produces-media-type: application/json
+

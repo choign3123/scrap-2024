@@ -1,5 +1,6 @@
 package com.example.scrap.web.oauth;
 
+import io.swagger.v3.oas.annotations.Hidden;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -8,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/oauth")
 @RequiredArgsConstructor
 @Slf4j
+@Hidden
 public class OauthController {
 
     private final NaverProvider naverProvider;

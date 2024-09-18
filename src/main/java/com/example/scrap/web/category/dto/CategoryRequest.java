@@ -1,5 +1,6 @@
 package com.example.scrap.web.category.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,6 +16,7 @@ public class CategoryRequest {
     @NoArgsConstructor
     public static class CreateCategoryDTO{
 
+        @Schema(example = "코테 자료")
         @NotBlank
         private String categoryTitle;
     }
