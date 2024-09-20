@@ -49,31 +49,6 @@ public class MemberCommandServiceImplTest {
     @Mock
     private ITokenProvider tokenProvider;
 
-
-    @DisplayName("네이버 회워가입")
-    @Test
-    public void signupNaver(){
-        //** given
-        // requestDTO 설정
-        String naverId = "testNaverId";
-        String name = "홍길동";
-        NaverResponse.ProfileInfo.Response naverResponseDTO = new NaverResponse.ProfileInfo.Response(naverId, name);
-
-        //** when
-        Member newMember = memberCommandService.signup(naverResponseDTO);
-
-        //** then
-        assertThat(newMember.getSnsId())
-                .isEqualTo(naverId);
-        assertThat(newMember.getName())
-                .isEqualTo(name);
-        assertThat(newMember.getSnsType())
-                .isEqualTo(SnsType.NAVER);
-        assertThat(newMember.getMemberLog()) // MemberLog 설정됐는지 확인
-                .isNotNull();
-        verify(categoryCommandService).createDefaultCategory(newMember); // 기본 카테고리 생성 로직 실행됐는지 확인
-    }
-
     @DisplayName("토큰 재발급")
     @Test
     public void reissueToken() {

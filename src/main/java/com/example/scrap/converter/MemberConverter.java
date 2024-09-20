@@ -5,18 +5,17 @@ import com.example.scrap.entity.MemberLog;
 import com.example.scrap.entity.enums.SnsType;
 import com.example.scrap.jwt.dto.Token;
 import com.example.scrap.web.member.dto.MemberResponse.*;
-import com.example.scrap.web.oauth.dto.NaverResponse;
+import com.example.scrap.web.oauth.dto.CommonOauthMemberInfo;
 
-import java.time.LocalDateTime;
 
 public class MemberConverter {
 
-    public static Member toEntity(NaverResponse.ProfileInfo.Response profileInfo, SnsType snsType, MemberLog memberLog){
+    public static Member toEntity(CommonOauthMemberInfo memberInfo, SnsType snsType, MemberLog memberLog){
 
         return Member.builder()
-                .name(profileInfo.getName())
+                .name(memberInfo.getName())
                 .snsType(snsType)
-                .snsId(profileInfo.getId())
+                .snsId(memberInfo.getSnsId())
                 .memberLog(memberLog)
                 .build();
     }

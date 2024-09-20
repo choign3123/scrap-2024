@@ -2,20 +2,18 @@ package com.example.scrap.web.oauth;
 
 import com.example.scrap.base.code.ErrorCode;
 import com.example.scrap.base.exception.AuthorizationException;
+import com.example.scrap.web.oauth.dto.CommonOauthMemberInfo;
 import com.example.scrap.web.oauth.dto.NaverResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.*;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 @Component
 @RequiredArgsConstructor
 @Slf4j
-public class NaverProvider {
+public class NaverProfileIntoProvider implements IOauthMemberInfoProvider{
 
     private final RestTemplate restTemplate;
 
@@ -25,7 +23,7 @@ public class NaverProvider {
      * https://jie0025.tistory.com/531
      * 지금은 외부 API를 호출하는 시점이 소셜 로그인을 할 때 뿐이라, 구현이 복잡하지 않은 기술을 택.
      */
-    public NaverResponse.ProfileInfo getProfileByAccessToken(String authorization){
+    public CommonOauthMemberInfo getMemberId(String authorization){
         String url = "https://openapi.naver.com/v1/nid/me";
         authorization = "Bearer " + authorization;
 
@@ -41,9 +39,14 @@ public class NaverProvider {
         // API 호출
         try{
             ResponseEntity<NaverResponse.ProfileInfo> response = restTemplate.exchange(url, HttpMethod.GET, entity, NaverResponse.ProfileInfo.class);
-            return response.getBody();
+            NaverResponse.ProfileInfo responseBody = response.getBody();
+
+            return CommonOauthMemberInfo.builder()
+                    .snsId(responseBody.getResponse().getId())
+                    .name(responseBody.getResponse().getName())
+                    .build();
         }
-        catch (HttpClientErrorException e){
+        catch (Exception e){
             throw new AuthorizationException(ErrorCode.OAUTH_NAVER_LOGIN_FAIL);
         }
     }
