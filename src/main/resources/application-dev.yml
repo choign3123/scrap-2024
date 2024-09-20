@@ -25,6 +25,7 @@ jwt:
   expire:
     access_hour: ${EXPIRE_HOUR_OF_ACCESS}
     refresh_day: ${EXPIRE_DAY_OF_REFRESH}
+  test_token: ${TEST_TOKEN}
 
 springdoc:
   swagger-ui:
