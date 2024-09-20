@@ -12,8 +12,6 @@ import org.springframework.web.bind.annotation.*;
 @Hidden
 public class OauthCallbackController {
 
-    private final NaverProfileIntoProvider naverProfileIntoProvider;
-
     /**
      * 네이버 로그인 Callback API
      * Web 로그인을 위함.

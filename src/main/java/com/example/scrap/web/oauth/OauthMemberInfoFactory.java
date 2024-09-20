@@ -9,12 +9,12 @@ import org.springframework.stereotype.Component;
 public class OauthMemberInfoFactory {
 
     private final KakaoMemberInfoProvider kakaoMemberInfoProvider;
-    private final NaverProfileIntoProvider naverProfileIntoProvider;
+    private final NaverMemberIntoProvider naverMemberIntoProvider;
 
     public IOauthMemberInfoProvider getOauthMemberInfoProvider(SnsType snsType){
         switch (snsType){
             case NAVER -> {
-                return naverProfileIntoProvider;
+                return naverMemberIntoProvider;
             }
             case KAKAO -> {
                 return kakaoMemberInfoProvider;

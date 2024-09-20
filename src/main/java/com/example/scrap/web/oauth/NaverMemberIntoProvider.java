@@ -13,7 +13,7 @@ import org.springframework.web.client.RestTemplate;
 @Component
 @RequiredArgsConstructor
 @Slf4j
-public class NaverProfileIntoProvider implements IOauthMemberInfoProvider{
+public class NaverMemberIntoProvider implements IOauthMemberInfoProvider{
 
     private final RestTemplate restTemplate;
 
