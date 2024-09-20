@@ -386,12 +386,14 @@ public class TokenProviderImplTest {
     }
 
     private long getTokenTTL(String token){
-        Date issuedAt = Jwts.parser().setSigningKey(jwtSecretKey)
+        Date issuedAt = Jwts.parser()
+                .setSigningKey(jwtSecretKey.getBytes())
                 .parseClaimsJws(token)
                 .getBody()
                 .getIssuedAt();
 
-        Date expireAt = Jwts.parser().setSigningKey(jwtSecretKey)
+        Date expireAt = Jwts.parser()
+                .setSigningKey(jwtSecretKey.getBytes())
                 .parseClaimsJws(token)
                 .getBody()
                 .getExpiration();
@@ -401,7 +403,8 @@ public class TokenProviderImplTest {
 
     private long getRefreshTokenId(String refreshToken){
         return Long.parseLong(
-                Jwts.parser().setSigningKey(jwtSecretKey)
+                Jwts.parser()
+                        .setSigningKey(jwtSecretKey.getBytes())
                         .parseClaimsJws(refreshToken)
                         .getBody()
                         .getId()
