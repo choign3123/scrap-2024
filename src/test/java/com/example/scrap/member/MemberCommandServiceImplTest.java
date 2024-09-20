@@ -14,6 +14,10 @@ import com.example.scrap.web.member.IMemberQueryService;
 import com.example.scrap.web.member.MemberCommandServiceImpl;
 import com.example.scrap.web.member.MemberRepository;
 import com.example.scrap.web.member.dto.MemberDTO;
+import com.example.scrap.web.oauth.IOauthMemberInfoProvider;
+import com.example.scrap.web.oauth.NaverMemberIntoProvider;
+import com.example.scrap.web.oauth.OauthMemberInfoFactory;
+import com.example.scrap.web.oauth.dto.CommonOauthMemberInfo;
 import com.example.scrap.web.oauth.dto.NaverResponse;
 import com.example.scrap.web.scrap.IScrapCommandService;
 import org.junit.jupiter.api.DisplayName;
@@ -24,7 +28,11 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.util.ReflectionTestUtils;
 
+import java.util.Optional;
+
 import static org.assertj.core.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -48,6 +56,85 @@ public class MemberCommandServiceImplTest {
 
     @Mock
     private ITokenProvider tokenProvider;
+
+    @Mock
+    private OauthMemberInfoFactory oauthMemberInfoFactory;
+
+    @Mock
+    private NaverMemberIntoProvider naverMemberIntoProvider;
+
+    @DisplayName("로그인 (회원가입) - 로그인")
+    @Test
+    public void integrationLoginSignup_login(){
+        //** given
+        Member member = setupMember();
+        MemberLog memberLog = new MemberLog();
+        ReflectionTestUtils.setField(member, "memberLog", memberLog);
+        String authorization = "tempAuthorizationValue";
+        SnsType snsType = SnsType.NAVER;
+        CommonOauthMemberInfo oauthMemberInfo = CommonOauthMemberInfo.builder()
+                .name(member.getName())
+                .snsId(member.getSnsId())
+                .build();
+
+        // 토큰 설정
+        Token token = Token.builder()
+                .accessToken("accessToken")
+                .refreshToken("refreshToken")
+                .build();
+
+        when(oauthMemberInfoFactory.getOauthMemberInfoProvider(snsType)).thenReturn(naverMemberIntoProvider);
+        when(naverMemberIntoProvider.getMemberId(authorization)).thenReturn(oauthMemberInfo);
+        when(memberRepository.findBySnsTypeAndSnsId(snsType, oauthMemberInfo.getSnsId())).thenReturn(Optional.of(member));
+        when(tokenProvider.createToken(member)).thenReturn(token);
+
+        //** when
+        Token newToken = memberCommandService.integrationLoginSignup(authorization, snsType);
+
+        //** then
+        assertThat(newToken.getAccessToken())
+                .isEqualTo(token.getAccessToken());
+        assertThat(newToken.getRefreshToken())
+                .isEqualTo(token.getRefreshToken());
+    }
+
+    @DisplayName("로그인 (회원가입) - 회원가입")
+    @Test
+    public void integrationLoginSignup_signup(){
+        //** given
+        Member member = setupMember();
+        MemberLog memberLog = new MemberLog();
+        ReflectionTestUtils.setField(member, "memberLog", memberLog);
+        String authorization = "tempAuthorizationValue";
+        SnsType snsType = SnsType.NAVER;
+        CommonOauthMemberInfo oauthMemberInfo = CommonOauthMemberInfo.builder()
+                .name(member.getName())
+                .snsId(member.getSnsId())
+                .build();
+
+        // 토큰 설정
+        Token token = Token.builder()
+                .accessToken("accessToken")
+                .refreshToken("refreshToken")
+                .build();
+
+        when(oauthMemberInfoFactory.getOauthMemberInfoProvider(snsType)).thenReturn(naverMemberIntoProvider);
+        when(naverMemberIntoProvider.getMemberId(authorization)).thenReturn(oauthMemberInfo);
+        when(memberRepository.findBySnsTypeAndSnsId(snsType, oauthMemberInfo.getSnsId())).thenReturn(Optional.empty());
+        when(memberRepository.save(isA(Member.class))).thenReturn(member);
+        when(tokenProvider.createToken(member)).thenReturn(token);
+
+        //** when
+        Token newToken = memberCommandService.integrationLoginSignup(authorization, snsType);
+
+        //** then
+        assertThat(newToken.getAccessToken())
+                .isEqualTo(token.getAccessToken());
+        assertThat(newToken.getRefreshToken())
+                .isEqualTo(token.getRefreshToken());
+
+        verify(categoryCommandService).createDefaultCategory(isA(Member.class));
+    }
 
     @DisplayName("토큰 재발급")
     @Test

@@ -48,6 +48,34 @@ public class MemberControllerTest {
                 .build();
     }
 
+    @DisplayName("로그인/회원가입")
+    @Test
+    public void integrationLoginSignup() throws Exception{
+        //** given
+        String authorization = "tempAuthorizationValue";
+        Token token = setupToken();
+
+        // query string
+        SnsType snsType = SnsType.NAVER;
+
+        when(memberCommandService.integrationLoginSignup(isA(String.class), isA(SnsType.class))).thenReturn(token);
+
+        //** when
+        ResultActions resultActions = mockMvc.perform(
+                MockMvcRequestBuilders.post("/oauth/login")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", authorization)
+                        .param("sns", snsType.name())
+        );
+
+        //** then
+        resultActions
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.result.accessToken").value(token.getAccessToken()))
+                .andExpect(jsonPath("$.result.refreshToken").value(token.getRefreshToken()));
+    }
+
     @DisplayName("토큰 유효성 검사")
     @Test
     public void tokenValidate() throws Exception {

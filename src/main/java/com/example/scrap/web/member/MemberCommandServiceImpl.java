@@ -68,9 +68,7 @@ public class MemberCommandServiceImpl implements IMemberCommandService {
         // 기본 카테고리 생성
         categoryCommandService.createDefaultCategory(member);
 
-        memberRepository.save(member);
-
-        return member;
+        return memberRepository.save(member);
     }
 
     /**
