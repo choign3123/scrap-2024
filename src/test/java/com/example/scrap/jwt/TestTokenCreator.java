@@ -70,7 +70,7 @@ public class TestTokenCreator {
 
         System.out.println("issuedAt: " + issuedAt);
         System.out.println("expiration: " + expiration);
-        System.out.println("memberId: " + memberDTO.getMemberId());
+        System.out.println("memberId: " + memberDTO.getMemberId().get());
         System.out.println("snsId: " + memberDTO.getSnsId());
         System.out.println("snsType: " + memberDTO.getSnsType());
     }

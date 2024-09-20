@@ -47,5 +47,5 @@ jar {
 
 test {
 	// 테스트 실행 제외 클래스 지정
-	exclude '**/ScrapApplicationTests.class'
+	exclude '**/ScrapApplicationTests.class', '**/TestTokenCreator.class'
 }
