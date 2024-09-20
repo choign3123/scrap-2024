@@ -60,7 +60,7 @@ public class TestTokenCreator {
         String accessToken = "eyJhbGciOiJIUzI1NiJ9.eyJzbnNUeXBlIjoiTkFWRVIiLCJzbnNJZCI6ImhvbmdUZXN0U25zSWQiLCJ0eXBlIjoiQUNDRVNTIiwiYXVkIjoiMSIsImlhdCI6MTcyNjgxMjE3NCwiZXhwIjoxNzM0NTg4MTc0fQ.-Ek5oMLlP3Qk0tmtJtjxEP5aXI8jijqfl6SMWY-iY74";
 
         Claims claims = Jwts.parser()
-                .setSigningKey(jwtSecretKey)
+                .setSigningKey(jwtSecretKey.getBytes())
                 .parseClaimsJws(accessToken)
                 .getBody();
 

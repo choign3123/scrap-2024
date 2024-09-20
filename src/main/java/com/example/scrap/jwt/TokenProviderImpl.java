@@ -102,7 +102,7 @@ public class TokenProviderImpl implements ITokenProvider{
                 .setClaims(claims)
                 .setIssuedAt(new Date(currentTimeMills))
                 .setExpiration(new Date(currentTimeMills + pareHourToMs(expireHourOfAccessToken)))
-                .signWith(SignatureAlgorithm.HS256, jwtSecretKey)
+                .signWith(SignatureAlgorithm.HS256, jwtSecretKey.getBytes())
                 .compact();
     }
 
@@ -122,7 +122,7 @@ public class TokenProviderImpl implements ITokenProvider{
                 .setIssuedAt(new Date(currentTimeMills))
                 .setExpiration(new Date(currentTimeMills + parseDayToMs(expireDayOfRefreshToken)))
                 .setId(refreshTokenId.toString())
-                .signWith(SignatureAlgorithm.HS256, jwtSecretKey)
+                .signWith(SignatureAlgorithm.HS256, jwtSecretKey.getBytes())
                 .compact();
     }
     /* 토큰 발급 끝 **/
@@ -138,7 +138,8 @@ public class TokenProviderImpl implements ITokenProvider{
         token = removeTokenPrefix(token);
 
         try{
-            Jwts.parser().setSigningKey(jwtSecretKey)
+            Jwts.parser()
+                    .setSigningKey(jwtSecretKey.getBytes())
                     .parseClaimsJws(token);
 
             return true;
@@ -159,7 +160,8 @@ public class TokenProviderImpl implements ITokenProvider{
 
         return tokenType.name()
                 .equals(
-                        Jwts.parser().setSigningKey(jwtSecretKey)
+                        Jwts.parser()
+                                .setSigningKey(jwtSecretKey.getBytes())
                                 .parseClaimsJws(token)
                                 .getBody()
                                 .get("type", String.class)
@@ -180,7 +182,8 @@ public class TokenProviderImpl implements ITokenProvider{
            throw new IllegalArgumentException("access 토큰이 아님");
         }
 
-        Claims claims = Jwts.parser().setSigningKey(jwtSecretKey)
+        Claims claims = Jwts.parser()
+                .setSigningKey(jwtSecretKey.getBytes())
                 .parseClaimsJws(accessToken)
                 .getBody();
 
@@ -212,7 +215,8 @@ public class TokenProviderImpl implements ITokenProvider{
             throw new IllegalArgumentException("refresh 토큰이 아님");
         }
 
-        Claims claims = Jwts.parser().setSigningKey(jwtSecretKey)
+        Claims claims = Jwts.parser()
+                .setSigningKey(jwtSecretKey.getBytes())
                 .parseClaimsJws(refreshToken)
                 .getBody();
 
@@ -231,7 +235,8 @@ public class TokenProviderImpl implements ITokenProvider{
     }
 
     private String getRefreshTokenId(String refreshToken){
-        return Jwts.parser().setSigningKey(jwtSecretKey)
+        return Jwts.parser()
+                .setSigningKey(jwtSecretKey.getBytes())
                 .parseClaimsJws(refreshToken)
                 .getBody()
                 .getId();
