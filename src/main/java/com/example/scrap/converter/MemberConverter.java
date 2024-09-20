@@ -27,4 +27,11 @@ public class MemberConverter {
                 .refreshToken(token.getRefreshToken())
                 .build();
     }
+
+    public static TokenDTO toTokenDTO(Token token){
+        return TokenDTO.builder()
+                .accessToken(token.getAccessToken())
+                .refreshToken(token.getRefreshToken())
+                .build();
+    }
 }

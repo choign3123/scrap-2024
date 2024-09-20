@@ -4,14 +4,12 @@ package com.example.scrap.web.member;
 import com.example.scrap.base.code.SuccessCode;
 import com.example.scrap.base.response.ResponseDTO;
 import com.example.scrap.converter.MemberConverter;
-import com.example.scrap.converter.OauthConverter;
 import com.example.scrap.entity.enums.SnsType;
 import com.example.scrap.jwt.ITokenProvider;
 import com.example.scrap.jwt.dto.Token;
 import com.example.scrap.validation.annotaion.EnumValid;
 import com.example.scrap.web.member.dto.MemberResponse;
 import com.example.scrap.web.member.dto.MemberDTO;
-import com.example.scrap.web.oauth.dto.OauthResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -38,7 +36,7 @@ public class MemberController {
             summary = "[API-33] 로그인(회원가입)"
     )
     @PostMapping("/oauth/login")
-    public ResponseEntity<ResponseDTO<OauthResponse.TokenDTO>>
+    public ResponseEntity<ResponseDTO<MemberResponse.TokenDTO>>
     integrationLoginSignup(@RequestHeader("Authorization") String authorization,
                   @RequestParam @EnumValid(enumC = SnsType.class) String sns){
 
@@ -46,8 +44,7 @@ public class MemberController {
         SnsType snsType = SnsType.valueOf(sns.toUpperCase());
 
         Token token = memberCommandService.integrationLoginSignup(authorization, snsType);
-
-        OauthResponse.TokenDTO response = OauthConverter.toTokenDTO(token);
+        MemberResponse.TokenDTO response = MemberConverter.toTokenDTO(token);
 
         return ResponseEntity.ok(new ResponseDTO<>(response));
     }
