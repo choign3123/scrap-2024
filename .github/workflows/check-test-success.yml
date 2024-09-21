@@ -1,0 +1,31 @@
+name: Check test success
+
+on:
+  pull_request:
+    types: [opened, edited, auto_merge_enabled]
+
+jobs:
+  check_test_success:
+    runs-on: ubuntu-latest # 우분투 최신 버전에서 실행됨.
+    permissions:
+      contents: read # 내용 읽기만 가능함.
+    env:
+      BASE_PORT: 8088
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x ./gradlew
+        shell: bash
+
+      - name: Run test code with Gradle
+        run: ./gradlew test
+        shell: bash
