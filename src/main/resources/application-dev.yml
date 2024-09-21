@@ -12,7 +12,7 @@ spring:
 
   output:
     ansi:
-      enabled: never
+      enabled: never # cloud watch에서는 컬러 적용이 안되기 때문에 흑백으로 설정
 
   redis:
     host: ${REDIS_HOST}
