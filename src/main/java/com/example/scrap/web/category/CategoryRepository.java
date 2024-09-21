@@ -3,6 +3,7 @@ package com.example.scrap.web.category;
 import com.example.scrap.entity.Category;
 import com.example.scrap.entity.Member;
 import com.example.scrap.entity.enums.CategoryStatus;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -16,6 +17,7 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
     /**
      * 순서에 맞게 카테고리 조회
      */
+    @EntityGraph(attributePaths = {"scrapList"})
     public List<Category> findAllByMemberAndStatusOrderBySequence(Member member, CategoryStatus status);
 
     @Modifying
