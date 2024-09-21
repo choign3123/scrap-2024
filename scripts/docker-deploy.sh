@@ -14,6 +14,7 @@ if [ "$DEPLOYMENT_GROUP_NAME" == "scrap-github-dev-group" ]; then
     export DOCKER_IMAGE_TAG=dev
     export SPRING_PROFILE=dev
     export DOCKER_CONTAINER_NAME=scrap2024dev
+    export AWS_LOG_GROUP=scrap-dev-log-group
 else
     echo "$DEPLOYMENT_GROUP_NAME: 알 수 없는 환경입니다. 실행을 종료합니다"
     exit 1
@@ -21,7 +22,11 @@ fi
 
 sudo docker pull choign3123/scrap2024:$DOCKER_IMAGE_TAG
 
-sudo docker run --name $DOCKER_CONTAINER_NAME \
+sudo docker run \
+--log-driver=awslogs \
+--log-opt awslogs-region=ap-northeast-2 \
+--log-opt awslogs-group=$AWS_LOG_GROUP \
+--name $DOCKER_CONTAINER_NAME \
 -e REDIS_HOST=$REDIS_HOST \
 -e REDIS_PORT=$REDIS_PORT \
 -e DB_URL=$DB_URL \
