@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - develop
+  pull_request:
+    branches:
+      - develop
 
 jobs:
   # 빌드 및 도커 이미지 생성&push
