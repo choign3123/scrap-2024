@@ -29,6 +29,7 @@ public enum ErrorCode implements BaseCode{
 
     // Oauth Error
     OAUTH_NAVER_LOGIN_FAIL(HttpStatus.NOT_ACCEPTABLE, "Oauth001", "다시 네이버 로그인후 서비스 이용 바랍니다."),
+    OAUTH_KAKAO_LOGIN_FAIL(HttpStatus.NOT_ACCEPTABLE, "Oauth002", "다시 카카오 로그인후 서비스 이용 바랍니다."),
 
     // Member Error
     MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, "MEMBER001", "해당하는 사용자가 존재하지 않습니다."),

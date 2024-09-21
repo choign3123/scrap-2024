@@ -12,8 +12,9 @@ import com.example.scrap.jwt.dto.TokenType;
 import com.example.scrap.redis.ILogoutBlacklistRedisUtils;
 import com.example.scrap.web.category.ICategoryCommandService;
 import com.example.scrap.web.member.dto.MemberDTO;
-import com.example.scrap.web.oauth.NaverProvider;
-import com.example.scrap.web.oauth.dto.NaverResponse;
+import com.example.scrap.web.oauth.IOauthMemberInfoProvider;
+import com.example.scrap.web.oauth.OauthMemberInfoFactory;
+import com.example.scrap.web.oauth.dto.CommonOauthMemberInfo;
 import com.example.scrap.web.scrap.IScrapCommandService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -31,24 +32,25 @@ public class MemberCommandServiceImpl implements IMemberCommandService {
     private final ICategoryCommandService categoryCommandService;
     private final IScrapCommandService scrapCommandService;
     private final ITokenProvider tokenProvider;
-    private final NaverProvider naverProvider;
     private final ILogoutBlacklistRedisUtils logoutBlacklistRedisUtils;
+    private final OauthMemberInfoFactory oauthMemberInfoFactory;
 
     /**
-     * 네이버 로그인
-     * @param authorization
+     * 로그인/회원가입 (통합)
      * @return 회원가입이 되어있지 않은 회원의 경우, 자동 회원가입 후 token 반환
      */
-    public Token login(String authorization){
-        // 네이버로부터 회원 정보 조회하기
-        NaverResponse.ProfileInfo.Response profileInfo = naverProvider.getProfileByAccessToken(authorization).getResponse();
+    public Token integrationLoginSignup(String authorization, SnsType snsType){
 
-        Optional<Member> optionalMember = memberRepository.findBySnsTypeAndSnsId(SnsType.NAVER, profileInfo.getId());
+        // 회원 정보 조회하기
+        IOauthMemberInfoProvider oauthMemberInfoProvider = oauthMemberInfoFactory.getOauthMemberInfoProvider(snsType);
+        CommonOauthMemberInfo memberInfo = oauthMemberInfoProvider.getMemberId(authorization);
+
+        Optional<Member> optionalMember = memberRepository.findBySnsTypeAndSnsId(snsType, memberInfo.getSnsId());
 
         // db에 없으면 해당 정보로 로그인 후, 토큰 생성해서 return
         // db에 있으면 해당 정보로 토큰 생성해서 return
         Member member = optionalMember.orElseGet(
-                () -> signup(profileInfo)
+                () -> signup(memberInfo, snsType)
         );
 
         member.login();
@@ -57,18 +59,16 @@ public class MemberCommandServiceImpl implements IMemberCommandService {
     }
 
     /**
-     * 네이버 회원가입
+     * 회원가입
      */
-    public Member signup(NaverResponse.ProfileInfo.Response profileInfo){
+    private Member signup(CommonOauthMemberInfo memberInfo, SnsType snsType){
         MemberLog memberLog = new MemberLog();
-        Member member = MemberConverter.toEntity(profileInfo, SnsType.NAVER, memberLog);
+        Member member = MemberConverter.toEntity(memberInfo, snsType, memberLog);
 
         // 기본 카테고리 생성
         categoryCommandService.createDefaultCategory(member);
 
-        memberRepository.save(member);
-
-        return member;
+        return memberRepository.save(member);
     }
 
     /**

@@ -4,12 +4,12 @@ package com.example.scrap.web.member;
 import com.example.scrap.base.code.SuccessCode;
 import com.example.scrap.base.response.ResponseDTO;
 import com.example.scrap.converter.MemberConverter;
-import com.example.scrap.converter.OauthConverter;
+import com.example.scrap.entity.enums.SnsType;
 import com.example.scrap.jwt.ITokenProvider;
 import com.example.scrap.jwt.dto.Token;
+import com.example.scrap.validation.annotaion.EnumValid;
 import com.example.scrap.web.member.dto.MemberResponse;
 import com.example.scrap.web.member.dto.MemberDTO;
-import com.example.scrap.web.oauth.dto.OauthResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -29,19 +29,22 @@ public class MemberController {
     private final ITokenProvider tokenProvider; // TODO: query랑 command랑 메소드 분리 필요.
 
     /**
-     * [POST] /oauth/naver/login
-     * [API-33] 네이버 로그인(회원가입)
+     * [POST] /oauth/login?sns=
+     * [API-33] 로그인(회원가입)
      */
     @Operation(
-            summary = "[API-33] 네이버 로그인(회원가입)"
+            summary = "[API-33] 로그인(회원가입)"
     )
-    @PostMapping("/oauth/login/naver")
-    public ResponseEntity<ResponseDTO<OauthResponse.TokenDTO>>
-    naverLoginOrSignup(@RequestHeader("Authorization") String authorization){
+    @PostMapping("/oauth/login")
+    public ResponseEntity<ResponseDTO<MemberResponse.TokenDTO>>
+    integrationLoginSignup(@RequestHeader("Authorization") String authorization,
+                  @RequestParam @EnumValid(enumC = SnsType.class) String sns){
 
-        Token token = memberCommandService.login(authorization);
+        // String -> Enum
+        SnsType snsType = SnsType.valueOf(sns.toUpperCase());
 
-        OauthResponse.TokenDTO response = OauthConverter.toTokenDTO(token);
+        Token token = memberCommandService.integrationLoginSignup(authorization, snsType);
+        MemberResponse.TokenDTO response = MemberConverter.toTokenDTO(token);
 
         return ResponseEntity.ok(new ResponseDTO<>(response));
     }
