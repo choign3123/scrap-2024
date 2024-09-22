@@ -8,10 +8,17 @@ jobs:
   check-compare-branch:
     runs-on: ubuntu-latest
     steps:
-      - name: only allow merge main<-develop
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Echo current branch
         run: |
-          # PR 소스 브랜치가 develop일 경우 성공, 그 외의 브랜치면 실패
-          if: github.event.pull_request.head.ref != 'develop'
-          run:|
-          echo "Pull requests to main must come from develop branch."
-          exit 1
+          echo "base branch = $GITHUB_BASE_REF"
+          echo "head branch = $GITHUB_HEAD_REF"
+
+      - name: only allow merge main<-develop # PR 소스 브랜치가 develop일 경우 성공, 그 외의 브랜치면 실패
+        run: |
+          if [ "$GITHUB_HEAD_REF" != "develop" ]; then
+            echo "Pull requests to main must come from develop branch."
+            exit 1
+          fi
