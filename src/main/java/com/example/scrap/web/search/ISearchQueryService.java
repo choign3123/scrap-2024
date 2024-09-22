@@ -10,11 +10,6 @@ public interface ISearchQueryService {
 
     /**
      * 스크랩 검색
-     * @param memberDTO
-     * @param request
-     * @param pageRequest
-     * @param query
-     * @return
      */
     public Page<Scrap> findScrap(MemberDTO memberDTO, SearchRequest.FindScrapDTO request, PageRequest pageRequest, String query);
 }

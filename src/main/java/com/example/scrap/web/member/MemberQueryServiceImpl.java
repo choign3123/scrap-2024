@@ -18,6 +18,7 @@ public class MemberQueryServiceImpl implements IMemberQueryService {
 
     /**
      * 멤버 조회
+     * @throws BaseException 해당하는 멤버를 찾지 못했을 경우
      */
     public Member findMember(MemberDTO memberDTO){
 
@@ -26,13 +27,13 @@ public class MemberQueryServiceImpl implements IMemberQueryService {
                     .orElseThrow(() -> new BaseException(ErrorCode.MEMBER_NOT_FOUND));
         }
         else{
-            return memberRepository.findBySnsTypeAndSnsId(memberDTO.getSnsType(), memberDTO.getSnsId())
-                    .orElseThrow(() -> new BaseException(ErrorCode.MEMBER_NOT_FOUND));
+            return findMember(memberDTO.getSnsId(), memberDTO.getSnsType());
         }
     }
 
     /**
      * 멤버 조회
+     * @throws BaseException 해당하는 멤버를 찾지 못했을 경우
      */
     public Member findMember(String snsId, SnsType snsType){
         return memberRepository.findBySnsTypeAndSnsId(snsType, snsId)

@@ -3,7 +3,6 @@ package com.example.scrap.specification;
 import com.example.scrap.entity.Category;
 import com.example.scrap.entity.Member;
 import com.example.scrap.entity.Scrap;
-import com.example.scrap.entity.enums.ScrapStatus;
 import com.example.scrap.base.enums.SearchScopeType;
 import org.springframework.data.jpa.domain.Specification;
 
@@ -35,8 +34,12 @@ public class ScrapSpecification {
         return (root, query, criteriaBuilder) -> criteriaBuilder.like(root.get("title"), "%" + title + "%");
     }
 
-    public static Specification<Scrap> isAvailable(){
-        return (root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("status"), ScrapStatus.ACTIVE);
+    public static Specification<Scrap> containingMemo(String memo){
+        return (root, query, criteriaBuilder) -> criteriaBuilder.like(root.get("memo"), "%" + memo + "%");
+    }
+
+    public static Specification<Scrap> containingDescription(String description){
+        return (root, query, criteriaBuilder) -> criteriaBuilder.like(root.get("description"), "%" + description + "%");
     }
 
     public static Specification<Scrap> isFavorite(){
@@ -46,6 +49,11 @@ public class ScrapSpecification {
     public static Specification<Scrap> inCategory(List<Long> categoryIdList) {
 
         return (root, query, criteriaBuilder) -> criteriaBuilder.and(root.get("category").in(categoryIdList));
+    }
+
+    public static Specification<Scrap> inScrap(List<Long> scrapIdList) {
+
+        return (root, query, criteriaBuilder) -> criteriaBuilder.and(root.get("id").in(scrapIdList));
     }
 
     public static Specification<Scrap> containingQueryInSearchType(String q, SearchScopeType searchScope){

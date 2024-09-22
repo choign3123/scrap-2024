@@ -1,10 +1,7 @@
 package com.example.scrap.web.scrap;
 
 import com.example.scrap.base.exception.BaseException;
-import com.example.scrap.base.exception.ValidationException;
-import com.example.scrap.entity.Member;
 import com.example.scrap.entity.Scrap;
-import com.example.scrap.base.enums.QueryRange;
 import com.example.scrap.web.member.dto.MemberDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -16,71 +13,43 @@ public interface IScrapQueryService {
 
     /**
      * 스크랩 전체 조회 - 카테고리별
-     * @param memberDTO
-     * @param categoryId
-     * @param pageRequest
-     * @return
      */
     public Page<Scrap> getScrapListByCategory(MemberDTO memberDTO, Long categoryId, PageRequest pageRequest);
 
     /**
      * 즐겨찾기된 스크랩 조회
-     * @param memberDTO
-     * @param pageRequest
-     * @return 즐겨찾기된 스크랩
      */
     public Page<Scrap> getFavoriteScrapList(MemberDTO memberDTO, PageRequest pageRequest);
 
     /**
      * 스크랩 세부 조회
-     * @param memberDTO
-     * @param scrapId
-     * @return
      */
     public Scrap getScrapDetails(MemberDTO memberDTO, Long scrapId);
 
-    /**
-     * 스크랩 제목으로 검색 - 카테고리별
-     * @param memberDTO
-     * @param categoryId
-     * @param query
-     * @param sort
-     * @return
-     */
-    public List<Scrap> findScrapByTitle(MemberDTO memberDTO, QueryRange queryRange, Long categoryId, String query, Sort sort);
 
     /**
-     * 스크랩 전체 공유하기
-     * @param memberDTO
-     * @param queryRange
-     * @param categoryId
-     * @return
+     * 스크랩 검색 (특정 카테고리에서)
      */
-    public List<Scrap> shareAllScrap(MemberDTO memberDTO, QueryRange queryRange, Long categoryId);
+    List<Scrap> findScrapAtParticularCategory(MemberDTO memberDTO, Long categoryId, Sort sort, String query);
+
+    /**
+     * 스크랩 검색 (즐겨찾기됨에서)
+     */
+    List<Scrap> findScrapAtFavorite(MemberDTO memberDTO, Sort sort, String query);
 
     /**
      * 스크랩 찾기
-     * @param scrapId
-     * @return
+     *
+     * @throws BaseException 해당하는 스크랩이 존재하지 않을 경우
      */
     public Scrap findScrap(Long scrapId);
 
     /**
-     * 프레스 타입에 따른 스크랩 조회
-     * @param member
-     * @param queryRange
-     * @param categoryId
-     * @return
-     * @throws BaseException CATEGORY_MEMBER_NOT_MATCH_IN_SCRAP
+     * 스크랩 찾기
+     *
+     * @throws BaseException 리스트 중 존재하지 않는 스크랩이 있을 경우
      */
-    List<Scrap> findAllByQueryType(Member member, QueryRange queryRange, Long categoryId);
+    List<Scrap> findScrapList(List<Long> scrapIdList);
 
-    /**
-     * 요청된 스크랩 조회
-     * @param scrapIdList
-     * @param member
-     * @return
-     * @throws ValidationException if scrapIdList empty
-     */
-    public List<Scrap> findAllByRequest(List<Long> scrapIdList, Member member);
+    // TODO: 스크랩 조회시 member 일치 여부도 함께 확인하는 메소드 추가하기
 }

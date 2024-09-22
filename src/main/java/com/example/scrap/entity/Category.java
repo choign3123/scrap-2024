@@ -3,6 +3,7 @@ package com.example.scrap.entity;
 import com.example.scrap.base.code.ErrorCode;
 import com.example.scrap.base.exception.BaseException;
 import com.example.scrap.entity.base.BaseEntity;
+import com.example.scrap.entity.enums.CategoryStatus;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -10,6 +11,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,6 +33,13 @@ public class Category extends BaseEntity implements Comparable<Category>{
     @ColumnDefault("false")
     private Boolean isDefault;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    @ColumnDefault("'ACTIVE'")
+    private CategoryStatus status;
+
+    private LocalDateTime deletedAt;
+
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "member_id")
     private Member member;
@@ -38,11 +47,20 @@ public class Category extends BaseEntity implements Comparable<Category>{
     @OneToMany(mappedBy = "category")
     private List<Scrap> scrapList = new ArrayList<>();
 
+    /**
+     * @param sequence 1 이상
+     * @throws IllegalArgumentException sequence가 0 이하의 숫자일 시
+     */
     @Builder
     public Category(String title, int sequence, Member member, Boolean isDefault) {
         this.title = title;
-        this.sequence = sequence;
         this.isDefault = isDefault == null ? false : isDefault;
+        this.status = CategoryStatus.ACTIVE;
+
+        if(sequence <= 0){
+            throw new IllegalArgumentException("sequence는 1 이상의 숫자여야 함");
+        }
+        this.sequence = sequence;
 
         setMember(member);
     }
@@ -60,15 +78,12 @@ public class Category extends BaseEntity implements Comparable<Category>{
     /**
      * 해당 카테고리를 생성한 사용자가 맞는지 확인
      * @param member
-     * @return if match return true, else throw BaseException
      * @throws BaseException ErrorCode.CATEGORY_MEMBER_NOT_MATCH
      */
-    public boolean checkIllegalMember(Member member){
+    public void checkIllegalMember(Member member){
         if(isIllegalMember(member)){
             throw new BaseException(ErrorCode.CATEGORY_MEMBER_NOT_MATCH);
         }
-
-        return true;
     }
 
     /**
@@ -92,4 +107,11 @@ public class Category extends BaseEntity implements Comparable<Category>{
         this.sequence = sequence;
     }
 
+    /**
+     * 카테고리 삭제하기
+     */
+    public void delete(){
+        this.status = CategoryStatus.DELETED;
+        this.deletedAt = LocalDateTime.now();
+    }
 }

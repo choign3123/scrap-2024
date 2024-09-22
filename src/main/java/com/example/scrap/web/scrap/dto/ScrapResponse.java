@@ -2,6 +2,7 @@ package com.example.scrap.web.scrap.dto;
 
 import com.example.scrap.web.baseDTO.Meta;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -22,6 +23,8 @@ public class ScrapResponse {
         private String imageURL;
         private Boolean isFavorite;
         private LocalDate scrapDate;
+
+        // TODO: memo, description도 추가하기!
     }
 
     /**
@@ -37,6 +40,7 @@ public class ScrapResponse {
 
         @Builder
         @Getter
+        @Schema(name = "스크랩 전체조회 - 카테고리별 DTO")
         public static class ScrapDTO{
             private Long scrapId;
             private String title;
@@ -60,6 +64,7 @@ public class ScrapResponse {
 
         @Builder
         @Getter
+        @Schema(name = "즐겨찾기된 스크랩 조회 DTO")
         public static class ScrapDTO{
             private String categoryTitle;
             private Long scrapId;
@@ -86,11 +91,11 @@ public class ScrapResponse {
     }
 
     /**
-     * 스크랩 제목으로 검색 - 카테고리별
+     * 스크랩 검색 (특정 카테고리에서)
      */
     @Builder
     @Getter
-    public static class FindScrapByTitleDTO {
+    public static class FindScrapAtParticularCategoryDTO {
 
         @JsonProperty("scraps")
         private List<ScrapDTO> scrapDTOList;
@@ -99,6 +104,32 @@ public class ScrapResponse {
 
         @Builder
         @Getter
+        @Schema(name = "스크랩 검색 (특정 카테고리에서) DTO")
+        public static class ScrapDTO {
+            private Long scrapId;
+            private String title;
+            private String scrapURL;
+            private String imageURL;
+            private Boolean isFavorite;
+            private LocalDate scrapDate;
+        }
+    }
+
+    /**
+     * 스크랩 검색 (즐겨찾기됨에서)
+     */
+    @Builder
+    @Getter
+    public static class FindScrapAtFavoriteDTO {
+
+        @JsonProperty("scraps")
+        private List<ScrapDTO> scrapDTOList;
+
+        private int total;
+
+        @Builder
+        @Getter
+        @Schema(name = "스크랩 검색 (즐겨찾기됨에서) DTO")
         public static class ScrapDTO {
             private Long scrapId;
             private String title;
@@ -114,6 +145,7 @@ public class ScrapResponse {
      */
     @Builder
     @Getter
+    // TODO: 삭제하기
     public static class ShareAllScrapDTO {
 
         private int total;
@@ -155,6 +187,7 @@ public class ScrapResponse {
 
         @Builder
         @Getter
+        @Schema(name = "스크랩 즐겨찾기(목록) DTO")
         public static class ScrapDTO {
             private Long scrapId;
             private Boolean isFavorite;
@@ -196,6 +229,7 @@ public class ScrapResponse {
 
         @Getter
         @Builder
+        @Schema(name = "스크랩 이동하기 (목록) DTO")
         public static class ScrapDTO{
             private Long scrapId;
             private Long categoryId;

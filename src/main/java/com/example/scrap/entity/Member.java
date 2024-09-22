@@ -44,6 +44,11 @@ public class Member extends BaseEntity {
         this.memberLog = memberLog;
     }
 
+    // 삭제된 카테고리도 포함하고 있기 때문에, 함부러 접근할 수 없도록 막음
+    protected List<Category> getCategoryList(){
+        return this.categoryList;
+    }
+
     /**
      * 로그인
      */
@@ -51,12 +56,6 @@ public class Member extends BaseEntity {
         this.getMemberLog().login();
     }
 
-    /**
-     * 로그아웃
-     */
-    public void logout() {
-        this.getMemberLog().logout();
-    }
 
     /**
      * refreshTokenId 갱신

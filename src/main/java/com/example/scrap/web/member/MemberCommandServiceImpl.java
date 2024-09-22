@@ -6,16 +6,21 @@ import com.example.scrap.converter.MemberConverter;
 import com.example.scrap.entity.Member;
 import com.example.scrap.entity.MemberLog;
 import com.example.scrap.entity.enums.SnsType;
-import com.example.scrap.jwt.TokenProvider;
+import com.example.scrap.jwt.ITokenProvider;
 import com.example.scrap.jwt.dto.Token;
 import com.example.scrap.jwt.dto.TokenType;
+import com.example.scrap.redis.ILogoutBlacklistRedisUtils;
 import com.example.scrap.web.category.ICategoryCommandService;
 import com.example.scrap.web.member.dto.MemberDTO;
-import com.example.scrap.web.oauth.dto.NaverResponse;
+import com.example.scrap.web.oauth.IOauthMemberInfoProvider;
+import com.example.scrap.web.oauth.OauthMemberInfoFactory;
+import com.example.scrap.web.oauth.dto.CommonOauthMemberInfo;
 import com.example.scrap.web.scrap.IScrapCommandService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -26,14 +31,39 @@ public class MemberCommandServiceImpl implements IMemberCommandService {
     private final IMemberQueryService memberQueryService;
     private final ICategoryCommandService categoryCommandService;
     private final IScrapCommandService scrapCommandService;
-    private final TokenProvider tokenProvider;
+    private final ITokenProvider tokenProvider;
+    private final ILogoutBlacklistRedisUtils logoutBlacklistRedisUtils;
+    private final OauthMemberInfoFactory oauthMemberInfoFactory;
 
     /**
-     * 네이버 회원가입
+     * 로그인/회원가입 (통합)
+     * @return 회원가입이 되어있지 않은 회원의 경우, 자동 회원가입 후 token 반환
      */
-    public Member signup(NaverResponse.ProfileInfo.Response profileInfo){
+    public Token integrationLoginSignup(String authorization, SnsType snsType){
+
+        // 회원 정보 조회하기
+        IOauthMemberInfoProvider oauthMemberInfoProvider = oauthMemberInfoFactory.getOauthMemberInfoProvider(snsType);
+        CommonOauthMemberInfo memberInfo = oauthMemberInfoProvider.getMemberId(authorization);
+
+        Optional<Member> optionalMember = memberRepository.findBySnsTypeAndSnsId(snsType, memberInfo.getSnsId());
+
+        // db에 없으면 해당 정보로 로그인 후, 토큰 생성해서 return
+        // db에 있으면 해당 정보로 토큰 생성해서 return
+        Member member = optionalMember.orElseGet(
+                () -> signup(memberInfo, snsType)
+        );
+
+        member.login();
+
+        return tokenProvider.createToken(member);
+    }
+
+    /**
+     * 회원가입
+     */
+    private Member signup(CommonOauthMemberInfo memberInfo, SnsType snsType){
         MemberLog memberLog = new MemberLog();
-        Member member = MemberConverter.toEntity(profileInfo, SnsType.NAVER, memberLog);
+        Member member = MemberConverter.toEntity(memberInfo, snsType, memberLog);
 
         // 기본 카테고리 생성
         categoryCommandService.createDefaultCategory(member);
@@ -43,43 +73,40 @@ public class MemberCommandServiceImpl implements IMemberCommandService {
 
     /**
      * 토큰 재발급
+     * @throws AuthorizationException refresh 토큰이 아닐 경우
+     * @throws AuthorizationException 로그아웃 상태일 경우
+     * @throws AuthorizationException 토큰이 만료되었을 경우
      */
     public Token reissueToken(String refreshToken){
 
         // 토큰 유효성 검사
         tokenProvider.isTokenValid(refreshToken);
 
-        MemberDTO memberDTO = tokenProvider.pasreRefreshToMemberDTO(refreshToken);
-        Member member = memberQueryService.findMemberWithLog(memberDTO);
-
-        if(!tokenProvider.equalsTokenType(refreshToken, TokenType.REFRESH)){
+        // refresh 토큰인지 확인
+        if(!tokenProvider.equalsTokenType(refreshToken, TokenType.REFRESH)) {
             throw new AuthorizationException(ErrorCode.NOT_REFRESH_TOKEN);
         }
 
-        // 로그인한 유저인지 검사
-        switch (member.getMemberLog().getLoginStatus()){
-            case ACTIVE -> {} // pass
-            case LOGOUT -> throw new AuthorizationException(ErrorCode.LOGOUT_STATUS);
-        }
+        Member member = memberQueryService.findMember(tokenProvider.parseRefreshToMemberDTO(refreshToken));
 
         // 토큰 재발급
-        return tokenProvider.reissueToken(refreshToken);
+        return tokenProvider.reissueToken(refreshToken, member);
     }
 
     /**
      * 로그아웃
      */
-    @Transactional
-    public void logout(MemberDTO memberDTO){
+    public void logout(MemberDTO memberDTO, String token){
         Member member = memberQueryService.findMember(memberDTO);
 
-        member.logout();
+        logoutBlacklistRedisUtils.addLogoutToken(token, member);
+
+        // TODO: refresh 토큰도 못쓰게 만들기
     }
 
     /**
      * 회원 탈퇴
      */
-    @Transactional
     public void signOut(MemberDTO memberDTO){
         Member member = memberQueryService.findMember(memberDTO);
 

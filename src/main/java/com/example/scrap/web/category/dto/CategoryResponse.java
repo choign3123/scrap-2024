@@ -2,6 +2,7 @@ package com.example.scrap.web.category.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -35,12 +36,13 @@ public class CategoryResponse {
 
         @Builder
         @Getter
+        @Schema(name = "카테고리 전체 조회 DTO")
         public static class CategoryDTO{
             private Long categoryId;
             private String categoryTitle;
-            private int scrapCnt;
-            private int sequence;
-            private boolean isDefault;
+            private Integer scrapCnt;
+            private Integer sequence;
+            private Boolean isDefault;
         }
     }
 
@@ -62,6 +64,7 @@ public class CategoryResponse {
 
         @Builder
         @Getter
+        @Schema(name = "카테고리 선택용 조회 DTO")
         public static class CategoryDTO{
             private Long categoryId;
             private String categoryTitle;
@@ -93,6 +96,7 @@ public class CategoryResponse {
 
         @Builder
         @Getter
+        @Schema(name = "카테고리 순서 변경 DTO")
         public static class CategoryDTO{
             private Long categoryId;
             private String categoryTitle;

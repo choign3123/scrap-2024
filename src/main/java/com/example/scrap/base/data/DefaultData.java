@@ -12,4 +12,8 @@ public class DefaultData {
 
     public static final Long MIN_REFRESH_TOKEN_ID = 1L;
     public static final Long MAX_REFRESH_TOKEN_ID = Long.MAX_VALUE;
+
+    public static final String REDIS_KEY_PREFIX = "logoutToken:";
+
+    public static final String REDIS_VALUE_PREFIX = "memberId:";
 }

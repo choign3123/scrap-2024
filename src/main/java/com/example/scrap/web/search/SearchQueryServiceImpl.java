@@ -20,26 +20,19 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 @Slf4j
-public class SearchQueryService implements ISearchQueryService {
+public class SearchQueryServiceImpl implements ISearchQueryService {
 
-    private final IMemberQueryService memberService;
+    private final IMemberQueryService memberQueryService;
     private final ScrapRepository scrapRepository;
 
     /**
      * 스크랩 검색
-     * @param memberDTO
-     * @param request
-     * @param pageRequest
-     * @param query
-     * @return
      */
     public Page<Scrap> findScrap(MemberDTO memberDTO, SearchRequest.FindScrapDTO request, PageRequest pageRequest, String query){
 
-        Member member = memberService.findMember(memberDTO);
+        Member member = memberQueryService.findMember(memberDTO);
 
-        Specification<Scrap> spec = Specification.where(ScrapSpecification.isAvailable())
-                .and(ScrapSpecification.equalMember(member));
-
+        Specification<Scrap> spec = Specification.where(ScrapSpecification.equalMember(member));
 
         // 검색범위 지정
         Specification<Scrap> specSearchScope = (root, q, criteriaBuilder) -> null;
@@ -50,8 +43,8 @@ public class SearchQueryService implements ISearchQueryService {
         spec = spec.and(specSearchScope);
 
         // 카테고리 범위 지정
-        if(!(request.getCategoryIdList() == null || request.getCategoryIdList().isEmpty())){
-            spec = spec.and(ScrapSpecification.inCategory(request.getCategoryIdList()));
+        if(!(request.getCategoryScope() == null || request.getCategoryScope().isEmpty())){
+            spec = spec.and(ScrapSpecification.inCategory(request.getCategoryScope()));
         }
 
         // 시작 날짜 ~ 종료 날짜 지정

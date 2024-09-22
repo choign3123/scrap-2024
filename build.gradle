@@ -31,8 +31,21 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'io.jsonwebtoken:jjwt:0.9.1'
+	implementation 'org.springframework.boot:spring-boot-starter-data-redis' // redis
+	implementation 'com.google.code.gson:gson:2.7'
+	implementation 'org.springdoc:springdoc-openapi-ui:1.8.0' // swagger
 }
 
 tasks.named('test') {
 	useJUnitPlatform()
+}
+
+// jar에 의해 생성되는 plane archive 생성 못하게 막음
+jar {
+	enabled = false
+}
+
+test {
+	// 테스트 실행 제외 클래스 지정
+	exclude '**/ScrapApplicationTests.class', '**/TestTokenCreator.class'
 }

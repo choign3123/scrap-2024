@@ -7,13 +7,11 @@ import com.example.scrap.entity.Member;
 import com.example.scrap.entity.enums.SnsType;
 import com.example.scrap.jwt.dto.Token;
 import com.example.scrap.jwt.dto.TokenType;
-import com.example.scrap.web.member.IMemberQueryService;
 import com.example.scrap.web.member.dto.MemberDTO;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -21,20 +19,17 @@ import org.springframework.stereotype.Component;
 import java.util.Date;
 
 @Component
-@RequiredArgsConstructor
 @Slf4j
-public class TokenProvider {
+public class TokenProviderImpl implements ITokenProvider{
 
     @Value("${jwt.secret}")
     private String jwtSecretKey;
 
-    @Value("${jwt.expire_day.access}")
-    private int expireDayOfAccessToken;
+    @Value("${jwt.expire.access_hour}")
+    private int expireHourOfAccessToken;
 
-    @Value("${jwt.expire_day.refresh}")
+    @Value("${jwt.expire.refresh_day}")
     private int expireDayOfRefreshToken;
-
-    private final IMemberQueryService memberQueryService;
 
     /* 토큰 발급 **/
     /**
@@ -63,8 +58,10 @@ public class TokenProvider {
      * token 갱신하기
      * @param refreshToken refreshToken으로 토큰 갱신함
      * @throws IllegalArgumentException refresh 토큰이 아닐 경우
+     * @throws AuthorizationException 이미 사용된 refresh 토큰일 경우
      */
-    public Token reissueToken(String refreshToken){
+    @Override
+    public Token reissueToken(String refreshToken, Member member){
         refreshToken = removeTokenPrefix(refreshToken);
 
         // refresh 토큰이 아닐경우
@@ -72,35 +69,20 @@ public class TokenProvider {
             throw new IllegalArgumentException("refresh 토큰이 아님");
         }
 
-        Member member = findMemberByRefreshToken(refreshToken);
-
         // 이미 사용된 refreshToken인지 확인 (일회용)
         Long refreshTokenId = Long.parseLong(getRefreshTokenId(refreshToken));
         if(!member.getMemberLog().equalRefreshTokenId(refreshTokenId)){
             throw new AuthorizationException(ErrorCode.REFRESH_TOKEN_ALREADY_USED);
         }
 
-        MemberDTO memberDTO = new MemberDTO(member);
-        // access 토큰 갱신
-        String reissuedAccessToken = createAccessToken(memberDTO);
-
-        // 기존과 다른 refreshToken id 생성.
-        Long newRefreshTokenId = member.getMemberLog().createRefreshTokenId();
-        member.setRefreshTokenId(newRefreshTokenId);
-        // refresh 토큰 재발급
-        String reissuedRefreshToken = createRefreshToken(memberDTO, newRefreshTokenId);
-
-        return Token.builder()
-                .accessToken(reissuedAccessToken)
-                .refreshToken(reissuedRefreshToken)
-                .build();
+        return createToken(member);
     }
 
     /**
      * 접근 토큰 생성하기
      * @throws NullPointerException memberId가 null 일때
      */
-    // [TODO] 토큰에 어떤 값을 담을지 고민 필요.
+    // TODO: 토큰에 어떤 값을 담을지 고민 필요.
     // https://velog.io/@kimcno3/Jwt-Token%EC%97%90-%EB%8B%B4%EA%B8%B8-%EC%82%AC%EC%9A%A9%EC%9E%90-%EC%A0%95%EB%B3%B4%EC%97%90-%EB%8C%80%ED%95%9C-%EA%B2%B0%EC%A0%95%EA%B3%BC-%ED%91%9C%EC%A4%80%EC%97%90-%EB%8C%80%ED%95%9C-%EC%9D%B4%ED%95%B4
     // snsId는 한번 노출되면 더이상 바꿀 수 있는 값이 아니라 위험할 수 있다는 생각 + 그렇다고 memberId만 넣자니 memberId가 sequence화 된거라 key가 뚤릴 시 위험할 수 있다는 생각.
     // 그렇다고 memberId를 넣지 않자니, 인터셉터와 서비스에서 각각 member를 찾기 위해 sql을 총 2번 실행하게 된다는 성능상의 문제.
@@ -119,8 +101,8 @@ public class TokenProvider {
         return Jwts.builder()
                 .setClaims(claims)
                 .setIssuedAt(new Date(currentTimeMills))
-                .setExpiration(new Date(currentTimeMills + parseDayToMs(expireDayOfAccessToken)))
-                .signWith(SignatureAlgorithm.HS256, jwtSecretKey)
+                .setExpiration(new Date(currentTimeMills + pareHourToMs(expireHourOfAccessToken)))
+                .signWith(SignatureAlgorithm.HS256, jwtSecretKey.getBytes())
                 .compact();
     }
 
@@ -140,7 +122,7 @@ public class TokenProvider {
                 .setIssuedAt(new Date(currentTimeMills))
                 .setExpiration(new Date(currentTimeMills + parseDayToMs(expireDayOfRefreshToken)))
                 .setId(refreshTokenId.toString())
-                .signWith(SignatureAlgorithm.HS256, jwtSecretKey)
+                .signWith(SignatureAlgorithm.HS256, jwtSecretKey.getBytes())
                 .compact();
     }
     /* 토큰 발급 끝 **/
@@ -156,7 +138,8 @@ public class TokenProvider {
         token = removeTokenPrefix(token);
 
         try{
-            Jwts.parser().setSigningKey(jwtSecretKey)
+            Jwts.parser()
+                    .setSigningKey(jwtSecretKey.getBytes())
                     .parseClaimsJws(token);
 
             return true;
@@ -177,7 +160,8 @@ public class TokenProvider {
 
         return tokenType.name()
                 .equals(
-                        Jwts.parser().setSigningKey(jwtSecretKey)
+                        Jwts.parser()
+                                .setSigningKey(jwtSecretKey.getBytes())
                                 .parseClaimsJws(token)
                                 .getBody()
                                 .get("type", String.class)
@@ -188,6 +172,7 @@ public class TokenProvider {
     /**
      * access 토큰을 MemberDTO로 변환
      * @throws IllegalArgumentException access 토큰이 아닐시
+     * @throws AuthorizationException 토큰에 든 값이 잘못된 경우
      */
     public MemberDTO parseAccessToMemberDTO(String accessToken){
         accessToken = removeTokenPrefix(accessToken);
@@ -197,19 +182,22 @@ public class TokenProvider {
            throw new IllegalArgumentException("access 토큰이 아님");
         }
 
-        Claims claims = Jwts.parser().setSigningKey(jwtSecretKey)
+        Claims claims = Jwts.parser()
+                .setSigningKey(jwtSecretKey.getBytes())
                 .parseClaimsJws(accessToken)
                 .getBody();
 
         // 토큰의 값 조회
-        String snsId = claims.get("snsId", String.class);
-        Long memberId = Long.parseLong(claims.getAudience());
-
+        String snsId;
+        Long memberId;
         SnsType snsType;
         try {
+            snsId = claims.get("snsId", String.class);
+            memberId = Long.parseLong(claims.getAudience());
             snsType = SnsType.valueOf(claims.get("snsType", String.class));
-        } catch (IllegalArgumentException e){
-            throw new AuthorizationException(ErrorCode.TOKEN_TYPE_ILLEGAL);
+        }
+        catch (IllegalArgumentException e){
+            throw new AuthorizationException(ErrorCode.INNER_TOKEN_VALUE_WRONG);
         }
 
         return new MemberDTO(memberId, snsType, snsId);
@@ -218,63 +206,40 @@ public class TokenProvider {
     /**
      * refresh 토큰을 MemberDTO로 변환
      * @throws IllegalArgumentException refresh 토큰이 아닐시
+     * @throws AuthorizationException 토큰에 든 값이 잘못된 경우
      */
-    public MemberDTO pasreRefreshToMemberDTO(String refreshToken){
+    public MemberDTO parseRefreshToMemberDTO(String refreshToken){
         refreshToken = removeTokenPrefix(refreshToken);
 
         if(!equalsTokenType(refreshToken, TokenType.REFRESH)){
             throw new IllegalArgumentException("refresh 토큰이 아님");
         }
 
-        Claims claims = Jwts.parser().setSigningKey(jwtSecretKey)
+        Claims claims = Jwts.parser()
+                .setSigningKey(jwtSecretKey.getBytes())
                 .parseClaimsJws(refreshToken)
                 .getBody();
 
         // 토큰의 값 조회
-        String snsId = claims.get("snsId", String.class);
-
+        String snsId;
         SnsType snsType;
         try {
+            snsId = claims.get("snsId", String.class);
             snsType = SnsType.valueOf(claims.get("snsType", String.class));
-        } catch (IllegalArgumentException e){
-            throw new AuthorizationException(ErrorCode.TOKEN_TYPE_ILLEGAL);
+        }
+        catch (IllegalArgumentException e){
+            throw new AuthorizationException(ErrorCode.INNER_TOKEN_VALUE_WRONG);
         }
 
         return new MemberDTO(null, snsType, snsId);
     }
 
     private String getRefreshTokenId(String refreshToken){
-        return Jwts.parser().setSigningKey(jwtSecretKey)
+        return Jwts.parser()
+                .setSigningKey(jwtSecretKey.getBytes())
                 .parseClaimsJws(refreshToken)
                 .getBody()
                 .getId();
-    }
-
-    /**
-     * refreshToken으로 Member 찾기
-     * @throws IllegalArgumentException refresh 토큰이 아닐시
-     */
-    private Member findMemberByRefreshToken(String refreshToken){
-        refreshToken = removeTokenPrefix(refreshToken);
-
-        // refreshToken인지 확인하기
-        if(!equalsTokenType(refreshToken, TokenType.REFRESH)){
-            throw new IllegalArgumentException("refresh 토큰이 아님");
-        }
-
-        Claims claims = Jwts.parser().setSigningKey(jwtSecretKey)
-                .parseClaimsJws(refreshToken)
-                .getBody();
-
-        String snsId = claims.get("snsId", String.class);
-        SnsType snsType;
-        try {
-            snsType = SnsType.valueOf(claims.get("snsType", String.class));
-        } catch (IllegalArgumentException e){
-            throw new AuthorizationException(ErrorCode.TOKEN_TYPE_ILLEGAL);
-        }
-
-        return memberQueryService.findMember(snsId, snsType);
     }
 
     /**
