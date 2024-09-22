@@ -15,6 +15,24 @@ if [ "$DEPLOYMENT_GROUP_NAME" == "scrap-github-dev-group" ]; then
     export SPRING_PROFILE=dev
     export DOCKER_CONTAINER_NAME=scrap2024dev
     export AWS_LOG_GROUP=scrap-dev-log-group
+
+elif [ "$DEPLOYMENT_GROUP_NAME" == "scrap-github-release-group" ]; then
+    echo "release 환경입니다."
+    export DB_URL=$(aws ssm get-parameters --names /Release/Mysql/db_url --with-decryption --query Parameters[0].Value --output text)
+    export DB_USERNAME=$(aws ssm get-parameters --names /Release/Mysql/db_username --with-decryption --query Parameters[0].Value --output text)
+    export DB_PASSWORD=$(aws ssm get-parameters --names /Release/Mysql/db_password --with-decryption --query Parameters[0].Value --output text)
+    export JWT_SECRET=$(aws ssm get-parameters --names /Release/Jwt/jwt_secret_key --with-decryption --query Parameters[0].Value --output text)
+    export EXPIRE_HOUR_OF_ACCESS=$(aws ssm get-parameters --names /Release/Jwt/expire_hour_of_access --with-decryption --query Parameters[0].Value --output text)
+    export EXPIRE_DAY_OF_REFRESH=$(aws ssm get-parameters --names /Release/Jwt/expire_day_of_refresh --with-decryption --query Parameters[0].Value --output text)
+    export TEST_TOKEN=$(aws ssm get-parameters --names /Release/Jwt/test_token --with-decryption --query Parameters[0].Value --output text)
+    export REDIS_HOST=$(aws ssm get-parameters --names /Release/Redis/redis_host --with-decryption --query Parameters[0].Value --output text)
+    export REDIS_PORT=$(aws ssm get-parameters --names /Release/Redis/redis_port --with-decryption --query Parameters[0].Value --output text)
+    export BASE_PORT=$(aws ssm get-parameters --names /Release/port --with-decryption --query Parameters[0].Value --output text)
+    export DOCKER_IMAGE_TAG=release
+    export SPRING_PROFILE=default
+    export DOCKER_CONTAINER_NAME=scrap2024release
+    export AWS_LOG_GROUP=scrap-release-log-group
+
 else
     echo "$DEPLOYMENT_GROUP_NAME: 알 수 없는 환경입니다. 실행을 종료합니다"
     exit 1
