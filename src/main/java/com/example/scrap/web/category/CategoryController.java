@@ -160,7 +160,6 @@ public class CategoryController {
         // 중복된 카테고리 있는지 확인
         boolean includeDuplicateCategory = (request.getCategoryIdList().size() != request.getCategoryIdList().stream().distinct().count());
         if(includeDuplicateCategory){
-            // TODO: categoryids -> categoryIdList로 변경하기
             throw new ValidationException("categories", "중복된 카테고리를 포함하고 있습니다.");
         }
 
