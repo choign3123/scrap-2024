@@ -76,7 +76,7 @@ public class ScrapConverter {
         List<ScrapResponse.GetFavoriteScrapListDTO.ScrapDTO> scrapDTOList = scrapPage.stream()
                 .map( scrap -> {
                     return ScrapResponse.GetFavoriteScrapListDTO.ScrapDTO.builder()
-                            .categoryTitle(scrap.getCategory().getTitle()) // [TODO] LazyInitializationException이 실제로 발생하는지 확인해볼 필요 있음.
+                            .categoryTitle(scrap.getCategory().getTitle())
                             .scrapId(scrap.getId())
                             .scrapTitle(scrap.getTitle())
                             .scrapURL(scrap.getScrapURL())
