@@ -189,23 +189,4 @@ public class ScrapConverter {
                 .scrapDTOList(scrapDTOList)
                 .build();
     }
-
-    // TODO: 삭제하기
-    public static ScrapResponse.ShareAllScrapDTO toShareAllScrap(List<Scrap> scrapList){
-
-        List<ScrapResponse.ShareAllScrapDTO.ScrapDTO> scrapDTOList = scrapList.stream()
-                .map(scrap -> {
-                    return ScrapResponse.ShareAllScrapDTO.ScrapDTO.builder()
-                            .scrapId(scrap.getId())
-                            .title(scrap.getTitle())
-                            .scrapURL(scrap.getScrapURL())
-                            .build();
-                })
-                .toList();
-
-        return ScrapResponse.ShareAllScrapDTO.builder()
-                .scrapDTOList(scrapDTOList)
-                .total(scrapList.size())
-                .build();
-    }
 }
