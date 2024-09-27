@@ -56,6 +56,13 @@ public class Member extends BaseEntity {
         this.getMemberLog().login();
     }
 
+    /**
+     * 로그아웃
+     */
+    public void logout() {
+        this.getMemberLog().initRefreshTokenId();
+    }
+
 
     /**
      * refreshTokenId 갱신
