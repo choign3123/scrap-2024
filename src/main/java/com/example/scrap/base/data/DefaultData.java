@@ -16,4 +16,6 @@ public class DefaultData {
     public static final String REDIS_KEY_PREFIX = "logoutToken:";
 
     public static final String REDIS_VALUE_PREFIX = "memberId:";
+
+    public static final String DEPLOY_TIME_KEY = "deployTime";
 }

@@ -11,7 +11,7 @@ else
 fi
 
 # stop docker container
-if [ "$(docker ps -q -f name=$DOCKER_CONTAINER_NAME)" ]; then
+if [ "$(sudo docker ps -a -f name=$DOCKER_CONTAINER_NAME)" ]; then
   echo "컨테이너를 종료합니다: $DOCKER_CONTAINER_NAME"
   sudo docker stop $DOCKER_CONTAINER_NAME
 else
@@ -19,10 +19,10 @@ else
 fi
 
 # remove docker container
-if [ "$(docker ps -a -q -f name=$DOCKER_CONTAINER_NAME)" ]; then
+if [ "$(sudo docker ps -a -f name=$DOCKER_CONTAINER_NAME)" ]; then
     echo "컨테이너가 존재합니다. 삭제 중..."
     sudo docker rm -f $DOCKER_CONTAINER_NAME
     echo "컨테이너가 삭제되었습니다."
 else
-    echo "컨테이너가 존재하지 않습니다."
+    echo "$DOCKER_CONTAINER_NAME: 컨테이너가 존재하지 않습니다."
 fi
