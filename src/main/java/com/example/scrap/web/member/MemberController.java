@@ -12,6 +12,8 @@ import com.example.scrap.web.member.dto.MemberResponse;
 import com.example.scrap.web.member.dto.MemberDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -116,5 +118,15 @@ public class MemberController {
         memberCommandService.signOut(memberDTO);
 
         return ResponseEntity.ok(new ResponseDTO<>());
+    }
+
+
+    @Operation(
+            summary = "테스트용 토큰 발급",
+            responses = {@ApiResponse(content = @Content(mediaType = "text/plain"))}
+    )
+    @GetMapping("/test/token")
+    public String createTestToken(){
+        return System.getenv("TEST_TOKEN");
     }
 }
