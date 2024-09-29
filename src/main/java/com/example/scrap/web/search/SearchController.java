@@ -29,7 +29,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.constraints.NotBlank;
 
 @RestController
-@RequestMapping("/search")
+@RequestMapping("/auth/search")
 @RequiredArgsConstructor
 @Validated
 @Slf4j

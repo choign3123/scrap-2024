@@ -69,7 +69,7 @@ public class MypageControllerTest {
 
         //** when
         ResultActions resultActions = mockMvc.perform(
-                MockMvcRequestBuilders.get("/mypage")
+                MockMvcRequestBuilders.get("/auth/mypage")
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", token)
         );

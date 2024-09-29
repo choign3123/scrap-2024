@@ -22,7 +22,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping("/categories")
+@RequestMapping("/auth/categories")
 @RequiredArgsConstructor
 @Slf4j
 @Validated

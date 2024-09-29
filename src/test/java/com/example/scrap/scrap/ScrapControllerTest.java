@@ -117,7 +117,7 @@ public class ScrapControllerTest {
 
         //** when
         ResultActions resultActions = mockMvc.perform(
-                MockMvcRequestBuilders.post("/scraps/{category-id}", categoryId)
+                MockMvcRequestBuilders.post("/auth/scraps/{category-id}", categoryId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new Gson().toJson(request))
                         .header("Authorization", token)
@@ -156,7 +156,7 @@ public class ScrapControllerTest {
 
         //** when
         ResultActions resultActions = mockMvc.perform(
-                MockMvcRequestBuilders.post("/scraps/{category-id}", categoryId)
+                MockMvcRequestBuilders.post("/auth/scraps/{category-id}", categoryId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new Gson().toJson(request))
                         .header("Authorization", token)
@@ -189,7 +189,7 @@ public class ScrapControllerTest {
 
         //** when
         ResultActions resultActions = mockMvc.perform(
-                MockMvcRequestBuilders.post("/scraps/{category-id}", categoryId)
+                MockMvcRequestBuilders.post("/auth/scraps/{category-id}", categoryId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new Gson().toJson(request))
                         .header("Authorization", token)
@@ -222,7 +222,7 @@ public class ScrapControllerTest {
 
         //** when
         ResultActions resultActions = mockMvc.perform(
-                MockMvcRequestBuilders.post("/scraps/{category-id}", categoryId)
+                MockMvcRequestBuilders.post("/auth/scraps/{category-id}", categoryId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new Gson().toJson(request))
                         .header("Authorization", token)
@@ -255,7 +255,7 @@ public class ScrapControllerTest {
 
         //** when
         ResultActions resultActions = mockMvc.perform(
-                MockMvcRequestBuilders.post("/scraps/{category-id}", categoryId)
+                MockMvcRequestBuilders.post("/auth/scraps/{category-id}", categoryId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new Gson().toJson(request))
                         .header("Authorization", token)
@@ -294,7 +294,7 @@ public class ScrapControllerTest {
 
         //** when
         ResultActions resultActions = mockMvc.perform(
-                MockMvcRequestBuilders.get("/scraps")
+                MockMvcRequestBuilders.get("/auth/scraps")
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", token)
                         .param("category", category.getId().toString())
@@ -330,7 +330,7 @@ public class ScrapControllerTest {
 
         //** when
         ResultActions resultActions = mockMvc.perform(
-                MockMvcRequestBuilders.get("/scraps")
+                MockMvcRequestBuilders.get("/auth/scraps")
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", token)
                         .param("category", category.getId().toString())
@@ -366,7 +366,7 @@ public class ScrapControllerTest {
 
         //** when
         ResultActions resultActions = mockMvc.perform(
-                MockMvcRequestBuilders.get("/scraps")
+                MockMvcRequestBuilders.get("/auth/scraps")
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", token)
                         .param("category", category.getId().toString())
@@ -402,7 +402,7 @@ public class ScrapControllerTest {
 
         //** when
         ResultActions resultActions = mockMvc.perform(
-                MockMvcRequestBuilders.get("/scraps")
+                MockMvcRequestBuilders.get("/auth/scraps")
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", token)
                         .param("category", category.getId().toString())
@@ -438,7 +438,7 @@ public class ScrapControllerTest {
 
         //** when
         ResultActions resultActions = mockMvc.perform(
-                MockMvcRequestBuilders.get("/scraps")
+                MockMvcRequestBuilders.get("/auth/scraps")
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", token)
                         .param("category", category.getId().toString())
@@ -474,7 +474,7 @@ public class ScrapControllerTest {
 
         //** when
         ResultActions resultActions = mockMvc.perform(
-                MockMvcRequestBuilders.get("/scraps")
+                MockMvcRequestBuilders.get("/auth/scraps")
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", token)
                         .param("category", category.getId().toString())
@@ -519,7 +519,7 @@ public class ScrapControllerTest {
 
         //** when
         ResultActions resultActions = mockMvc.perform(
-                MockMvcRequestBuilders.get("/scraps/favorite")
+                MockMvcRequestBuilders.get("/auth/scraps/favorite")
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", token)
                         .param("sort", sorts.name())
@@ -548,7 +548,7 @@ public class ScrapControllerTest {
 
         //** when
         ResultActions resultActions = mockMvc.perform(
-                MockMvcRequestBuilders.get("/scraps/favorite")
+                MockMvcRequestBuilders.get("/auth/scraps/favorite")
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", token)
                         .param("sort", "이상한 값")
@@ -577,7 +577,7 @@ public class ScrapControllerTest {
 
         //** when
         ResultActions resultActions = mockMvc.perform(
-                MockMvcRequestBuilders.get("/scraps/favorite")
+                MockMvcRequestBuilders.get("/auth/scraps/favorite")
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", token)
                         .param("sort", sorts.getName())
@@ -606,7 +606,7 @@ public class ScrapControllerTest {
 
         //** when
         ResultActions resultActions = mockMvc.perform(
-                MockMvcRequestBuilders.get("/scraps/favorite")
+                MockMvcRequestBuilders.get("/auth/scraps/favorite")
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", token)
                         .param("sort", sorts.getName())
@@ -635,7 +635,7 @@ public class ScrapControllerTest {
 
         //** when
         ResultActions resultActions = mockMvc.perform(
-                MockMvcRequestBuilders.get("/scraps/favorite")
+                MockMvcRequestBuilders.get("/auth/scraps/favorite")
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", token)
                         .param("sort", sorts.getName())
@@ -665,7 +665,7 @@ public class ScrapControllerTest {
 
         //** when
         ResultActions resultActions = mockMvc.perform(
-                MockMvcRequestBuilders.get("/scraps/favorite")
+                MockMvcRequestBuilders.get("/auth/scraps/favorite")
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", token)
                         .param("sort", sorts.getName())
@@ -699,7 +699,7 @@ public class ScrapControllerTest {
 
         //** when
         ResultActions resultActions = mockMvc.perform(
-                MockMvcRequestBuilders.get("/scraps/{scrap-id}", scrap.getId())
+                MockMvcRequestBuilders.get("/auth/scraps/{scrap-id}", scrap.getId())
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", token)
         );
@@ -746,7 +746,7 @@ public class ScrapControllerTest {
 
         //** when
         ResultActions resultActions = mockMvc.perform(
-                MockMvcRequestBuilders.get("/scraps/search/{category-id}", category.getId())
+                MockMvcRequestBuilders.get("/auth/scraps/search/{category-id}", category.getId())
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", token)
                         .param("sort", sorts.name())
@@ -779,7 +779,7 @@ public class ScrapControllerTest {
 
         //** when
         ResultActions resultActions = mockMvc.perform(
-                MockMvcRequestBuilders.get("/scraps/search/{category-id}", category.getId())
+                MockMvcRequestBuilders.get("/auth/scraps/search/{category-id}", category.getId())
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", token)
                         .param("sort", "이상한 값")
@@ -811,7 +811,7 @@ public class ScrapControllerTest {
 
         //** when
         ResultActions resultActions = mockMvc.perform(
-                MockMvcRequestBuilders.get("/scraps/search/{category-id}", category.getId())
+                MockMvcRequestBuilders.get("/auth/scraps/search/{category-id}", category.getId())
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", token)
                         .param("sort", sorts.name())
@@ -843,7 +843,7 @@ public class ScrapControllerTest {
 
         //** when
         ResultActions resultActions = mockMvc.perform(
-                MockMvcRequestBuilders.get("/scraps/search/{category-id}", category.getId())
+                MockMvcRequestBuilders.get("/auth/scraps/search/{category-id}", category.getId())
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", token)
                         .param("sort", sorts.name())
@@ -875,7 +875,7 @@ public class ScrapControllerTest {
 
         //** when
         ResultActions resultActions = mockMvc.perform(
-                MockMvcRequestBuilders.get("/scraps/search/{category-id}", category.getId())
+                MockMvcRequestBuilders.get("/auth/scraps/search/{category-id}", category.getId())
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", token)
                         .param("sort", sorts.name())
@@ -919,7 +919,7 @@ public class ScrapControllerTest {
 
         //** when
         ResultActions resultActions = mockMvc.perform(
-                MockMvcRequestBuilders.get("/scraps/search/favorite")
+                MockMvcRequestBuilders.get("/auth/scraps/search/favorite")
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", token)
                         .param("sort", sorts.name())
@@ -947,7 +947,7 @@ public class ScrapControllerTest {
 
         //** when
         ResultActions resultActions = mockMvc.perform(
-                MockMvcRequestBuilders.get("/scraps/search/favorite")
+                MockMvcRequestBuilders.get("/auth/scraps/search/favorite")
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", token)
                         .param("sort", "이상한 값")
@@ -974,7 +974,7 @@ public class ScrapControllerTest {
 
         //** when
         ResultActions resultActions = mockMvc.perform(
-                MockMvcRequestBuilders.get("/scraps/search/favorite")
+                MockMvcRequestBuilders.get("/auth/scraps/search/favorite")
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", token)
                         .param("sort", sorts.getName())
@@ -1001,7 +1001,7 @@ public class ScrapControllerTest {
 
         //** when
         ResultActions resultActions = mockMvc.perform(
-                MockMvcRequestBuilders.get("/scraps/search/favorite")
+                MockMvcRequestBuilders.get("/auth/scraps/search/favorite")
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", token)
                         .param("sort", sorts.getName())
@@ -1028,7 +1028,7 @@ public class ScrapControllerTest {
 
         //** when
         ResultActions resultActions = mockMvc.perform(
-                MockMvcRequestBuilders.get("/scraps/search/favorite")
+                MockMvcRequestBuilders.get("/auth/scraps/search/favorite")
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", token)
                         .param("sort", sorts.getName())
@@ -1062,7 +1062,7 @@ public class ScrapControllerTest {
 
         //** when
         ResultActions resultActions = mockMvc.perform(
-                MockMvcRequestBuilders.patch("/scraps/{scrap-id}/favorite", scrap.getId())
+                MockMvcRequestBuilders.patch("/auth/scraps/{scrap-id}/favorite", scrap.getId())
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", token)
         );
@@ -1102,7 +1102,7 @@ public class ScrapControllerTest {
 
         //** when
         ResultActions resultActions = mockMvc.perform(
-                MockMvcRequestBuilders.patch("/scraps/favorite")
+                MockMvcRequestBuilders.patch("/auth/scraps/favorite")
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", token)
                         .content(new Gson().toJson(request))
@@ -1127,7 +1127,7 @@ public class ScrapControllerTest {
 
         //** when
         ResultActions resultActions = mockMvc.perform(
-                MockMvcRequestBuilders.patch("/scraps/favorite")
+                MockMvcRequestBuilders.patch("/auth/scraps/favorite")
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", token)
                         .content(new Gson().toJson(request))
@@ -1151,7 +1151,7 @@ public class ScrapControllerTest {
 
         //** when
         ResultActions resultActions = mockMvc.perform(
-                MockMvcRequestBuilders.patch("/scraps/favorite")
+                MockMvcRequestBuilders.patch("/auth/scraps/favorite")
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", token)
                         .content(new Gson().toJson(request))
@@ -1186,7 +1186,7 @@ public class ScrapControllerTest {
 
         //** when
         ResultActions resultActions = mockMvc.perform(
-                MockMvcRequestBuilders.patch("/scraps/{scrap-id}/move", scrap.getId())
+                MockMvcRequestBuilders.patch("/auth/scraps/{scrap-id}/move", scrap.getId())
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", token)
                         .content(new Gson().toJson(request))
@@ -1214,7 +1214,7 @@ public class ScrapControllerTest {
 
         //** when
         ResultActions resultActions = mockMvc.perform(
-                MockMvcRequestBuilders.patch("/scraps/{scrap-id}/move", scrapId)
+                MockMvcRequestBuilders.patch("/auth/scraps/{scrap-id}/move", scrapId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", token)
                         .content(new Gson().toJson(request))
@@ -1253,7 +1253,7 @@ public class ScrapControllerTest {
 
         //** when
         ResultActions resultActions = mockMvc.perform(
-                MockMvcRequestBuilders.patch("/scraps/move")
+                MockMvcRequestBuilders.patch("/auth/scraps/move")
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", token)
                         .content(new Gson().toJson(request))
@@ -1281,7 +1281,7 @@ public class ScrapControllerTest {
 
         //** when
         ResultActions resultActions = mockMvc.perform(
-                MockMvcRequestBuilders.patch("/scraps/move")
+                MockMvcRequestBuilders.patch("/auth/scraps/move")
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", token)
                         .content(new Gson().toJson(request))
@@ -1308,7 +1308,7 @@ public class ScrapControllerTest {
 
         //** when
         ResultActions resultActions = mockMvc.perform(
-                MockMvcRequestBuilders.patch("/scraps/move")
+                MockMvcRequestBuilders.patch("/auth/scraps/move")
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", token)
                         .content(new Gson().toJson(request))
@@ -1335,7 +1335,7 @@ public class ScrapControllerTest {
 
         //** when
         ResultActions resultActions = mockMvc.perform(
-                MockMvcRequestBuilders.patch("/scraps/move")
+                MockMvcRequestBuilders.patch("/auth/scraps/move")
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", token)
                         .content(new Gson().toJson(request))
@@ -1371,7 +1371,7 @@ public class ScrapControllerTest {
 
         //** when
         ResultActions resultActions = mockMvc.perform(
-                MockMvcRequestBuilders.patch("/scraps/{scrap-id}/memo", scrap.getId())
+                MockMvcRequestBuilders.patch("/auth/scraps/{scrap-id}/memo", scrap.getId())
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", token)
                         .content(new Gson().toJson(request))
@@ -1399,7 +1399,7 @@ public class ScrapControllerTest {
 
         //** when
         ResultActions resultActions = mockMvc.perform(
-                MockMvcRequestBuilders.patch("/scraps/{scrap-id}/memo", scrapId)
+                MockMvcRequestBuilders.patch("/auth/scraps/{scrap-id}/memo", scrapId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", token)
                         .content(new Gson().toJson(request))
@@ -1430,7 +1430,7 @@ public class ScrapControllerTest {
 
         //** when
         ResultActions resultActions = mockMvc.perform(
-                MockMvcRequestBuilders.patch("/scraps/{scrap-id}/trash", scrap.getId())
+                MockMvcRequestBuilders.patch("/auth/scraps/{scrap-id}/trash", scrap.getId())
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", token)
         );
@@ -1466,7 +1466,7 @@ public class ScrapControllerTest {
 
         //** when
         ResultActions resultActions = mockMvc.perform(
-                MockMvcRequestBuilders.patch("/scraps/trash")
+                MockMvcRequestBuilders.patch("/auth/scraps/trash")
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", token)
                         .content(new Gson().toJson(request))
@@ -1490,7 +1490,7 @@ public class ScrapControllerTest {
 
         //** when
         ResultActions resultActions = mockMvc.perform(
-                MockMvcRequestBuilders.patch("/scraps/trash")
+                MockMvcRequestBuilders.patch("/auth/scraps/trash")
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", token)
                         .content(new Gson().toJson(request))
@@ -1514,7 +1514,7 @@ public class ScrapControllerTest {
 
         //** when
         ResultActions resultActions = mockMvc.perform(
-                MockMvcRequestBuilders.patch("/scraps/trash")
+                MockMvcRequestBuilders.patch("/auth/scraps/trash")
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", token)
                         .content(new Gson().toJson(request))

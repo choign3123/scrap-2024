@@ -101,6 +101,8 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(ValidationException.class)
     protected ResponseEntity<ResponseDTO> handleValidationException(ValidationException e){
 
+        log.info(e.getMessage());
+
         ResponseDTO<ValidationErrorDTO> response = new ResponseDTO<>(ErrorConverter.toValidationErrorDTO(e), e.getErrorCode());
 
         return ResponseEntity.status(response.getHttpStatus())

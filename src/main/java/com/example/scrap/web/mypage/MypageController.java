@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/mypage")
+@RequestMapping("/auth/mypage")
 @RequiredArgsConstructor
 @Tag(name = "마이페이지", description = "마이페이지 관련 API")
 public class MypageController {
