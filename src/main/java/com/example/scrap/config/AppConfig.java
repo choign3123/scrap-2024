@@ -25,26 +25,9 @@ public class AppConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
 
-        // 소셜 로그인 관련은 토큰 인증 제외
-        List<String> excludeSocialPatternList = new ArrayList<>();
-        excludeSocialPatternList.add("/oauth/naver/callback");
-        excludeSocialPatternList.add("/oauth/kakao/callback");
-
-        // 스웨거 관련은 토큰 인증 제외
-        List<String> excludeSwaggerPatternList = new ArrayList<>();
-        excludeSwaggerPatternList.add("/v3/api-docs/**");
-        excludeSwaggerPatternList.add("/swagger-ui/**");
-        excludeSwaggerPatternList.add("/swagger");
-
-
         // accessToken 인증 인터셉터 등록
         registry.addInterceptor(authorizationInterceptor)
                 .order(2) // OpenEntityManagerInViewInterceptor 를 먼저 동작시키게 하기 위해서 우선순위 낮춤.
-                .addPathPatterns("/**")
-                .excludePathPatterns("/oauth/login/**")
-                .excludePathPatterns("/health")
-                .excludePathPatterns("/token") // 토큰 재발급
-                .excludePathPatterns(excludeSocialPatternList)
-                .excludePathPatterns(excludeSwaggerPatternList);
+                .addPathPatterns("/oauth/**");
     }
 }

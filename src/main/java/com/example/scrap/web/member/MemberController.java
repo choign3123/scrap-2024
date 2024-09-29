@@ -58,7 +58,7 @@ public class MemberController {
             security = { @SecurityRequirement(name = "bearer-key") },
             parameters = {@Parameter(name = "Authorization", example = "오른쪽 맨위 Authorize를 사용시, 여기엔 아무값이나 입력하세요")}
     )
-    @GetMapping("/token/me")
+    @GetMapping("/auth/token/me")
     public ResponseEntity<ResponseDTO<Void>> tokenValidate(@RequestHeader("Authorization") String token){
 
         return ResponseEntity.ok(new ResponseDTO<>(SuccessCode.TOKEN_VALID));
@@ -90,7 +90,7 @@ public class MemberController {
             security = { @SecurityRequirement(name = "bearer-key") },
             parameters = {@Parameter(name = "Authorization", example = "오른쪽 맨위 Authorize를 사용시, 여기엔 아무값이나 입력하세요")}
     )
-    @PatchMapping("/logout")
+    @PatchMapping("/auth/logout")
     public ResponseEntity<ResponseDTO<Void>> logout(@RequestHeader("Authorization") String token){
         MemberDTO memberDTO = tokenProvider.parseAccessToMemberDTO(token);
 
@@ -109,7 +109,7 @@ public class MemberController {
             security = { @SecurityRequirement(name = "bearer-key") },
             parameters = {@Parameter(name = "Authorization", example = "오른쪽 맨위 Authorize를 사용시, 여기엔 아무값이나 입력하세요")}
     )
-    @PatchMapping("/signout")
+    @PatchMapping("/auth/signout")
     public ResponseEntity<ResponseDTO<Void>> signOut(@RequestHeader("Authorization") String token){
         MemberDTO memberDTO = tokenProvider.parseAccessToMemberDTO(token);
 

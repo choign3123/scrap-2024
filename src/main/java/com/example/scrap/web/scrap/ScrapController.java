@@ -28,7 +28,7 @@ import javax.validation.constraints.NotBlank;
 import java.util.List;
 
 @RestController
-@RequestMapping("/scraps")
+@RequestMapping("/auth/scraps")
 @Validated
 @RequiredArgsConstructor
 @Slf4j
