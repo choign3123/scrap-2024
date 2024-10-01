@@ -8,9 +8,6 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @Configuration
 @RequiredArgsConstructor
 public class AppConfig implements WebMvcConfigurer {
