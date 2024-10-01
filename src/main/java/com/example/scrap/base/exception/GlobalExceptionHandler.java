@@ -27,7 +27,6 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(BaseException.class)
     protected ResponseEntity<ResponseDTO> handleBaseException(BaseException e){
         log.info(e.getMessage());
-        e.printStackTrace();
 
         ResponseDTO<Void> response = new ResponseDTO<>(e.getErrorCode());
 
@@ -58,7 +57,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     protected ResponseEntity<ResponseDTO> handleMethodArgumentNotValidException(MethodArgumentNotValidException e){
-        e.printStackTrace();
+        log.info(e.getMessage());
 
         BindingResult bindingResult = e.getBindingResult();
         ResponseDTO<ValidationErrorDTO> response = new ResponseDTO<>(ErrorConverter.toValidationErrorDTO(bindingResult), ErrorCode._BAD_REQUEST);
@@ -69,7 +68,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(ConstraintViolationException.class)
     protected ResponseEntity<ResponseDTO> handleConstraintViolationException(ConstraintViolationException e){
-        e.printStackTrace();
+        log.info(e.getMessage());
 
         Set<ConstraintViolation<?>> cv = e.getConstraintViolations();
         ResponseDTO<ValidationErrorDTO> response = new ResponseDTO<>(ErrorConverter.toValidationErrorDTO(cv), ErrorCode._BAD_REQUEST);
@@ -80,7 +79,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(MissingServletRequestParameterException.class)
     protected ResponseEntity<ResponseDTO> handleMissingServletRequestParameterException(MissingServletRequestParameterException e){
-        e.printStackTrace();
+        log.info(e.getMessage());
 
         ResponseDTO<ValidationErrorDTO> response = new ResponseDTO<>(new ValidationErrorDTO(e.getParameterName(), "필수값입니다."), ErrorCode._BAD_REQUEST);
 
@@ -90,7 +89,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(MissingRequestHeaderException.class)
     protected ResponseEntity<ResponseDTO> handleMissingRequestHeaderException(MissingRequestHeaderException e){
-        e.printStackTrace();
+        log.info(e.getMessage());
 
         ResponseDTO<ValidationErrorDTO> response = new ResponseDTO<>(new ValidationErrorDTO(e.getHeaderName(), "필수값입니다."), ErrorCode._BAD_REQUEST);
 
@@ -100,7 +99,6 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(ValidationException.class)
     protected ResponseEntity<ResponseDTO> handleValidationException(ValidationException e){
-
         log.info(e.getMessage());
 
         ResponseDTO<ValidationErrorDTO> response = new ResponseDTO<>(ErrorConverter.toValidationErrorDTO(e), e.getErrorCode());
