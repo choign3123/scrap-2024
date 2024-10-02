@@ -1,5 +1,6 @@
 package com.example.scrap.web;
 
+import com.example.scrap.base.data.DefaultData;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,6 +15,6 @@ public class HealthyCheckController {
     )
     @GetMapping("/health")
     public String checkHealth(){
-        return "I'm healthy! from 24.09.10";
+        return "I'm healthy! " + System.getProperty(DefaultData.DEPLOY_TIME_KEY);
     }
 }

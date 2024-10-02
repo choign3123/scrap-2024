@@ -29,6 +29,8 @@ public class AuthorizationInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler){
 
+        log.info("요청 URI: {}", request.getRequestURI());
+
         String accessToken = request.getHeader("Authorization");
         if(accessToken == null){
             throw new ValidationException("Authorization", "인증 토큰이 없습니다.");

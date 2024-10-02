@@ -4,21 +4,19 @@ import com.example.scrap.base.code.ErrorCode;
 import com.example.scrap.base.exception.AuthorizationException;
 import com.example.scrap.entity.Member;
 import com.example.scrap.entity.MemberLog;
-import com.example.scrap.entity.enums.LoginStatus;
 import com.example.scrap.entity.enums.SnsType;
 import com.example.scrap.jwt.ITokenProvider;
 import com.example.scrap.jwt.dto.Token;
 import com.example.scrap.jwt.dto.TokenType;
+import com.example.scrap.redis.LogoutBlacklistRedisUtils;
 import com.example.scrap.web.category.ICategoryCommandService;
 import com.example.scrap.web.member.IMemberQueryService;
 import com.example.scrap.web.member.MemberCommandServiceImpl;
 import com.example.scrap.web.member.MemberRepository;
 import com.example.scrap.web.member.dto.MemberDTO;
-import com.example.scrap.web.oauth.IOauthMemberInfoProvider;
 import com.example.scrap.web.oauth.NaverMemberIntoProvider;
 import com.example.scrap.web.oauth.OauthMemberInfoFactory;
 import com.example.scrap.web.oauth.dto.CommonOauthMemberInfo;
-import com.example.scrap.web.oauth.dto.NaverResponse;
 import com.example.scrap.web.scrap.IScrapCommandService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -31,7 +29,6 @@ import org.springframework.test.util.ReflectionTestUtils;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -62,6 +59,9 @@ public class MemberCommandServiceImplTest {
 
     @Mock
     private NaverMemberIntoProvider naverMemberIntoProvider;
+
+    @Mock
+    private LogoutBlacklistRedisUtils logoutBlacklistRedisUtils;
 
     @DisplayName("로그인 (회원가입) - 로그인")
     @Test
@@ -199,6 +199,7 @@ public class MemberCommandServiceImplTest {
     }
 
     @DisplayName("로그아웃")
+    @Test
     public void logout(){
         //** given
         Member member = setupMember();
@@ -215,6 +216,9 @@ public class MemberCommandServiceImplTest {
         memberCommandService.logout(memberDTO, token);
 
         //** then
+        assertThat(member.getMemberLog().getRefreshTokenId())
+                .isEqualTo(0L);
+        verify(logoutBlacklistRedisUtils).addLogoutToken(token, member);
     }
 
     private Member setupMember(){

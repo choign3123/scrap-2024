@@ -66,6 +66,13 @@ public class MemberLog extends BaseEntity {
         return refreshTokenId;
     }
 
+    /**
+     * refreshTokenId 초기화하기
+     */
+    public void initRefreshTokenId(){
+        this.refreshTokenId = 0L;
+    }
+
     public boolean equalRefreshTokenId(Long refreshTokenId){
         return this.refreshTokenId.equals(refreshTokenId);
     }

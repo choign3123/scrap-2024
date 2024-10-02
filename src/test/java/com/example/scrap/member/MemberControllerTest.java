@@ -84,7 +84,7 @@ public class MemberControllerTest {
 
         //** when
         ResultActions resultActions = mockMvc.perform(
-                MockMvcRequestBuilders.get("/token/me")
+                MockMvcRequestBuilders.get("/auth/token/me")
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", token)
         );
@@ -132,7 +132,7 @@ public class MemberControllerTest {
 
         //** when
         ResultActions resultActions = mockMvc.perform(
-                MockMvcRequestBuilders.patch("/logout")
+                MockMvcRequestBuilders.patch("/auth/logout")
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", token)
         );
@@ -155,7 +155,7 @@ public class MemberControllerTest {
 
         //** when
         ResultActions resultActions = mockMvc.perform(
-                MockMvcRequestBuilders.patch("/signout")
+                MockMvcRequestBuilders.patch("/auth/signout")
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", token)
         );

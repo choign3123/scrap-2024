@@ -76,7 +76,7 @@ public class ScrapConverter {
         List<ScrapResponse.GetFavoriteScrapListDTO.ScrapDTO> scrapDTOList = scrapPage.stream()
                 .map( scrap -> {
                     return ScrapResponse.GetFavoriteScrapListDTO.ScrapDTO.builder()
-                            .categoryTitle(scrap.getCategory().getTitle()) // [TODO] LazyInitializationException이 실제로 발생하는지 확인해볼 필요 있음.
+                            .categoryTitle(scrap.getCategory().getTitle())
                             .scrapId(scrap.getId())
                             .scrapTitle(scrap.getTitle())
                             .scrapURL(scrap.getScrapURL())
@@ -187,25 +187,6 @@ public class ScrapConverter {
         return ScrapResponse.MoveCategoryOfScrapListDTO.builder()
                 .total(scrapList.size())
                 .scrapDTOList(scrapDTOList)
-                .build();
-    }
-
-    // TODO: 삭제하기
-    public static ScrapResponse.ShareAllScrapDTO toShareAllScrap(List<Scrap> scrapList){
-
-        List<ScrapResponse.ShareAllScrapDTO.ScrapDTO> scrapDTOList = scrapList.stream()
-                .map(scrap -> {
-                    return ScrapResponse.ShareAllScrapDTO.ScrapDTO.builder()
-                            .scrapId(scrap.getId())
-                            .title(scrap.getTitle())
-                            .scrapURL(scrap.getScrapURL())
-                            .build();
-                })
-                .toList();
-
-        return ScrapResponse.ShareAllScrapDTO.builder()
-                .scrapDTOList(scrapDTOList)
-                .total(scrapList.size())
                 .build();
     }
 }

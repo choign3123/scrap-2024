@@ -109,7 +109,7 @@ public class SearchControllerTest {
 
         //** when
         ResultActions resultActions = mockMvc.perform(
-                MockMvcRequestBuilders.post("/search")
+                MockMvcRequestBuilders.post("/auth/search")
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", token)
                         .param("sort", sorts.name())

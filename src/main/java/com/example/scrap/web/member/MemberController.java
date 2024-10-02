@@ -12,6 +12,8 @@ import com.example.scrap.web.member.dto.MemberResponse;
 import com.example.scrap.web.member.dto.MemberDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -58,7 +60,7 @@ public class MemberController {
             security = { @SecurityRequirement(name = "bearer-key") },
             parameters = {@Parameter(name = "Authorization", example = "오른쪽 맨위 Authorize를 사용시, 여기엔 아무값이나 입력하세요")}
     )
-    @GetMapping("/token/me")
+    @GetMapping("/auth/token/me")
     public ResponseEntity<ResponseDTO<Void>> tokenValidate(@RequestHeader("Authorization") String token){
 
         return ResponseEntity.ok(new ResponseDTO<>(SuccessCode.TOKEN_VALID));
@@ -90,7 +92,7 @@ public class MemberController {
             security = { @SecurityRequirement(name = "bearer-key") },
             parameters = {@Parameter(name = "Authorization", example = "오른쪽 맨위 Authorize를 사용시, 여기엔 아무값이나 입력하세요")}
     )
-    @PatchMapping("/logout")
+    @PatchMapping("/auth/logout")
     public ResponseEntity<ResponseDTO<Void>> logout(@RequestHeader("Authorization") String token){
         MemberDTO memberDTO = tokenProvider.parseAccessToMemberDTO(token);
 
@@ -109,12 +111,22 @@ public class MemberController {
             security = { @SecurityRequirement(name = "bearer-key") },
             parameters = {@Parameter(name = "Authorization", example = "오른쪽 맨위 Authorize를 사용시, 여기엔 아무값이나 입력하세요")}
     )
-    @PatchMapping("/signout")
+    @PatchMapping("/auth/signout")
     public ResponseEntity<ResponseDTO<Void>> signOut(@RequestHeader("Authorization") String token){
         MemberDTO memberDTO = tokenProvider.parseAccessToMemberDTO(token);
 
         memberCommandService.signOut(memberDTO);
 
         return ResponseEntity.ok(new ResponseDTO<>());
+    }
+
+
+    @Operation(
+            summary = "테스트용 토큰 발급",
+            responses = {@ApiResponse(content = @Content(mediaType = "text/plain"))}
+    )
+    @GetMapping("/test/token")
+    public String createTestToken(){
+        return System.getenv("TEST_TOKEN");
     }
 }

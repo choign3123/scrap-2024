@@ -101,7 +101,7 @@ public class MemberCommandServiceImpl implements IMemberCommandService {
 
         logoutBlacklistRedisUtils.addLogoutToken(token, member);
 
-        // TODO: refresh 토큰도 못쓰게 만들기
+        member.logout();
     }
 
     /**

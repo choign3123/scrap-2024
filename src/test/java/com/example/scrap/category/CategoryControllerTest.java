@@ -21,7 +21,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.MediaType;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -83,7 +82,7 @@ public class CategoryControllerTest {
 
         //** when
         ResultActions resultActions = mockMvc.perform(
-                MockMvcRequestBuilders.post("/categories")
+                MockMvcRequestBuilders.post("/auth/categories")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new Gson().toJson(request))
                         .header("Authorization", token)
@@ -107,7 +106,7 @@ public class CategoryControllerTest {
 
         //** when
         ResultActions resultActions = mockMvc.perform(
-                MockMvcRequestBuilders.post("/categories")
+                MockMvcRequestBuilders.post("/auth/categories")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new Gson().toJson(request))
                         .header("Authorization", token)
@@ -130,7 +129,7 @@ public class CategoryControllerTest {
 
         //** when
         ResultActions resultActions = mockMvc.perform(
-                MockMvcRequestBuilders.post("/categories")
+                MockMvcRequestBuilders.post("/auth/categories")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new Gson().toJson(request))
                         .header("Authorization", token)
@@ -167,7 +166,7 @@ public class CategoryControllerTest {
 
         //** when
         ResultActions resultActions = mockMvc.perform(
-                MockMvcRequestBuilders.get("/categories")
+                MockMvcRequestBuilders.get("/auth/categories")
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", token)
         );
@@ -204,7 +203,7 @@ public class CategoryControllerTest {
 
         //** when
         ResultActions resultActions = mockMvc.perform(
-                MockMvcRequestBuilders.get("/categories/selection")
+                MockMvcRequestBuilders.get("/auth/categories/selection")
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", token)
         );
@@ -227,7 +226,7 @@ public class CategoryControllerTest {
 
         //** when
         ResultActions resultActions = mockMvc.perform(
-                MockMvcRequestBuilders.delete("/categories/{category-id}", 99L)
+                MockMvcRequestBuilders.delete("/auth/categories/{category-id}", 99L)
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", token)
         );
@@ -262,7 +261,7 @@ public class CategoryControllerTest {
 
         //** when
         ResultActions resultActions = mockMvc.perform(
-                MockMvcRequestBuilders.patch("/categories/{category-id}/title", category.getId())
+                MockMvcRequestBuilders.patch("/auth/categories/{category-id}/title", category.getId())
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", token)
                         .content(new Gson().toJson(request))
@@ -289,7 +288,7 @@ public class CategoryControllerTest {
 
         //** when
         ResultActions resultActions = mockMvc.perform(
-                MockMvcRequestBuilders.patch("/categories/{category-id}/title", categoryId)
+                MockMvcRequestBuilders.patch("/auth/categories/{category-id}/title", categoryId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", token)
                         .content(new Gson().toJson(request))
@@ -315,7 +314,7 @@ public class CategoryControllerTest {
 
         //** when
         ResultActions resultActions = mockMvc.perform(
-                MockMvcRequestBuilders.patch("/categories/{category-id}/title", categoryId)
+                MockMvcRequestBuilders.patch("/auth/categories/{category-id}/title", categoryId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", token)
                         .content(new Gson().toJson(request))
@@ -356,7 +355,7 @@ public class CategoryControllerTest {
 
         //** when
         ResultActions resultActions = mockMvc.perform(
-                MockMvcRequestBuilders.patch("/categories/sequence")
+                MockMvcRequestBuilders.patch("/auth/categories/sequence")
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", token)
                         .content(new Gson().toJson(request))
@@ -380,7 +379,7 @@ public class CategoryControllerTest {
 
         //** when
         ResultActions resultActions = mockMvc.perform(
-                MockMvcRequestBuilders.patch("/categories/sequence")
+                MockMvcRequestBuilders.patch("/auth/categories/sequence")
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", token)
                         .content(new Gson().toJson(request))
@@ -403,7 +402,7 @@ public class CategoryControllerTest {
 
         //** when
         ResultActions resultActions = mockMvc.perform(
-                MockMvcRequestBuilders.patch("/categories/sequence")
+                MockMvcRequestBuilders.patch("/auth/categories/sequence")
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", token)
                         .content(new Gson().toJson(request))
@@ -426,7 +425,7 @@ public class CategoryControllerTest {
 
         //** when
         ResultActions resultActions = mockMvc.perform(
-                MockMvcRequestBuilders.patch("/categories/sequence")
+                MockMvcRequestBuilders.patch("/auth/categories/sequence")
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", token)
                         .content(new Gson().toJson(request))
