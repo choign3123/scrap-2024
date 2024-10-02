@@ -38,6 +38,10 @@ else
     exit 1
 fi
 
+# 기존 도커 이미지 삭제
+sudo docker rmi choign3123/scrap2024:$DOCKER_IMAGE_TAG
+
+# 도커 이미지 PULL
 sudo docker pull choign3123/scrap2024:$DOCKER_IMAGE_TAG
 
 sudo docker run \
