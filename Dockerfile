@@ -1,5 +1,5 @@
 # openjdk 이미지를 베이스로 한다.
-FROM openjdk:17
+FROM openjdk:17-alpine
 
 COPY ./build/libs/*.jar ./app.jar
 
