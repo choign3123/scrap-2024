@@ -27,7 +27,6 @@ public class SearchRequest {
 
         private List<Long> categoryScope;
 
-        // TODO: JsonProperty default로 설정하기
         private LocalDate startDate;
 
         private LocalDate endDate;
