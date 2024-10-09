@@ -1,6 +1,7 @@
 package com.example.scrap.web.search.dto;
 
 import com.example.scrap.web.baseDTO.Meta;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -17,6 +18,8 @@ public class SearchResponse {
     public static class FindScrapDTO {
 
         private Meta meta;
+
+        @JsonProperty(value = "scraps")
         private List<ScrapDTO> scrapDTOList;
 
         @Builder
