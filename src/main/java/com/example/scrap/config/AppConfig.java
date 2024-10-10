@@ -25,6 +25,6 @@ public class AppConfig implements WebMvcConfigurer {
         // accessToken 인증 인터셉터 등록
         registry.addInterceptor(authorizationInterceptor)
                 .order(2) // OpenEntityManagerInViewInterceptor 를 먼저 동작시키게 하기 위해서 우선순위 낮춤.
-                .addPathPatterns("/oauth/**");
+                .addPathPatterns("/auth/**");
     }
 }
